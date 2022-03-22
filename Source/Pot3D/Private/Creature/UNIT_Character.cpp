@@ -44,6 +44,7 @@ AUNIT_Character::AUNIT_Character()
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
+
 	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
 
 
@@ -91,9 +92,6 @@ AUNIT_Character::AUNIT_Character()
 	_PSPR_MinimapIcon->SetRelativeLocation(FVector(0.f, 0.f, 750.f));
 	_PSPR_MinimapIcon->bOwnerNoSee = true;
 
-
-
-
 	_Audio_Comp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO_COMP"));
 	_Audio_Comp->SetupAttachment(RootComponent);
 	_Audio_Comp->bIsPaused = true;
@@ -126,6 +124,8 @@ void AUNIT_Character::BeginPlay()
 void AUNIT_Character::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	_ACP_Stat->SetCharacterId(_chrId);
 
 	_unitAnim = Cast<UUNIT_Anim>(GetMesh()->GetAnimInstance());
 

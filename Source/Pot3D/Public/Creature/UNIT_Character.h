@@ -91,6 +91,7 @@ public:
 private:
 
 	int32 _connectedId = 0;
+	UPROPERTY(EditAnywhere, Category = "ID")
 	int32 _chrId = 0;
 
 
@@ -100,10 +101,10 @@ protected:
 	class UUNIT_Anim* _unitAnim;
 
 	UPROPERTY(EditAnywhere, Category = "Mesh")
-		class USkeletalMeshComponent* _SKM_OutLineSkelMesh;
+	class USkeletalMeshComponent* _SKM_OutLineSkelMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Mesh")
-		class UMaterial* _MAT_OutlineMat;
+	class UMaterial* _MAT_OutlineMat;
 
 protected:
 

@@ -8,9 +8,9 @@
 
 UGI_GmInst::UGI_GmInst()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> StatData(TEXT("DataTable'/Game/Resources/Data/StatDataTable.StatDataTable'"));
-	if (StatData.Succeeded())
-		_statData = StatData.Object;
+	//static ConstructorHelpers::FObjectFinder<UDataTable> StatData(TEXT("DataTable'/Game/Resources/Data/StatDataTable.StatDataTable'"));
+	//if (StatData.Succeeded())
+	//	_statData = StatData.Object;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterData(TEXT("DataTable'/Game/Resources/Data/MonsterDataTable.MonsterDataTable'"));
 	if (MonsterData.Succeeded())
@@ -24,10 +24,12 @@ UGI_GmInst::UGI_GmInst()
 	if (UnitData.Succeeded())
 		_unitData = UnitData.Object;
 
-	_tableLists.Add(_statData);
+
+	//테이블에 넣는 서순주의 
+	_tableLists.Add(_unitData);
 	_tableLists.Add(_monsterData);
 	_tableLists.Add(_itemData);
-	_tableLists.Add(_unitData);
+
 
 	
 	static ConstructorHelpers::FClassFinder<AUNIT_Monster> EM(TEXT("Blueprint'/Game/BluePrints/Monster/001/BP_001_UnitMonster.BP_001_UnitMonster_C'"));

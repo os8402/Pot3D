@@ -13,7 +13,6 @@ UACP_StatInfo::UACP_StatInfo()
 	bWantsInitializeComponent = true;
 
 	//TODO : DB에서 불러와야함
-	_level = 1;
 }
 
 
@@ -21,7 +20,8 @@ void UACP_StatInfo::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	SetLevel(_level);
+	SetLevel(_chrId);
+
 }
 void UACP_StatInfo::SetLevel(int32 level)
 {
@@ -29,12 +29,13 @@ void UACP_StatInfo::SetLevel(int32 level)
 
 	if (gmInst)
 	{
-		auto unitData = gmInst->GetTableData<FUnitData>(ETableDatas::UNIT, level);
+		auto unitData = gmInst->GetTableData<FUnitData>(ETableDatas::UNIT, _chrId);
 
 
 		if (unitData)
 		{
 			_level = unitData->_statData._level;
+			_job = unitData->_statData._job;
 			_maxHp = unitData->_statData._maxHp;
 			SetHp(unitData->_statData._maxHp);
 			_attack = unitData->_statData._attack;
@@ -50,6 +51,11 @@ void UACP_StatInfo::OnAttacked(int32 dmg)
 	SetHp(newHp);
 }
 
+
+void UACP_StatInfo::SetCharacterId(int32 id)
+{
+	_chrId = id;
+}
 
 void UACP_StatInfo::SetHp(int32 newHp)
 {

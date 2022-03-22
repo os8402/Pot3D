@@ -29,27 +29,30 @@ public:
 
 
 public:
-	virtual void SetLevel(int32 level);
+
+	void SetCharacterId(int32 id);
+	void SetLevel(int32 level);
 	void SetHp(int32 newHp);
 	void SetMp(int32 newMp);
-	
-
 	void SetExp(int32 exp);
 
-
+	int32 GetCharacterId() { return _chrId; }
 	int32 GetHp() { return _hp; }
 	int32 GetMaxHp() { return _maxHp; }
 	float GetHpRatio() { return  _hp / (float)_maxHp; }
 	int32 GetLevel() { return _level; }
+	int32 GetJob() { return _job; }
 	int32 GetAttack() { return _attack; }
 
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
-
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _chrId;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _level;
-
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _job;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _hp;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))

@@ -71,10 +71,10 @@ enum class EWeaponSounds : uint8
 UENUM(BlueprintType)
 enum class ETableDatas : uint8
 {
-	STAT = 0 UMETA(DisplayName = "STAT") ,
+	UNIT  = 0 UMETA(DisplayName = "UNIT"), 
 	MONSTER UMETA(DisplayName = "MONSTER"),
 	ITEM UMETA(DisplayName = "ITEM"),
-	UNIT UMETA(DisplayName = "UNIT"),
+
 
 	END
 };

@@ -24,7 +24,7 @@ public:
 
 public:
 	void SetItemInfo(int32 id);
-	void SetItemType(EItemTypes type) { _ItemType = type; }
+	void SetItemType(EItemTypes type) { _itemType = type; }
 
 public:
 	class UStaticMesh* GetPickUpMesh() { return _MESH_Pickup; }
@@ -36,7 +36,7 @@ private:
 	int32 _id;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
-	EItemTypes _ItemType;
+	EItemTypes _itemType;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FText _name;
@@ -45,10 +45,10 @@ private:
 	FText _description;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
-	int32 _count;
+	bool _isConsumable;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
-	int32 _job;
+	int32 _count;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FText _iconPath;

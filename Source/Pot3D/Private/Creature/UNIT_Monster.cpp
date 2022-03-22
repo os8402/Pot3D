@@ -16,6 +16,9 @@ AUNIT_Monster::AUNIT_Monster()
 {
 	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Red);
 
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+
 }
 
 void AUNIT_Monster::PostInitializeComponents()
@@ -45,7 +48,9 @@ void AUNIT_Monster::DeadUnit()
 
 	if (gmInst)
 	{
-		auto monsterData = gmInst->GetTableData<FMonsterData>(ETableDatas::MONSTER, GetCharacterId() >> 24);
+		UE_LOG(LogTemp, Warning, TEXT("Monster ID : %d"), GetCharacterId());
+		
+		auto monsterData = gmInst->GetTableData<FMonsterData>(ETableDatas::MONSTER, GetCharacterId() % 100);
 		TArray<int32> rewardIdList;
 
 		if (monsterData)
@@ -74,6 +79,8 @@ void AUNIT_Monster::DeadUnit()
 			{
 				//TODO : Get Item Info
 				UOBJ_Item* newItem = nullptr;
+				NewObject<UOBJ_Item>(newItem);
+				
 				newItem->SetItemInfo(id);
 
 

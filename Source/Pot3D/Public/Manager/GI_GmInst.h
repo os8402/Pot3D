@@ -18,6 +18,8 @@ struct FStatData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _job;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _attack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _defence;
@@ -52,12 +54,7 @@ struct FMonsterData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _id;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString _name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _exp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FStatData _statData;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FRewardData> _dropItemLists;
 
@@ -76,9 +73,9 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _description;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _job;
+	FStatData _statData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FStatData> _statLists;
+	bool _isConsumable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -95,8 +92,6 @@ struct FUnitData : public FTableRowBase
 	int32 _id;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString _name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _job;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStatData _statData;
 
@@ -136,8 +131,8 @@ public:
 
 private:
 
-	UPROPERTY()
-	class UDataTable* _statData;
+	//UPROPERTY()
+	//class UDataTable* _statData;
 	UPROPERTY()
 	class UDataTable* _monsterData;
 	UPROPERTY()

@@ -247,7 +247,9 @@ void AUNIT_PlayerCT::SetMoveDest(const FVector destPos, float deltaTime)
 		movementComp->AddInputVector(Dir);
 
 		FRotator targetRot = UKismetMathLibrary::FindLookAtRotation(_UP_owned->GetActorLocation(), destPos);
+		
 		targetRot.Pitch = 0.f;
+		targetRot.Roll = 0.f;
 
 		_smoothRot = FMath::RInterpTo(_smoothRot, targetRot, deltaTime, 10.f);
 

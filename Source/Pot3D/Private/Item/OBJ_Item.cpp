@@ -23,7 +23,7 @@ void UOBJ_Item::SetItemInfo(int32 id)
 			_id = itemData->_id;
 			_name = itemData->_name;
 			_description = itemData->_description;
-			_job = itemData->_job;
+			_isConsumable = itemData->_isConsumable;
 			_iconPath = itemData->_iconPath;
 			_meshPath = itemData->_meshPath;
 			SetPickUpMesh(_meshPath);

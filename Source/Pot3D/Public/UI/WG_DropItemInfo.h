@@ -17,7 +17,7 @@ class POT3D_API UWG_DropItemInfo : public UUserWidget
 
 public:
 
-	void UpdateText(FText name);
+	void BindItemInfo(FText name, int32 count);
 
 private:
 	UPROPERTY(meta = (BindWidget))

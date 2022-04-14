@@ -14,8 +14,6 @@
 #include "Creature/UNIT_Monster.h"
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
-#include "Item/OBJ_Item.h"
-
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {

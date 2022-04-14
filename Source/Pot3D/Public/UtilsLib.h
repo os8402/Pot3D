@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 
+#include <random>
+
 #define FIND_OBJ(type, path) UtilsLib::FindObjHelper<type>(TEXT(path));
 #define FIND_CLASS(type, path) UtilsLib::FindClassHelper<type>(TEXT(path));
 
@@ -13,6 +15,22 @@ class POT3D_API UtilsLib
 {
 public:
 	
+	
+	static int NormalDistribution(float m , float s)
+	{		
+		std::random_device rd{};
+		std::mt19937 gen{ rd() };
+		std::normal_distribution<float> d(m, s);
+
+		int result = abs(d(gen));
+
+		if (result == 0)
+			result++;
+
+		return result;
+	}
+
+
 	template<typename t1>
 	static t1* FindObjHelper(const TCHAR* path)
 	{

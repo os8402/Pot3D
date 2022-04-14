@@ -3,12 +3,10 @@
 
 #include "Creature/UNIT_Monster.h"
 #include "Item/ACT_DropItem.h"
-#include "Item/OBJ_Item.h"
 #include "PaperSpriteComponent.h"
 #include "PaperSprite.h"
 #include "Manager/GI_GmInst.h"
 #include "UI/WG_HpBar.h"
-#include "Stat/ACP_StatMonster.h"
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -16,7 +14,11 @@ AUNIT_Monster::AUNIT_Monster()
 {
 	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Red);
 
-	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+	static ConstructorHelpers::FClassFinder<AActor> DIT(TEXT("Blueprint'/Game/BluePrints/Item/BP_DropItemActor.BP_DropItemActor_C'"));
+
+	if (DIT.Succeeded())
+		_ACT_DropItem = DIT.Class;
+
 
 
 }
@@ -49,65 +51,99 @@ void AUNIT_Monster::DeadUnit()
 	if (gmInst)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Monster ID : %d"), GetCharacterId());
-		
+
 		auto monsterData = gmInst->GetTableData<FMonsterData>(ETableDatas::MONSTER, GetCharacterId() % 100);
-		TArray<int32> rewardIdList;
+		TArray<FRewardData> possibleItemList; // 후보 선별 과정
+		TArray<TPair<int32, int32>> rewardIdList; // 최종 아이템만 담음
+	
 
 		if (monsterData)
 		{
 
-			int32 rand = FMath::RandRange(0, 101);
-			int32 sum = 0;
 
-			for (auto& item : monsterData->_dropItemLists)
+			int32 itemNum = FMath::RandRange(2, 5);
+			//	itemNum = 1;
+
+			for (int32 i = 0; i < itemNum; i++)
 			{
-				sum += item._probability;
 
-				if (sum <= rand)
+				//정규 분포 
+				//절대값으로 추출해서 1 2 3 단계로 나눔
+
+				int result = UtilsLib::NormalDistribution(0, 1);
+
+				for (auto& item : monsterData->_dropItemLists)
 				{
-					//처음은 무조건 골드
-					sum = 0;
-					rewardIdList.Add(item._itemId);
+					if (item._probability != result)
+						continue;
+
+					possibleItemList.Add(item);
+
+				}
+
+				if (possibleItemList.Num() == 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Item Count is Zero"));
+					return;
 				}
 				
+
+				int32 index = FMath::RandRange(0, possibleItemList.Num() - 1);
+
+				TPair<int32,int32> itemData;
+				itemData.Key = possibleItemList[index]._itemId;
+				itemData.Value = possibleItemList[index]._count;
+
+				rewardIdList.Add(itemData);
+
 			}
 
+
+
+			//SPAWN
+
 			TMap<FVector2D, bool> randPosList;
-			FVector2D randPos;
+			
 
-			for (auto& id : rewardIdList)
+			for (auto& item : rewardIdList)
 			{
-				//TODO : Get Item Info
-				UOBJ_Item* newItem = nullptr;
-				NewObject<UOBJ_Item>(newItem);
-				
-				newItem->SetItemInfo(id);
-
-
+				FVector2D randPos;
 				//TODO : Drop Item Actor
-				while (randPosList.Find(randPos) == false)
+				while (true)
 				{
-					randPos = FMath::RandPointInCircle(10.f);
+					randPos = FMath::RandPointInCircle(100.f);
+
+					if (randPosList.Find(randPos) == false)
+					{
+						randPosList.Add(randPos, true);
+						break;
+
+					}
+					
+
 				}
 
-				randPosList.Add(randPos, true);
-
-			
 				FActorSpawnParameters spawnParams;
 				spawnParams.Owner = this;
 
 				FVector spawnPos = GetActorLocation();
 				FRotator spawnRot = GetActorRotation();
 
-				auto dropItem = Cast<AACT_DropItem>(
-					GetWorld()->SpawnActor<AActor>(_ACT_DmgText, spawnPos, spawnRot, spawnParams));
+				FVector dropPos = FVector(spawnPos.X + randPos.X, spawnPos.Y + randPos.Y, spawnPos.Z + 200);
 
-				dropItem->CreateItem(newItem, FVector(randPos.X, randPos.Y , spawnPos.Z));
-			
+				auto dropItem = Cast<AACT_DropItem>(
+					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, dropPos, spawnRot, spawnParams));
+
+				int32 itemId = item.Key;
+				int32 itemCount = item.Value;
+
+				dropItem->CreateItem(itemId , itemCount,  gmInst);
+
 			}
 		}
+
 	}
 
-	
+
 }
 

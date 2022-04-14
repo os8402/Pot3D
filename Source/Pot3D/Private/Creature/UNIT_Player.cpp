@@ -5,7 +5,6 @@
 #include "Creature/UNIT_Monster.h"
 #include "Controller/UNIT_PlayerCT.h"
 #include "ACP_Weapon.h"
-#include "Stat/ACP_StatPlayer.h"
 #include <Camera/CameraComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Components/CapsuleComponent.h>

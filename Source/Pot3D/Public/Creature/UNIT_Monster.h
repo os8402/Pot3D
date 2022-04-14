@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UNIT_Character.h"
+#include "UtilsLib.h"
 #include "UNIT_Monster.generated.h"
 
 /**
@@ -22,5 +23,10 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void DeadUnit() override;
+
+private:
+	
+	UPROPERTY()
+	TSubclassOf<class AActor> _ACT_DropItem;
 
 };

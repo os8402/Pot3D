@@ -36,11 +36,16 @@ protected:
 public:
 	void CreateItem(int32 id, int32 count , UGI_GmInst* gmInst);
 
+private:
+	UFUNCTION()
+	void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* _MESH_Comp; 
+	UPROPERTY(VisibleAnywhere)
+	class UBoxComponent* _BOX_Trigger;
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* _WG_Info;
 

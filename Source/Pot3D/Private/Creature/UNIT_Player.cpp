@@ -24,6 +24,7 @@ AUNIT_Player::AUNIT_Player()
 	_SPC_Arm->SetRelativeRotation(FRotator(-60.f, 45.f, 0.f));
 	_SPC_Arm->bDoCollisionTest = false;
 
+	GetCapsuleComponent()->SetCollisionProfileName("Player");
 
 	_CAM_Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("CAM"));
 	_CAM_Cam->SetupAttachment(_SPC_Arm);

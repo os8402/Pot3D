@@ -12,9 +12,9 @@ UGI_GmInst::UGI_GmInst()
 	//if (StatData.Succeeded())
 	//	_statData = StatData.Object;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterData(TEXT("DataTable'/Game/Resources/Data/MonsterDataTable.MonsterDataTable'"));
-	if (MonsterData.Succeeded())
-		_monsterData = MonsterData.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> DropItemData(TEXT("DataTable'/Game/Resources/Data/DropRewardDataTable.DropRewardDataTable'"));
+	if (DropItemData.Succeeded())
+		_dropRewardData = DropItemData.Object;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> ItemData(TEXT("DataTable'/Game/Resources/Data/ItemDataTable.ItemDataTable'"));
 	if (ItemData.Succeeded())
@@ -27,7 +27,7 @@ UGI_GmInst::UGI_GmInst()
 
 	//테이블에 넣는 서순주의 
 	_tableLists.Add(_unitData);
-	_tableLists.Add(_monsterData);
+	_tableLists.Add(_dropRewardData);
 	_tableLists.Add(_itemData);
 
 

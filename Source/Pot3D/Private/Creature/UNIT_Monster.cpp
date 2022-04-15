@@ -52,12 +52,12 @@ void AUNIT_Monster::DeadUnit()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Monster ID : %d"), GetCharacterId());
 
-		auto monsterData = gmInst->GetTableData<FMonsterData>(ETableDatas::MONSTER, GetCharacterId() % 100);
+		auto dropItemData = gmInst->GetTableData<FDropItemData>(ETableDatas::MONSTER, GetCharacterId() % 100);
 		TArray<FRewardData> possibleItemList; // 후보 선별 과정
 		TArray<TPair<int32, int32>> rewardIdList; // 최종 아이템만 담음
 	
 
-		if (monsterData)
+		if (dropItemData)
 		{
 
 
@@ -68,11 +68,10 @@ void AUNIT_Monster::DeadUnit()
 			{
 
 				//정규 분포 
-				//절대값으로 추출해서 1 2 3 단계로 나눔
 
 				int result = UtilsLib::NormalDistribution(0, 1);
 
-				for (auto& item : monsterData->_dropItemLists)
+				for (auto& item : dropItemData->_dropItemLists)
 				{
 					if (item._probability != result)
 						continue;

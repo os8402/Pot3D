@@ -22,12 +22,13 @@ public:
 		std::mt19937 gen{ rd() };
 		std::normal_distribution<float> d(m, s);
 
-		int result = abs(d(gen));
+	//	int result = abs(d(gen));
 
-		if (result == 0)
-			result++;
+	//	if (result == 0)
+	//		result++;
 
-		return result;
+	//	return result;
+		return d(gen);
 	}
 
 

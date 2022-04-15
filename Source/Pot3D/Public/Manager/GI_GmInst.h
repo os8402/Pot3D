@@ -48,7 +48,7 @@ struct FRewardData : public FTableRowBase
 };
 
 USTRUCT()
-struct FMonsterData : public FTableRowBase
+struct FDropItemData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -134,7 +134,7 @@ private:
 	//UPROPERTY()
 	//class UDataTable* _statData;
 	UPROPERTY()
-	class UDataTable* _monsterData;
+	class UDataTable* _dropRewardData;
 	UPROPERTY()
 	class UDataTable* _itemData;
 	UPROPERTY()

@@ -45,6 +45,7 @@ struct FRewardData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _count;
 
+
 };
 
 USTRUCT()
@@ -76,6 +77,8 @@ struct FItemData : public FTableRowBase
 	FStatData _statData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool _isConsumable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ERarity _rarity;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

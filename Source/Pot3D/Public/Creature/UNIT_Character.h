@@ -145,7 +145,7 @@ protected:
 	float _hpZPos = 250.f;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
-	FVector2D _hpDrawSize = {200.f , 50.f};
+	FVector2D _hpDrawSize = {200.f , 70.f};
 
 	UPROPERTY(VisibleAnywhere , Category="UI")
 	class UWidgetComponent* _WG_HpBar;

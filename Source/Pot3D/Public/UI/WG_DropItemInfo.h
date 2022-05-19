@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "UEnumHeader.h"
 #include "WG_DropItemInfo.generated.h"
 
 /**
@@ -17,7 +18,7 @@ class POT3D_API UWG_DropItemInfo : public UUserWidget
 
 public:
 
-	void BindItemInfo(FText name, int32 count);
+	void BindItemInfo(class UOBJ_Item* item);
 
 private:
 	UPROPERTY(meta = (BindWidget))

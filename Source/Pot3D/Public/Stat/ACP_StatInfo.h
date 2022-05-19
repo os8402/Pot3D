@@ -31,12 +31,12 @@ public:
 public:
 
 	void SetCharacterId(int32 id);
-	void SetLevel(int32 level);
 	void SetHp(int32 newHp);
 	void SetMp(int32 newMp);
 	void SetExp(int32 exp);
 
 	int32 GetCharacterId() { return _chrId; }
+	FString GetChracterName() { return _chrName;}
 	int32 GetHp() { return _hp; }
 	int32 GetMaxHp() { return _maxHp; }
 	float GetHpRatio() { return  _hp / (float)_maxHp; }
@@ -47,8 +47,13 @@ public:
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
+private:
+
+
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _chrId;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	FString _chrName;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _level;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))

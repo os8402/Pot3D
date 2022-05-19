@@ -7,6 +7,7 @@
 #include "Inventory.generated.h"
 
 // This class does not need to be modified.
+
 class UOBJ_Item;
 
 UINTERFACE(MinimalAPI)
@@ -29,7 +30,7 @@ public:
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	
-	virtual void AddItem(UOBJ_Item* newItem) = 0;
+	virtual bool AddItem(UOBJ_Item* newItem) = 0;
 	virtual void RemoveItem(int32 slot) = 0;
 	virtual void UseItem(int32 slot) = 0;
 	virtual void RefreshInventory() = 0;

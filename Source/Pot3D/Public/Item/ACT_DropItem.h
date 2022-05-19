@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UEnumHeader.h"
 #include "ACT_DropItem.generated.h"
 
 class UOBJ_Item;
@@ -19,14 +20,8 @@ public:
 	AACT_DropItem();
 
 public:
-	FText& GetItemName() { return _name; }
-
-public:
-	bool SetItemInfo(int32 id, int32 count );
-
-public:
 	class UStaticMesh* GetPickUpMesh() { return _MESH_Pickup; }
-	void  SetPickUpMesh(const FName& meshPath);
+	void  SetPickUpMesh();
 
 protected:
 
@@ -34,7 +29,7 @@ protected:
 
 
 public:
-	void CreateItem(int32 id, int32 count , UGI_GmInst* gmInst);
+	void CreateItem(UOBJ_Item* newItem);
 
 private:
 	UFUNCTION()
@@ -59,16 +54,7 @@ private:
 	class UGI_GmInst* _gmInst;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
-	int32 _id;
-
-	UPROPERTY(VisibleAnywhere, Category = "Item")
-	FText _name;
-
-	UPROPERTY(VisibleAnywhere, Category = "Item")
-	FName _meshPath;
-
-	UPROPERTY(VisibleAnywhere, Category = "Item")
-	int32 _count;
+	UOBJ_Item* _dropItem;
 
 	UPROPERTY(EditAnywhere, Category = "Item")
 	class UStaticMesh* _MESH_Pickup;

@@ -29,5 +29,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_NameLv;
+
+
 	
 };

@@ -20,31 +20,8 @@ void UACP_StatInfo::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	SetLevel(_chrId);
-
 }
-void UACP_StatInfo::SetLevel(int32 level)
-{
-	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-	if (gmInst)
-	{
-		auto unitData = gmInst->GetTableData<FUnitData>(ETableDatas::UNIT, _chrId);
-
-
-		if (unitData)
-		{
-			_level = unitData->_statData._level;
-			_job = unitData->_statData._job;
-			_maxHp = unitData->_statData._maxHp;
-			SetHp(unitData->_statData._maxHp);
-			_attack = unitData->_statData._attack;
-			_maxMp = unitData->_statData._maxMp;
-			SetMp(unitData->_statData._maxMp);
-		}
-
-	}
-}
 void UACP_StatInfo::OnAttacked(int32 dmg)
 {
 	int32 newHp = _hp - dmg;
@@ -55,6 +32,27 @@ void UACP_StatInfo::OnAttacked(int32 dmg)
 void UACP_StatInfo::SetCharacterId(int32 id)
 {
 	_chrId = id;
+
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	if (gmInst)
+	{
+		auto unitData = gmInst->GetTableData<FUnitData>(ETableDatas::UNIT, _chrId);
+
+
+		if (unitData)
+		{
+			_level = unitData->_statData._level;
+			_chrName = unitData->_name;
+			_job = unitData->_statData._job;
+			_maxHp = unitData->_statData._maxHp;
+			SetHp(unitData->_statData._maxHp);
+			_attack = unitData->_statData._attack;
+			_maxMp = unitData->_statData._maxMp;
+			SetMp(unitData->_statData._maxMp);
+		}
+
+	}
 }
 
 void UACP_StatInfo::SetHp(int32 newHp)

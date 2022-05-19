@@ -11,6 +11,7 @@ void UWG_HpBar::BindHp(class UACP_StatInfo* statComp, FText name)
 	_currentStatComp = statComp;
 	statComp->GetOnHpChanged().AddUObject(this, &UWG_HpBar::UpdateHp);
 	_TB_NameLv->SetText(name);
+
 }
 
 void UWG_HpBar::UpdateHp()

@@ -9,11 +9,13 @@
 #include <Components/SceneCaptureComponent2D.h>
 #include <Camera/CameraShake.h>
 #include <Components/CanvasPanel.h>
+
 #include "Creature/UNIT_Character.h"
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
+#include "UI/WG_NamePlate.h"
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {
@@ -169,7 +171,8 @@ void AUNIT_PlayerCT::MoveToMouseCursor(float deltaTime)
 
 				_UP_owned->SetUnitStates(EUnitStates::ATTACK);
 
-				_ingameMainUI->GetMonsterInfoPanel()->SetVisibility(ESlateVisibility::Visible);
+				
+		
 			}
 
 		}
@@ -198,7 +201,7 @@ void AUNIT_PlayerCT::MoveToMouseCursor(float deltaTime)
 		//취소 진행
 		_UP_owned->SetUnitStates(EUnitStates::IDLE);
 
-		_ingameMainUI->GetMonsterInfoPanel()->SetVisibility(ESlateVisibility::Hidden);
+	//	_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Hidden);
 
 		if (bTarget)
 		{
@@ -273,6 +276,8 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 			return;
 
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorAttack->GetUserWidgetObject());
+		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Visible);
+		_ingameMainUI->GetNamePlate()->BindHp(other->GetStatComp());
 
 		if (_currentLookTarget.IsValid())
 		{
@@ -288,6 +293,7 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 	else
 	{
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorNormal->GetUserWidgetObject());
+		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Hidden);
 
 		if (_currentLookTarget.IsValid())
 		{
@@ -359,13 +365,13 @@ void AUNIT_PlayerCT::OpenDeadPanel()
 
 }
 
-void AUNIT_PlayerCT::AddItem(UOBJ_Item* newItem)
+bool AUNIT_PlayerCT::AddItem(UOBJ_Item* newItem)
 {
-
+	
 	if (newItem == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Add Item Failed"));
-		return;
+		return false;
 	}
 		
 
@@ -375,12 +381,14 @@ void AUNIT_PlayerCT::AddItem(UOBJ_Item* newItem)
 	if (emptySlot == -1)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Inventory Is Full"));
-		return;
+		return false;
 
 	}
 	_inventoryData.Add(emptySlot, newItem);
 
 	RefreshInventory();
+
+	return true;
 }
 
 void AUNIT_PlayerCT::RemoveItem(int32 slot)

@@ -58,7 +58,7 @@ void UGI_GmInst::RespawnMonster()
 
 		int32 x = FMath::RandRange(-800.f , 800.f);
 		int32 y = FMath::RandRange(-800.f , 800.f);
-		FVector spawnLoc = FVector(x, y, 120.f);
+		FVector spawnLoc = FVector(x, y, 0.f);
 		FRotator spawnRot = FRotator(FQuat::Identity);
 
 		auto respawnMonster = Cast<AUNIT_Monster>
@@ -67,10 +67,8 @@ void UGI_GmInst::RespawnMonster()
 		if (respawnMonster == nullptr)
 			return;
 
-		int32 _chrID = FMath::RandRange(1,3);
+		//int32 _chrID = FMath::RandRange(1,3);
 	
-
-
 		int32 key = GenerateKey(_keyMonsterCount);
 		respawnMonster->SetConnectedId(key);
 
@@ -86,7 +84,9 @@ void UGI_GmInst::RespawnMonster()
 void UGI_GmInst::DestoryMonster(int32 id)
 {
 	int key = id >> 24;
-	GetWorld()->DestroyActor(_monsterLists[key]);
+
+	//GetWorld()->DestroyActor(_monsterLists[key]);
+	_monsterLists.Remove(key);
 	--_totalMonsterCount;
 }
 
@@ -96,7 +96,7 @@ void UGI_GmInst::RespawnPlayer(class AUNIT_PlayerCT* ct)
 	FActorSpawnParameters spawnParams;
 	int32 x = FMath::RandRange(-800, 800);
 	int32 y = FMath::RandRange(-800, 800);
-	FVector spawnLoc = FVector(x, y, 120.f);
+	FVector spawnLoc = FVector(x, y, 0.f);
 	FRotator spawnRot = FRotator(FQuat::Identity);
 
 	auto respawnPlayer = Cast<AUNIT_Player>(

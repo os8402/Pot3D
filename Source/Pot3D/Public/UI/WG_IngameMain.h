@@ -16,11 +16,11 @@ class POT3D_API UWG_IngameMain : public UUserWidget
 
 public:
 
-	void BindHp(class UACP_StatInfo* statComp);
+	void BindCreatureInfo(class UACP_StatInfo* statComp);
 	void UpdateHp();
 
 public:
-	class UCanvasPanel* GetMonsterInfoPanel() { return _CP_MonsterInfo; }
+	class UWG_NamePlate* GetNamePlate() { return WBP_NamePlate_1; }
 
 public :
 
@@ -28,21 +28,24 @@ public :
 	class UImage* IMG_Main;
 
 
-	UPROPERTY(meta = (BindWidget))
+	/*UPROPERTY(meta = (BindWidget))
 	class UProgressBar* _PB_HpMainBar;
 
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* _PB_MpMainBar;
+	class UProgressBar* _PB_MpMainBar;*/
 
 	UPROPERTY(meta = (BindWidget))
-	class UCanvasPanel* _CP_MonsterInfo;
+	class UWG_NamePlate* WBP_NamePlate_1;
 
-	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* _PB_MonsterInfoHpBar;
+	//UPROPERTY(meta = (BindWidget))
+	//class UProgressBar* _PB_MonsterInfoHpBar;
 
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_MonsterInfoName;
+	//UPROPERTY(meta = (BindWidget))
+	//class UTextBlock* _TB_MonsterInfoName;
 
 	TWeakObjectPtr<class UACP_StatInfo> _currentStatComp;
+
+//	UPROPERTY(meta = (BindWidget))
+//	class UWG_GlassBallBar* _GB_HpBar;
 	
 };

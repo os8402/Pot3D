@@ -8,6 +8,7 @@
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
 #include "ACP_Weapon.h"
+
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 #include <Components/CapsuleComponent.h>
@@ -53,7 +54,7 @@ AUNIT_Character::AUNIT_Character()
 	_WG_HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 	_WG_HpBar->SetRelativeLocation(FVector(0.f, 0.f, _hpZPos));
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_HpBar(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_HpBar.WBP_HpBar_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_HpBar(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/NamePlate/WBP_NamePlateSmall_1.WBP_NamePlateSmall_1_C'"));
 
 	if (WBP_HpBar.Succeeded())
 	{
@@ -98,15 +99,19 @@ AUNIT_Character::AUNIT_Character()
 	_Audio_Comp->bIsPaused = false;
 
 	_PS_HitEff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PARTICLE"));
+	_PS_HitEff->SetupAttachment(GetMesh());
+	FVector effPos = FVector(0.f, 0.f, 50.f);
+	_PS_HitEff->SetRelativeLocation(effPos);
+	_PS_HitEff->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> HIT_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Primary/FX/P_Kwang_Primary_Impact.P_Kwang_Primary_Impact'"));
 
 	if (HIT_EFF.Succeeded())
 	{
 		_PS_HitEff->SetTemplate(HIT_EFF.Object);
 		_PS_HitEff->bAutoActivate = false;
-		_PS_HitEff->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
-		//_PS_HitEff->SetupAttachment(GetMesh());
-	
+
 	}
 
 
@@ -245,7 +250,6 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	curSpawnDmgActor->SetMyOwner(this);
 	curSpawnDmgActor->UpdateDamage();
 
-	_PS_HitEff->SetRelativeLocation(FVector::ZeroVector);
 	_PS_HitEff->Activate(true);
 	
 	//hp바 표시

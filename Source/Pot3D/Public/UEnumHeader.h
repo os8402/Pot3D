@@ -103,6 +103,18 @@ enum class EItemTypes : uint8
 	END
 };
 
+UENUM(BlueprintType)
+enum class ERarity : uint8
+{
+	NORMAL = 0 UMETA(DisplayName = "NORMAL"),
+	RARE UMETA(DisplayName = "RARE"),
+	UNIQUE UMETA(DisplayName = "UNIQUE"),
+	LEGENDARY UMETA(DisplayName = "LEGENDARY"),
+
+	END
+};
+
+
 class POT3D_API UEnumHeader
 {
 public:

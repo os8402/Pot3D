@@ -3,7 +3,9 @@
 
 #include "Item/ACT_DropItem.h"
 #include "UI/WG_DropItemInfo.h"
-#include "Manager/GI_GmInst.h"
+#include "Item/OBJ_Item.h"
+#include "Controller/UNIT_PlayerCT.h"
+
 #include "Creature/UNIT_Player.h"
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -28,12 +30,10 @@ AACT_DropItem::AACT_DropItem()
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropMesh"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_BOX_Trigger->SetBoxExtent(FVector(30.f,30.f,30.f));
-
 	_BOX_Trigger->SetGenerateOverlapEvents(true);
 
 	_WG_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
 	_WG_Info->SetupAttachment(_MESH_Comp);
-
 	_WG_Info->SetWidgetSpace(EWidgetSpace::Screen);
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
@@ -65,26 +65,26 @@ void AACT_DropItem::PostInitializeComponents()
 
 }
 
-void AACT_DropItem::CreateItem(int32 id , int32 count ,UGI_GmInst* gmInst)
+void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 {
 	
-	_gmInst = gmInst;
-
-	bool flag =  SetItemInfo(id,count);
-
-	if (flag == false)
+	if (newItem == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Create Item is Failed"));
+		UE_LOG(LogTemp, Warning, TEXT("Drop Item Is Null"));
 		return;
 	}
 
-
+	_dropItem = newItem;
+	
+	SetPickUpMesh();
 
 	_MESH_Comp->SetStaticMesh(GetPickUpMesh());
 
+	// UI 등록
+
 	auto infoWidget = Cast<UWG_DropItemInfo>(_WG_Info->GetUserWidgetObject());
-	infoWidget->BindItemInfo(_name, _count);
-	
+	infoWidget->BindItemInfo(_dropItem);
+
 	_WG_Info->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 
 
@@ -101,46 +101,24 @@ void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AAct
 		UE_LOG(LogTemp, Log, TEXT("player check"));
 
 		//TODO : 인벤토리에 넣음
+		auto pc = Cast<AUNIT_PlayerCT>(player->GetController());
+		bool flag = pc->AddItem(_dropItem);
 
-
-		Destroy();
-
-	}
-
-}
-
-bool AACT_DropItem::SetItemInfo(int32 id, int32 count)
-{
-
-	bool flag = false;
-
-	if (_gmInst)
-	{
-		auto itemData = _gmInst->GetTableData<FItemData>(ETableDatas::ITEM, id);
-
-		if (itemData)
+		if (flag)
 		{
-			_id = itemData->_id;
-			_name = itemData->_name;
-			_meshPath = itemData->_meshPath;
-			_count = count;
-			SetPickUpMesh(_meshPath);
-			
-			flag = true;
+			UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
+			Destroy();
 		}
-
-
+	
 	}
-
-	return flag;
-
 
 }
 
-void AACT_DropItem::SetPickUpMesh(const FName& meshPath)
+
+void AACT_DropItem::SetPickUpMesh()
 {
 	UStaticMesh* newMesh = Cast<UStaticMesh>(
-	StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *meshPath.ToString()));
+	StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *_dropItem->GetMeshPath().ToString()));
 
 	if (newMesh)
 	{

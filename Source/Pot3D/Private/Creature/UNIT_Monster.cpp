@@ -1,14 +1,17 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Item/OBJ_Item.h"
 
 #include "Creature/UNIT_Monster.h"
 #include "Item/ACT_DropItem.h"
-#include "PaperSpriteComponent.h"
-#include "PaperSprite.h"
 #include "Manager/GI_GmInst.h"
-#include "UI/WG_HpBar.h"
+#include "UI/WG_NamePlateSmall.h"
+
+
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
+#include "PaperSpriteComponent.h"
+#include "PaperSprite.h"
 
 AUNIT_Monster::AUNIT_Monster()
 {
@@ -27,13 +30,12 @@ void AUNIT_Monster::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	auto hpBarWidget = Cast<UWG_HpBar>(_WG_HpBar->GetUserWidgetObject());
+	auto hpBarWidget = Cast<UWG_NamePlateSmall>(_WG_HpBar->GetUserWidgetObject());
 
 	if (hpBarWidget)
 	{
-		FString chrName = TEXT("유령 기사");
-		FString barInfoStr = FString::Printf(TEXT("%s LV %d"), *chrName, 1);
-		hpBarWidget->BindHp(_ACP_Stat, FText::FromString(barInfoStr));
+	
+		hpBarWidget->BindHp(_ACP_Stat);
 	}
 }
 
@@ -54,7 +56,7 @@ void AUNIT_Monster::DeadUnit()
 
 		auto dropItemData = gmInst->GetTableData<FDropItemData>(ETableDatas::MONSTER, GetCharacterId() % 100);
 		TArray<FRewardData> possibleItemList; // 후보 선별 과정
-		TArray<TPair<int32, int32>> rewardIdList; // 최종 아이템만 담음
+		TArray<UOBJ_Item*> rewardIdList; // 최종 아이템만 담음
 	
 
 		if (dropItemData)
@@ -69,7 +71,7 @@ void AUNIT_Monster::DeadUnit()
 
 				//정규 분포 
 
-				int result = UtilsLib::NormalDistribution(0, 1);
+				int32 result = UtilsLib::NormalDistribution(0, 1);
 
 				for (auto& item : dropItemData->_dropItemLists)
 				{
@@ -87,13 +89,30 @@ void AUNIT_Monster::DeadUnit()
 				}
 				
 
+				auto newItemClass = UOBJ_Item::StaticClass();
+				auto newItem = NewObject<UOBJ_Item>(newItemClass);
+
 				int32 index = FMath::RandRange(0, possibleItemList.Num() - 1);
 
-				TPair<int32,int32> itemData;
-				itemData.Key = possibleItemList[index]._itemId;
-				itemData.Value = possibleItemList[index]._count;
+				int32 id = possibleItemList[index]._itemId;
+				int32 count = possibleItemList[index]._count;
 
-				rewardIdList.Add(itemData);
+				//골드는 랜덤으로..
+				if (id == 10001)
+				{
+					count = FMath::RandRange(count - 50 , count + 500);
+				}
+
+	
+				bool flag = newItem->SetItemInfo(gmInst, id, count);
+
+				if (flag == false)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Create Item is Failed"));
+					return;
+				}
+
+				rewardIdList.Add(newItem);
 
 			}
 
@@ -133,13 +152,15 @@ void AUNIT_Monster::DeadUnit()
 				auto dropItem = Cast<AACT_DropItem>(
 					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, dropPos, spawnRot, spawnParams));
 
-				int32 itemId = item.Key;
-				int32 itemCount = item.Value;
+	
+				dropItem->CreateItem(item);
 
-				dropItem->CreateItem(itemId , itemCount,  gmInst);
+
 
 			}
 		}
+
+		gmInst->DestoryMonster(GetConnectedId());
 
 	}
 

@@ -72,10 +72,9 @@ void AUNIT_Player::SearchActorInfo()
 
 		if (hitResult.bBlockingHit)
 		{
-			auto obj = Cast<AUNIT_Character>(hitResult.Actor);
-			pc->CheckActorOther(obj);
+			auto other = Cast<AUNIT_Character>(hitResult.Actor);
+			pc->CheckActorOther(other);
 		}
-
 
 	}
 }

@@ -268,6 +268,8 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 	if (_UP_owned == nullptr)
 		return;
 
+	
+
 	//Å¸°ÙÀÌ x  or  ±âÁ¸¿¡ Àâ¾ÆµÐ Å¸°ÙÀÌ ¾Æ´Ô + º»ÀÎÀÌ ¾Æ´Ò ½Ã 
 	if (other && _UP_owned != other)
 	{
@@ -275,17 +277,23 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 		if (other->GetUnitStates() == EUnitStates::DEAD)
 			return;
 
+		
+
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorAttack->GetUserWidgetObject());
 		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Visible);
 		_ingameMainUI->GetNamePlate()->BindHp(other->GetStatComp());
 
+	
+
 		if (_currentLookTarget.IsValid())
 		{
 			//	_currentLookTarget.Get()-> TODO ¾Æ¿ô¶óÀÎ ÇØÁ¦
+			_currentLookTarget->SetOutline(false);
 			_currentLookTarget.Reset();
 		}
 
 		_currentLookTarget = other;
+		_currentLookTarget->SetOutline(true);
 
 		//TODO : ¾Æ¿ô¶óÀÎ È°¼ºÈ­ 
 
@@ -294,9 +302,12 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 	{
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorNormal->GetUserWidgetObject());
 		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Hidden);
+		
 
 		if (_currentLookTarget.IsValid())
 		{
+			_currentLookTarget->SetOutline(false);
+			
 			if (_UP_owned->GetTargetEnemy().IsValid())
 			{
 				if (_currentLookTarget.Get() == _UP_owned->GetTargetEnemy().Get())
@@ -307,7 +318,10 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 
 			//TODO : ¾Æ¿ô¶óÀÎ ºñÈ°¼ºÈ­
 			//	_currentLookTarget.Get()->
+		
 			_currentLookTarget.Reset();
+			
+
 		}
 
 	}

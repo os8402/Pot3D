@@ -48,6 +48,8 @@ public:
 	void VisibleHpBar();
 	virtual void DeadUnit();
 
+	void SetOutline(bool on = true);
+
 	void SetDebugText();
 
 
@@ -99,12 +101,6 @@ protected:
 
 	//MESH
 	class UUNIT_Anim* _unitAnim;
-
-	UPROPERTY(EditAnywhere, Category = "Mesh")
-	class USkeletalMeshComponent* _SKM_OutLineSkelMesh;
-
-	UPROPERTY(EditAnywhere, Category = "Mesh")
-	class UMaterial* _MAT_OutlineMat;
 
 protected:
 

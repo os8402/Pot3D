@@ -284,6 +284,16 @@ void AUNIT_Character::DeadUnit()
 	_PSPR_MinimapIcon->SetSprite(nullptr);
 }
 
+void AUNIT_Character::SetOutline(bool on)
+{
+	GetMesh()->SetRenderCustomDepth(on);
+	if(on)
+		GetMesh()->SetCustomDepthStencilValue(2);
+		
+	else
+		GetMesh()->SetCustomDepthStencilValue(0);
+}
+
 void AUNIT_Character::SetDebugText()
 {
 

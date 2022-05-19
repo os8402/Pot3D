@@ -4,6 +4,7 @@
 #include "UI/WG_IngameMain.h"
 #include "Stat/ACP_StatInfo.h"
 #include "UI/WG_GlassBallBar.h"
+#include "UI/WG_NamePlate.h"
 
 
 #include <Components/ProgressBar.h>
@@ -12,6 +13,8 @@ void UWG_IngameMain::BindCreatureInfo(class UACP_StatInfo* statComp)
 {
 	_currentStatComp = statComp;
 	//_currentStatComp->GetOnHpChanged().AddUObject(this, &UWG_IngameMain::UpdateHp);
+
+	WBP_NamePlate_1->SetVisibility(ESlateVisibility::Hidden);
 
 }
 

@@ -13,6 +13,7 @@
 #include "Creature/UNIT_Character.h"
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
+#include "Item/ACT_DropItem.h"
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
@@ -77,7 +78,7 @@ void AUNIT_PlayerCT::BeginPlay()
 
 	if (_ingameMainUI)
 	{
-		//_ingameMainUI->BindHp(_UP_owned->GetStatComp());
+		_ingameMainUI->BindStat(_UP_owned->GetStatComp());
 		//_ingameMainUI->UpdateHp();
 	}
 }
@@ -121,6 +122,8 @@ void AUNIT_PlayerCT::SetupInputComponent()
 
 	InputComponent->BindAction("Move", IE_Pressed, this, &AUNIT_PlayerCT::OnMovePressed);
 	InputComponent->BindAction("Move", IE_Released, this, &AUNIT_PlayerCT::OnMoveReleased);
+	
+	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUNIT_PlayerCT::OpenInventory);
 }
 
 void AUNIT_PlayerCT::InitPlayerUnit()
@@ -268,7 +271,7 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 	if (_UP_owned == nullptr)
 		return;
 
-	
+
 
 	//Å¸°ÙÀÌ x  or  ±âÁ¸¿¡ Àâ¾ÆµÐ Å¸°ÙÀÌ ¾Æ´Ô + º»ÀÎÀÌ ¾Æ´Ò ½Ã 
 	if (other && _UP_owned != other)
@@ -276,8 +279,6 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 		//Á×¾úÀ¸¸é Å½Áö x
 		if (other->GetUnitStates() == EUnitStates::DEAD)
 			return;
-
-		
 
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorAttack->GetUserWidgetObject());
 		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Visible);
@@ -326,6 +327,27 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 
 	}
 
+}
+
+void AUNIT_PlayerCT::CheckDropItem(class AACT_DropItem* item)
+{
+
+	if (_currentLookItem.IsValid())
+	{
+		_currentLookItem->SetOutline(false);
+		_currentLookItem.Reset();
+	}
+
+	if (item)
+	{	
+		_currentLookItem = item;
+		_currentLookItem->SetOutline(true);
+	}
+	else
+	{
+		_currentLookItem.Reset();
+	}
+	
 }
 
 void AUNIT_PlayerCT::ChaseToEnemy(float deltaTime)
@@ -422,6 +444,11 @@ void AUNIT_PlayerCT::UseItem(int32 slot)
 void AUNIT_PlayerCT::RefreshInventory()
 {
 	
+}
+
+void AUNIT_PlayerCT::OpenInventory()
+{
+	_ingameMainUI->OpenInventory();
 }
 
 int32 AUNIT_PlayerCT::GetEmptySlot()

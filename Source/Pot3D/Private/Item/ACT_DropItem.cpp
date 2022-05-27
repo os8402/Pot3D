@@ -18,23 +18,23 @@ AACT_DropItem::AACT_DropItem()
 
 	RootComponent = defalutRoot;
 
-	
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 
-	
 	_BOX_Trigger->SetupAttachment(RootComponent);
 	_MESH_Comp->SetupAttachment(_BOX_Trigger);
 
 
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropMesh"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
-	_BOX_Trigger->SetBoxExtent(FVector(30.f,30.f,30.f));
+	_BOX_Trigger->SetBoxExtent(FVector(30.f, 30.f, 30.f));
 	_BOX_Trigger->SetGenerateOverlapEvents(true);
 
 	_WG_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
 	_WG_Info->SetupAttachment(_MESH_Comp);
 	_WG_Info->SetWidgetSpace(EWidgetSpace::Screen);
+
+
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
 	if (UW.Succeeded())
@@ -52,13 +52,10 @@ void AACT_DropItem::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	_WG_Info->InitWidget();
 
-
 	_MESH_Comp->SetSimulatePhysics(true);
-	_MESH_Comp->SetEnableGravity(true);	
+	_MESH_Comp->SetEnableGravity(true);
 	_BOX_Trigger->SetSimulatePhysics(true);
 	_BOX_Trigger->SetEnableGravity(true);
-
-
 
 	_BOX_Trigger->OnComponentBeginOverlap.AddDynamic(this, &AACT_DropItem::OnCharacterOverlap);
 
@@ -67,7 +64,7 @@ void AACT_DropItem::PostInitializeComponents()
 
 void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 {
-	
+
 	if (newItem == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Drop Item Is Null"));
@@ -75,7 +72,7 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 	}
 
 	_dropItem = newItem;
-	
+
 	SetPickUpMesh();
 
 	_MESH_Comp->SetStaticMesh(GetPickUpMesh());
@@ -109,7 +106,7 @@ void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AAct
 			UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
 			Destroy();
 		}
-	
+
 	}
 
 }
@@ -118,10 +115,23 @@ void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AAct
 void AACT_DropItem::SetPickUpMesh()
 {
 	UStaticMesh* newMesh = Cast<UStaticMesh>(
-	StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *_dropItem->GetMeshPath().ToString()));
+		StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *_dropItem->GetMeshPath().ToString()));
 
 	if (newMesh)
 	{
 		_MESH_Pickup = newMesh;
 	}
+}
+
+void AACT_DropItem::SetOutline(bool on)
+{
+
+	_MESH_Comp->SetRenderCustomDepth(on);
+
+	if (on)
+		_MESH_Comp->SetCustomDepthStencilValue(2);
+
+	else
+		_MESH_Comp->SetCustomDepthStencilValue(0);
+
 }

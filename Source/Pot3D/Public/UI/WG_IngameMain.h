@@ -16,11 +16,14 @@ class POT3D_API UWG_IngameMain : public UUserWidget
 
 public:
 
-	void BindCreatureInfo(class UACP_StatInfo* statComp);
+	void BindStat(class UACP_StatInfo* statComp);
+	void BindCreatureInfo();
+
 	void UpdateHp();
+	void OpenInventory();
 
 public:
-	class UWG_NamePlate* GetNamePlate() { return WBP_NamePlate_1; }
+	class UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
 
 public :
 
@@ -35,7 +38,7 @@ public :
 	class UProgressBar* _PB_MpMainBar;*/
 
 	UPROPERTY(meta = (BindWidget))
-	class UWG_NamePlate* WBP_NamePlate_1;
+	class UWG_NamePlate* _WBP_NamePlate_1;
 
 	//UPROPERTY(meta = (BindWidget))
 	//class UProgressBar* _PB_MonsterInfoHpBar;
@@ -47,5 +50,8 @@ public :
 
 //	UPROPERTY(meta = (BindWidget))
 //	class UWG_GlassBallBar* _GB_HpBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWG_Inventory* _WBP_Inventory;
 	
 };

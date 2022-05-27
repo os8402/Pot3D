@@ -42,7 +42,14 @@ public:
 	float GetHpRatio() { return  _hp / (float)_maxHp; }
 	int32 GetLevel() { return _level; }
 	int32 GetJob() { return _job; }
+
 	int32 GetAttack() { return _attack; }
+	int32 GetDefense() { return _defence; }
+	int32 GetResilience() { return _resilience; }
+	int32 GetStrength() { return _strength; }
+	int32 GetDexterity() { return _dexterity; }
+	int32 GetIntelligence() { return _intelligence; }
+	int32 GetLuck() { return _luck; }
 
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
@@ -58,17 +65,30 @@ private:
 	int32 _level;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _job;
+
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _hp;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _mp;
-
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _maxHp;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _maxMp;
+
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _attack;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _defence;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _resilience;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _strength;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _dexterity;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _intelligence;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _luck;
 
 	FOnHpChanged _onHpChanged;
 	FOnHpChanged _onMpChanged;

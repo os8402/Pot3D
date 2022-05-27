@@ -5,6 +5,8 @@
 #include "Creature/UNIT_Monster.h"
 #include "Controller/UNIT_PlayerCT.h"
 #include "ACP_Weapon.h"
+#include "Item/ACT_DropItem.h"
+
 #include <Camera/CameraComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Components/CapsuleComponent.h>
@@ -67,13 +69,24 @@ void AUNIT_Player::SearchActorInfo()
 
 	if (pc)
 	{
-		FHitResult hitResult;
-		pc->GetHitResultUnderCursor(ECC_Pawn, true, hitResult);
+		FHitResult hitOther;
+		pc->GetHitResultUnderCursor(ECC_Pawn, true, hitOther);
 
-		if (hitResult.bBlockingHit)
+		FHitResult hitItem;
+		pc->GetHitResultUnderCursor(ECC_GameTraceChannel3, true, hitItem);
+	
+		if (hitOther.bBlockingHit)
 		{
-			auto other = Cast<AUNIT_Character>(hitResult.Actor);
+			//캐릭터 [ 몬스터, npc = 추후 멀티 추가되면 플레이어도 넣긴 할듯]
+			auto other = Cast<AUNIT_Character>(hitOther.Actor);
 			pc->CheckActorOther(other);
+		}
+
+		if (hitItem.bBlockingHit)
+		{
+			//드랍 아이템 확인
+			auto dropItem = Cast<AACT_DropItem>(hitItem.Actor);
+			pc->CheckDropItem(dropItem);
 		}
 
 	}

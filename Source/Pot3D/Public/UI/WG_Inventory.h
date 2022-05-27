@@ -13,5 +13,12 @@ UCLASS()
 class POT3D_API UWG_Inventory : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	class UWG_Status* GetStatus() {return _WBP_Status;}
+
+private:
+
+	UPROPERTY(meta = (BindWidget))
+	class UWG_Status* _WBP_Status;
 };

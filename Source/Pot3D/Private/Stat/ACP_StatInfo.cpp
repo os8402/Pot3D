@@ -47,9 +47,16 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 			_job = unitData->_statData._job;
 			_maxHp = unitData->_statData._maxHp;
 			SetHp(unitData->_statData._maxHp);
-			_attack = unitData->_statData._attack;
 			_maxMp = unitData->_statData._maxMp;
 			SetMp(unitData->_statData._maxMp);
+
+			_attack = unitData->_statData._attack;
+			_defence = unitData->_statData._defence;
+			_resilience = unitData->_statData._resilience;
+			_strength = unitData->_statData._strength;
+			_dexterity = unitData->_statData._dexterity;
+			_intelligence = unitData->_statData._intelligence;
+			_luck = unitData->_statData._luck;
 		}
 
 	}
@@ -74,6 +81,6 @@ void UACP_StatInfo::SetMp(int32 newMp)
 
 void UACP_StatInfo::SetExp(int32 exp)
 {
-
+	
 }
 

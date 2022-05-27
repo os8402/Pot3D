@@ -24,11 +24,22 @@ struct FStatData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _defence;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _resilience;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _strength;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _dexterity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _intelligence;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _luck;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _maxHp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _maxMp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _maxExp;
+
 
 };
 

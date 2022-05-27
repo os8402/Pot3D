@@ -37,8 +37,13 @@ public:
 
 	void SetMoveDest(const FVector destPos, float deltaTime);
 
+	// npc + 몬스터 정보 확인
 	void CheckActorOther(class AUNIT_Character* other);
-	
+	// 드랍 아이템 확인
+	void CheckDropItem(class AACT_DropItem* item);
+
+
+	//적 추적
 	void ChaseToEnemy(float deltaTime);
 
 
@@ -62,12 +67,17 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* _WC_CursorAttack;
 
-	//현재 마우스로 보는 타겟 정보
-	
+	//현재 마우스로 보는 몬스터 + npc 정보
 	UPROPERTY(VisibleAnywhere)
 	TWeakObjectPtr<class AUNIT_Character> _currentLookTarget;
 
 
+	//현재 마우스로 보는 드랍 아이템 정보
+	UPROPERTY(VisibleAnywhere)
+	TWeakObjectPtr<class AACT_DropItem> _currentLookItem;
+
+
+	//플레이어 캐릭터
 	UPROPERTY(VisibleAnywhere)
 	class AUNIT_Player* _UP_owned;
 
@@ -102,6 +112,7 @@ public:
 	virtual void RemoveItem(int32 slot);
 	virtual void UseItem(int32 slot);
 	virtual void RefreshInventory();
+	virtual void OpenInventory();
 	virtual int32 GetEmptySlot();
 
 private:

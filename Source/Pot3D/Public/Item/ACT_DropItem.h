@@ -23,6 +23,9 @@ public:
 	class UStaticMesh* GetPickUpMesh() { return _MESH_Pickup; }
 	void  SetPickUpMesh();
 
+	void SetOutline(bool on);
+
+
 protected:
 
 	virtual void PostInitializeComponents() override;

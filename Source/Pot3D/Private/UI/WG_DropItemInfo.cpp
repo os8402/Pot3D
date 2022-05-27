@@ -3,6 +3,7 @@
 
 #include "UI/WG_DropItemInfo.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 #include "Item/OBJ_Item.h"
 
@@ -50,3 +51,8 @@ void UWG_DropItemInfo::BindItemInfo(class UOBJ_Item* item)
 	_TB_ItemName->SetText(FText::FromString(conv));
 
 }
+
+void  UWG_DropItemInfo::LookItem()
+{
+	//_IMG_BG->SetColorAndOpacity();
+}	

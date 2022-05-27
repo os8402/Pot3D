@@ -5,16 +5,26 @@
 #include "Stat/ACP_StatInfo.h"
 #include "UI/WG_GlassBallBar.h"
 #include "UI/WG_NamePlate.h"
+#include "UI/WG_Inventory.h"
+#include "UI/WG_Status.h"
 
 
 #include <Components/ProgressBar.h>
 
-void UWG_IngameMain::BindCreatureInfo(class UACP_StatInfo* statComp)
+void UWG_IngameMain::BindStat(class UACP_StatInfo* statComp)
 {
 	_currentStatComp = statComp;
-	//_currentStatComp->GetOnHpChanged().AddUObject(this, &UWG_IngameMain::UpdateHp);
+	_currentStatComp->GetOnHpChanged().AddUObject(this, &UWG_IngameMain::UpdateHp);
+}
 
-	WBP_NamePlate_1->SetVisibility(ESlateVisibility::Hidden);
+void UWG_IngameMain::BindCreatureInfo()
+{
+
+	//
+
+	_WBP_NamePlate_1->SetVisibility(ESlateVisibility::Hidden);
+
+
 
 }
 
@@ -28,4 +38,27 @@ void UWG_IngameMain::UpdateHp()
 	//	_GB_HpBar->SetProgessBar(rand);
 	}
 	
+}
+
+void UWG_IngameMain::OpenInventory()
+{
+	ESlateVisibility visible = _WBP_Inventory->GetVisibility();
+	bool open = false;
+
+	open = (visible == ESlateVisibility::Hidden) ? false : true;
+	
+	if(open == false)
+		_WBP_Inventory->SetVisibility(ESlateVisibility::Visible);
+	else
+		_WBP_Inventory->SetVisibility(ESlateVisibility::Hidden);
+
+	//TODO : ½ºÅÈ °»½Å 
+
+	if (_currentStatComp.IsValid())
+	{
+		_WBP_Inventory->GetStatus()->RefreshStat(_currentStatComp.Get());
+	}
+
+
+
 }

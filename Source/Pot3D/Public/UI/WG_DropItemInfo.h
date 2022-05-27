@@ -20,7 +20,13 @@ public:
 
 	void BindItemInfo(class UOBJ_Item* item);
 
+	void LookItem();
+
 private:
+	
+	UPROPERTY(meta = (BindWidget))
+	class UImage* _IMG_BG;
+
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_ItemName;
 

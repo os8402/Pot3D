@@ -31,6 +31,14 @@ public:
 		return d(gen);
 	}
 
+	static FText ConvertToFText(int32 data)
+	{
+		FString conv = FString::FromInt(data);
+		FText fText = FText::FromString(conv);
+
+		return fText;
+	}
+
 
 	template<typename t1>
 	static t1* FindObjHelper(const TCHAR* path)

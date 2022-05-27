@@ -287,6 +287,7 @@ void AUNIT_Character::DeadUnit()
 void AUNIT_Character::SetOutline(bool on)
 {
 	GetMesh()->SetRenderCustomDepth(on);
+
 	if(on)
 		GetMesh()->SetCustomDepthStencilValue(2);
 		

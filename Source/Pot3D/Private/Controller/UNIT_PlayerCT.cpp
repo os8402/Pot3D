@@ -17,6 +17,7 @@
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
+#include "Engine/PostProcessVolume.h"
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {
@@ -45,7 +46,13 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	if (WB_Ingame.Succeeded())
 		_ingameMainClass = WB_Ingame.Class;
 	
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_MONSTER(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Monster.MI_InteractiveOutline_Monster'"));
+	if(MID_MONSTER.Succeeded())
+		_MID_Outline.Add(MID_MONSTER.Object);
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_ITEM(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
+	if (MID_ITEM.Succeeded())
+		_MID_Outline.Add(MID_ITEM.Object);
 }
 
 void AUNIT_PlayerCT::OnPossess(APawn* aPawn)
@@ -81,6 +88,47 @@ void AUNIT_PlayerCT::BeginPlay()
 		_ingameMainUI->BindStat(_UP_owned->GetStatComp());
 		//_ingameMainUI->UpdateHp();
 	}
+
+	//TODO : Post process
+
+	TArray<AActor*> actors;
+
+	UGameplayStatics::GetAllActorsOfClass(this, APostProcessVolume::StaticClass(), actors);
+
+	if (actors.Num() > 0)
+	{
+		
+
+		_ppv = Cast<APostProcessVolume>(actors[0]);
+
+		if (_ppv)
+		{
+			FPostProcessSettings& postProcessSettings = _ppv->Settings;
+			FWeightedBlendable weightBlendable;
+			weightBlendable.Object = _MID_Outline[0];
+			weightBlendable.Weight = 1;
+
+			for (int32 i = 0; i < (int32)EPostProcess::END; i++)
+			{
+				postProcessSettings.WeightedBlendables.Array.Add(weightBlendable);
+			}
+
+		}
+	}
+	
+}
+
+void AUNIT_PlayerCT::SetPostProcessOutline(EOutline outline)
+{
+
+	FPostProcessSettings& postProcessSettings = _ppv->Settings;
+
+	FWeightedBlendable weightBlendable;
+	weightBlendable.Object = _MID_Outline[(int32)outline];
+	weightBlendable.Weight = 1;
+
+	postProcessSettings.WeightedBlendables.Array[(int32)EPostProcess::OUTLINE] = weightBlendable;
+	
 }
 
 void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
@@ -293,6 +341,7 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 			_currentLookTarget.Reset();
 		}
 
+		SetPostProcessOutline(EOutline::MONSTER);
 		_currentLookTarget = other;
 		_currentLookTarget->SetOutline(true);
 
@@ -340,6 +389,7 @@ void AUNIT_PlayerCT::CheckDropItem(class AACT_DropItem* item)
 
 	if (item)
 	{	
+		SetPostProcessOutline(EOutline::ITEM);
 		_currentLookItem = item;
 		_currentLookItem->SetOutline(true);
 	}
@@ -385,6 +435,8 @@ void AUNIT_PlayerCT::SetTargetEmpty()
 
 	}
 }
+
+
 
 void AUNIT_PlayerCT::OnMovePressed()
 {

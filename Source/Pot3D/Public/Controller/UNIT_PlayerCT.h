@@ -51,6 +51,9 @@ public:
 	//타켓이 사라질 경우
 	void SetTargetEmpty();
 
+
+	void SetPostProcessOutline(EOutline outline);
+
 	void OnMovePressed();
 	void OnMoveReleased();
 
@@ -81,6 +84,16 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class AUNIT_Player* _UP_owned;
 
+
+
+//POST PROCESS
+private:
+
+	UPROPERTY()
+	class APostProcessVolume* _ppv;
+
+	UPROPERTY(EditAnywhere, Category = "Post Process")
+	TArray<UMaterialInterface*> _MID_Outline;
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Pawn")

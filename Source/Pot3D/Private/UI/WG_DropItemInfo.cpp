@@ -52,7 +52,7 @@ void UWG_DropItemInfo::BindItemInfo(class UOBJ_Item* item)
 
 }
 
-void  UWG_DropItemInfo::LookItem()
+void  UWG_DropItemInfo::LookItem(FLinearColor color)
 {
-	//_IMG_BG->SetColorAndOpacity();
+	_IMG_Bg->SetColorAndOpacity(color);
 }	

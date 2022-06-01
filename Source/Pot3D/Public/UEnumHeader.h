@@ -114,6 +114,25 @@ enum class ERarity : uint8
 	END
 };
 
+UENUM(BlueprintType)
+enum class EPostProcess : uint8
+{
+	OUTLINE = 0 UMETA(DisplayName = "OUTLINE"),
+	
+
+	END
+};
+UENUM(BlueprintType)
+enum class EOutline: uint8
+{
+	MONSTER = 0 UMETA(DisplayName = "MONSTER"),
+	ITEM UMETA(DisplayName = "ITEM"),
+	NPC UMETA(DisplayName = "NPC"),
+
+
+	END
+
+};
 
 class POT3D_API UEnumHeader
 {

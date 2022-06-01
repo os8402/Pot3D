@@ -20,12 +20,12 @@ public:
 
 	void BindItemInfo(class UOBJ_Item* item);
 
-	void LookItem();
+	void LookItem(FLinearColor color);
 
 private:
 	
 	UPROPERTY(meta = (BindWidget))
-	class UImage* _IMG_BG;
+	class UImage* _IMG_Bg;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_ItemName;

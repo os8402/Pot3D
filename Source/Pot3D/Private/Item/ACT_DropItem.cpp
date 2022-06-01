@@ -30,17 +30,17 @@ AACT_DropItem::AACT_DropItem()
 	_BOX_Trigger->SetBoxExtent(FVector(30.f, 30.f, 30.f));
 	_BOX_Trigger->SetGenerateOverlapEvents(true);
 
-	_WG_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
-	_WG_Info->SetupAttachment(_MESH_Comp);
-	_WG_Info->SetWidgetSpace(EWidgetSpace::Screen);
+	_WC_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
+	_WC_Info->SetupAttachment(_MESH_Comp);
+	_WC_Info->SetWidgetSpace(EWidgetSpace::Screen);
 
 
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
 	if (UW.Succeeded())
 	{
-		_WG_Info->SetWidgetClass(UW.Class);
-		_WG_Info->SetDrawSize(FVector2D(150.f, 25.f));
+		_WC_Info->SetWidgetClass(UW.Class);
+		_WC_Info->SetDrawSize(FVector2D(150.f, 25.f));
 	}
 
 }
@@ -50,7 +50,7 @@ AACT_DropItem::AACT_DropItem()
 void AACT_DropItem::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	_WG_Info->InitWidget();
+	_WC_Info->InitWidget();
 
 	_MESH_Comp->SetSimulatePhysics(true);
 	_MESH_Comp->SetEnableGravity(true);
@@ -79,10 +79,12 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 
 	// UI µî·Ï
 
-	auto infoWidget = Cast<UWG_DropItemInfo>(_WG_Info->GetUserWidgetObject());
+	auto infoWidget = Cast<UWG_DropItemInfo>(_WC_Info->GetUserWidgetObject());
 	infoWidget->BindItemInfo(_dropItem);
 
-	_WG_Info->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+	_WG_DropInfo = infoWidget;
+
+	_WC_Info->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 
 
 }
@@ -127,11 +129,17 @@ void AACT_DropItem::SetOutline(bool on)
 {
 
 	_MESH_Comp->SetRenderCustomDepth(on);
+	
 
 	if (on)
+	{
 		_MESH_Comp->SetCustomDepthStencilValue(2);
-
+		_WG_DropInfo->LookItem(FLinearColor(1, 1, 0, 0.4f));
+	}
+	
 	else
+	{
 		_MESH_Comp->SetCustomDepthStencilValue(0);
-
+		_WG_DropInfo->LookItem(FLinearColor(0,0,0, 0.4f));
+	}		
 }

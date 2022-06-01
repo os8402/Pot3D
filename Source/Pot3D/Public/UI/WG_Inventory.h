@@ -17,8 +17,13 @@ class POT3D_API UWG_Inventory : public UUserWidget
 public:
 	class UWG_Status* GetStatus() {return _WBP_Status;}
 
+	void RefreshInventory();
+
 private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Status* _WBP_Status;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* _TB_Gold;
 };

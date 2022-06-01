@@ -74,7 +74,8 @@ void AUNIT_Player::SearchActorInfo()
 
 		FHitResult hitItem;
 		pc->GetHitResultUnderCursor(ECC_GameTraceChannel3, true, hitItem);
-	
+
+
 		if (hitOther.bBlockingHit)
 		{
 			//캐릭터 [ 몬스터, npc = 추후 멀티 추가되면 플레이어도 넣긴 할듯]

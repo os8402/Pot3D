@@ -45,7 +45,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UBoxComponent* _BOX_Trigger;
 	UPROPERTY(VisibleAnywhere)
-	class UWidgetComponent* _WG_Info;
+	class UWidgetComponent* _WC_Info;
 
 
 //필요한 정보만 세팅하면 됨 
@@ -62,4 +62,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Item")
 	class UStaticMesh* _MESH_Pickup;
 
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	class UWG_DropItemInfo* _WG_DropInfo;
 };

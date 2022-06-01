@@ -3,3 +3,7 @@
 
 #include "UI/WG_Inventory.h"
 
+void UWG_Inventory::RefreshInventory()
+{
+
+}

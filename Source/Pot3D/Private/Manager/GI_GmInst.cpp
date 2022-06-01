@@ -68,7 +68,7 @@ void UGI_GmInst::RespawnMonster()
 			return;
 
 		//int32 _chrID = FMath::RandRange(1,3);
-	
+
 		int32 key = GenerateKey(_keyMonsterCount);
 		respawnMonster->SetConnectedId(key);
 

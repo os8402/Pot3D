@@ -91,6 +91,8 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ERarity _rarity;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EItemTypes _itemType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _meshPath;
@@ -141,8 +143,8 @@ public:
 	int32 GetKeyPlayerCount() { return _keyPlayerCount; }
 	
 
-	void SetGold(int32 gold) {_gold = gold;}
-	int32 GetGold() {return _gold;}
+	void SetGold(int32 gold) { _gold = gold; }
+	int32 GetGold() { return _gold; }
 
 private:
 

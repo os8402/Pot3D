@@ -99,7 +99,7 @@ enum class EItemTypes : uint8
 	EQUIPMENT UMETA(DisplayName = "EQUIPMENT"),
 	CONSUMABLE UMETA(DisplayName = "CONSUMABLE"),
 	JEWEL UMETA(DisplayName = "JEWEL"),
-
+	GOLD UMETA(DisplayName = "GOLD"),
 	END
 };
 

@@ -21,7 +21,7 @@ bool UOBJ_Item::SetItemInfo(class UGI_GmInst* gmInst, int32 id, int32 count)
 			_count = count;
 			_isConsumable = itemData->_isConsumable;
 			_rarity = itemData->_rarity;
-
+			_itemType = itemData->_itemType;
 
 			flag = true;
 		}

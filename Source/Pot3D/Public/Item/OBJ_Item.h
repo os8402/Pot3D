@@ -22,6 +22,7 @@ public:
 	int32 GetCount() {return _count;}
 	bool GetIsConsumable(){return _isConsumable;}
 	ERarity GetRarity(){return _rarity;}
+	EItemTypes GetItemType(){return _itemType;}
 
 public:
 	bool SetItemInfo(class UGI_GmInst* gmInst , int32 id, int32 count);
@@ -49,5 +50,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	ERarity _rarity;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	EItemTypes _itemType;
 	
 };

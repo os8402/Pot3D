@@ -59,7 +59,9 @@ public:
 
 	void OpenDeadPanel();
 
-	
+public:
+	void SetGold(int32 gold) { _gold = gold; }
+	int32 GetGold() { return _gold; }
 
 private:
 
@@ -131,5 +133,8 @@ public:
 private:
 	TMap<int32, UOBJ_Item*> _inventoryData;
 	int32 _itemMaxSlot = 20; 
+
+private:
+	int32 _gold = 0;
 
 };

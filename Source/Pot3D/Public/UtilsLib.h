@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include <random>
 
 #define FIND_OBJ(type, path) UtilsLib::FindObjHelper<type>(TEXT(path));
@@ -57,6 +56,15 @@ public:
 
 		if (TMP.Succeeded())
 			return TMP.Class;
+
+		return nullptr;
+	}
+
+	template<typename t1>
+	static t1* FindResoruces(const FName& name)
+	{
+
+		t1* resource = Cast<t1>(StaticLoadObject(t1::StaticClass(), NULL, *name.ToString()));
 
 		return nullptr;
 	}

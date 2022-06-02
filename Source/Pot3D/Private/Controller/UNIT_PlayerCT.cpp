@@ -9,6 +9,7 @@
 #include <Components/SceneCaptureComponent2D.h>
 #include <Camera/CameraShake.h>
 #include <Components/CanvasPanel.h>
+#include <Engine/PostProcessVolume.h>
 
 #include "Creature/UNIT_Character.h"
 #include "Creature/UNIT_Player.h"
@@ -17,7 +18,8 @@
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
-#include "Engine/PostProcessVolume.h"
+#include "Item/OBJ_Item.h"
+
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {
@@ -472,7 +474,20 @@ bool AUNIT_PlayerCT::AddItem(UOBJ_Item* newItem)
 		return false;
 
 	}
-	_inventoryData.Add(emptySlot, newItem);
+
+	EItemTypes itemtype = newItem->GetItemType();
+	
+	if (itemtype == EItemTypes::GOLD || itemtype == EItemTypes::JEWEL)
+	{
+		// TODO : 재화 처리
+	}
+
+	else
+	{
+		_inventoryData.Add(emptySlot, newItem);
+	}
+
+
 
 	RefreshInventory();
 

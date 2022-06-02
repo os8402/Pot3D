@@ -10,6 +10,7 @@
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Components/BoxComponent.h>
+#include <Sound/SoundCue.h>
 
 // Sets default values
 AACT_DropItem::AACT_DropItem()

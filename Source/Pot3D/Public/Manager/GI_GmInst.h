@@ -143,8 +143,6 @@ public:
 	int32 GetKeyPlayerCount() { return _keyPlayerCount; }
 	
 
-	void SetGold(int32 gold) { _gold = gold; }
-	int32 GetGold() { return _gold; }
 
 private:
 
@@ -186,10 +184,6 @@ private:
 
 	FTimerHandle _respawnTimer;
 
-
-private:
-
-	int32 _gold = 0;
 
 };
 template<typename T>

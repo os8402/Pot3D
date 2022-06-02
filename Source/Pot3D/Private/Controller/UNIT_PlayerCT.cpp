@@ -455,83 +455,8 @@ void AUNIT_PlayerCT::OpenDeadPanel()
 
 }
 
-bool AUNIT_PlayerCT::AddItem(UOBJ_Item* newItem)
-{
-	
-	if (newItem == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Add Item Failed"));
-		return false;
-	}
-		
-
-	int32 emptySlot = GetEmptySlot();
-
-
-	if (emptySlot == -1)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Inventory Is Full"));
-		return false;
-
-	}
-
-	EItemTypes itemtype = newItem->GetItemType();
-	
-	if (itemtype == EItemTypes::GOLD || itemtype == EItemTypes::JEWEL)
-	{
-		// TODO : 犁拳 贸府
-	}
-
-	else
-	{
-		_inventoryData.Add(emptySlot, newItem);
-	}
-
-
-
-	RefreshInventory();
-
-	return true;
-}
-
-void AUNIT_PlayerCT::RemoveItem(int32 slot)
-{
-	
-	_inventoryData.Remove(slot);
-	RefreshInventory();
-}
-
-//consumable
-void AUNIT_PlayerCT::UseItem(int32 slot)
-{
-	//_inventoryData[slot]->_count -= 1;
-	RefreshInventory();
-}
-
-void AUNIT_PlayerCT::RefreshInventory()
-{
-	
-}
 
 void AUNIT_PlayerCT::OpenInventory()
 {
 	_ingameMainUI->OpenInventory();
-}
-
-int32 AUNIT_PlayerCT::GetEmptySlot()
-{
-	int32 emptySlot = -1;
-
-	//后 浇吩 ずつ农
-	for (int32 i = 0; i < _itemMaxSlot; i++)
-	{
-		UOBJ_Item* const* isItem = _inventoryData.Find(i);
-		
-		if (isItem == nullptr)
-		{
-			return i;
-		}
-	}
-
-	return emptySlot;
 }

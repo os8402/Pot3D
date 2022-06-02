@@ -2,11 +2,13 @@
 
 
 #include "Item/ACT_DropItem.h"
-#include "UI/WG_DropItemInfo.h"
 #include "Item/OBJ_Item.h"
 #include "Controller/UNIT_PlayerCT.h"
-
 #include "Creature/UNIT_Player.h"
+#include "UI/WG_IngameMain.h"
+#include "UI/WG_DropItemInfo.h"
+#include "UI/WG_Inventory.h"
+
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Components/BoxComponent.h>
@@ -102,7 +104,7 @@ void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AAct
 
 		//TODO : 인벤토리에 넣음
 		auto pc = Cast<AUNIT_PlayerCT>(player->GetController());
-		bool flag = pc->AddItem(_dropItem);
+		bool flag = pc->GetMainUI()->GetInventory()->AddItem(_dropItem);
 
 		if (flag)
 		{

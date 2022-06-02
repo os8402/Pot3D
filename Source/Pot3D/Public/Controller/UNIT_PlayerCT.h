@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "UEnumHeader.h"
-#include "Item/Inventory.h"
 #include "UNIT_PlayerCT.generated.h"
 
 /**
  * 
  */
 class UOBJ_Item;
+class UWG_IngameMain;
 
 UCLASS()
-class POT3D_API AUNIT_PlayerCT : public APlayerController, public IInventory
+class POT3D_API AUNIT_PlayerCT : public APlayerController
 {
 	GENERATED_BODY()
 
@@ -57,11 +57,11 @@ public:
 	void OnMovePressed();
 	void OnMoveReleased();
 
+	void OpenInventory();
 	void OpenDeadPanel();
 
 public:
-	void SetGold(int32 gold) { _gold = gold; }
-	int32 GetGold() { return _gold; }
+	UWG_IngameMain* GetMainUI() {return _ingameMainUI;}
 
 private:
 
@@ -114,27 +114,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UWG_IngameMain> _ingameMainClass;
-	class UWG_IngameMain* _ingameMainUI;
+	UWG_IngameMain* _ingameMainUI;
 
-
-public:
-	virtual TMap<int32, UOBJ_Item*>& GetInventoryData() { return _inventoryData;}
-	
-public:
-	//ITEM
-
-	virtual bool AddItem(UOBJ_Item* newItem);
-	virtual void RemoveItem(int32 slot);
-	virtual void UseItem(int32 slot);
-	virtual void RefreshInventory();
-	virtual void OpenInventory();
-	virtual int32 GetEmptySlot();
-
-private:
-	TMap<int32, UOBJ_Item*> _inventoryData;
-	int32 _itemMaxSlot = 20; 
-
-private:
-	int32 _gold = 0;
 
 };

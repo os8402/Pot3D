@@ -9,6 +9,9 @@
 /**
  * 
  */
+class UWG_Inventory;
+class UWG_NamePlate;
+
 UCLASS()
 class POT3D_API UWG_IngameMain : public UUserWidget
 {
@@ -23,9 +26,10 @@ public:
 	void OpenInventory();
 
 public:
-	class UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
+	UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
+	UWG_Inventory* GetInventory() {return _WBP_Inventory;}
 
-public :
+private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* IMG_Main;
@@ -38,7 +42,7 @@ public :
 	class UProgressBar* _PB_MpMainBar;*/
 
 	UPROPERTY(meta = (BindWidget))
-	class UWG_NamePlate* _WBP_NamePlate_1;
+	UWG_NamePlate* _WBP_NamePlate_1;
 
 	//UPROPERTY(meta = (BindWidget))
 	//class UProgressBar* _PB_MonsterInfoHpBar;
@@ -52,6 +56,6 @@ public :
 //	class UWG_GlassBallBar* _GB_HpBar;
 
 	UPROPERTY(meta = (BindWidget))
-	class UWG_Inventory* _WBP_Inventory;
+	UWG_Inventory* _WBP_Inventory;
 	
 };

@@ -19,6 +19,7 @@ public:
 	int32 GetItemId() {return _id;}
 	FText GetItemName() {return _name;}
 	FName GetMeshPath() {return _meshPath;}
+	FName GetTexturePath() {return _iconPath;}
 	int32 GetCount() {return _count;}
 	bool GetIsConsumable(){return _isConsumable;}
 	ERarity GetRarity(){return _rarity;}
@@ -41,6 +42,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FName _meshPath;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	FName _iconPath;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	int32 _count;

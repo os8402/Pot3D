@@ -18,6 +18,7 @@ bool UOBJ_Item::SetItemInfo(class UGI_GmInst* gmInst, int32 id, int32 count)
 			_id = itemData->_id;
 			_name = itemData->_name;
 			_meshPath = itemData->_meshPath;
+			_iconPath = itemData->_iconPath;
 			_count = count;
 			_isConsumable = itemData->_isConsumable;
 			_rarity = itemData->_rarity;

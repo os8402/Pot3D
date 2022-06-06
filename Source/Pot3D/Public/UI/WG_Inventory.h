@@ -13,6 +13,7 @@
  */
 
  class UOBJ_Item;
+ class UWG_Inventory_ItemSlot;
 
 UCLASS()
 class POT3D_API UWG_Inventory : public UUserWidget, public IInventory
@@ -20,10 +21,13 @@ class POT3D_API UWG_Inventory : public UUserWidget, public IInventory
 	GENERATED_BODY()
 
 public:
+	
+	virtual void NativePreConstruct() override;
 	class UWG_Status* GetStatus() {return _WBP_Status;}
 
+
 public:
-	virtual TMap<int32, UOBJ_Item*>& GetInventoryData() { return _inventoryData; }
+	virtual TMap<int32, UWG_Inventory_ItemSlot*>& GetInventoryData() { return _inventoryData; }
 
 public:
 	//ITEM
@@ -35,8 +39,14 @@ public:
 	virtual int32 GetEmptySlot();
 
 private:
-	TMap<int32, UOBJ_Item*> _inventoryData;
-	int32 _itemMaxSlot = 20;
+
+	UPROPERTY(EditAnywhere, Category="Item Slot")
+	TSubclassOf<UWG_Inventory_ItemSlot> _itemSlotClass; 
+
+
+	//TMap<int32, UOBJ_Item*> _inventoryData;
+	TMap<int32, UWG_Inventory_ItemSlot*> _inventoryData;
+	int32 _itemMaxSlotNum = 20;
 
 
 private:
@@ -46,6 +56,6 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_Gold;
-
+	
 
 };

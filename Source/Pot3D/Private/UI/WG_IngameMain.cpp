@@ -59,6 +59,6 @@ void UWG_IngameMain::OpenInventory()
 		_WBP_Inventory->GetStatus()->RefreshStat(_currentStatComp.Get());
 	}
 
-
+	_WBP_Inventory->RefreshInventory();
 
 }

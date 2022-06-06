@@ -93,7 +93,7 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EItemTypes _itemType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText _iconPath;
+	FName _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _meshPath;
 

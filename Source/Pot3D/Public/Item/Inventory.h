@@ -9,6 +9,7 @@
 // This class does not need to be modified.
 
 class UOBJ_Item;
+class UWG_Inventory_ItemSlot;
 
 UINTERFACE(MinimalAPI)
 class UInventory : public UInterface
@@ -24,7 +25,7 @@ class POT3D_API IInventory
 	GENERATED_BODY()
 
 public:
-	virtual TMap<int32, UOBJ_Item*>& GetInventoryData() = 0;
+	virtual TMap<int32, UWG_Inventory_ItemSlot*>& GetInventoryData() = 0;
 
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.

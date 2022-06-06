@@ -2,19 +2,51 @@
 
 
 #include "UI/WG_Inventory_ItemSlot.h"
-#include "Components/Image.h"
+#include "Item/OBJ_Item.h"
+
+#include <Components/WrapBox.h>
+#include <Blueprint/WidgetTree.h>
+#include <Components/Image.h>
+
 
 void UWG_Inventory_ItemSlot::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	SetItemInfo(_TEX_Icon);
+	RefreshUI();
+
+	
+
 }
 
 
-void UWG_Inventory_ItemSlot::SetItemInfo(UTexture2D* texture)
+void UWG_Inventory_ItemSlot::RefreshUI()
 {
-	_IMG_Icon->SetColorAndOpacity(_color);
+	if (_item == nullptr)
+	{
+		_IMG_Icon->SetColorAndOpacity(FLinearColor::Transparent);
+		return;
+	}
 
-	_IMG_Icon->SetBrushFromTexture(texture);
+	_IMG_Icon->SetColorAndOpacity(FLinearColor::White);
+	_IMG_Icon->SetBrushFromTexture(_texture);
+
+}
+
+void UWG_Inventory_ItemSlot::SetItem(UOBJ_Item* item)
+{
+	if(item == nullptr)
+		return;
+	
+	_item = item;
+
+	//TODO : Texture Set
+
+	UTexture2D* newTexture = Cast<UTexture2D>(
+		StaticLoadObject(UTexture2D::StaticClass(), nullptr , *item->GetTexturePath().ToString()));
+
+	if (newTexture != nullptr)
+		_texture = newTexture;
+	
+
 }

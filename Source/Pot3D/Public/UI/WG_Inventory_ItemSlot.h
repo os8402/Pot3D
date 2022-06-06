@@ -10,7 +10,7 @@
  * 
  */
 
-
+class UOBJ_Item;
 class UTexture2D;
 
 UCLASS()
@@ -24,20 +24,30 @@ class POT3D_API UWG_Inventory_ItemSlot : public UUserWidget
 public:
 
 	virtual void NativePreConstruct() override;
-
-	void SetItemInfo(UTexture2D* texture);
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	FLinearColor _color;
+	void RefreshUI();
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	UTexture2D* _TEX_Icon;
-	
+	void SetItem(UOBJ_Item* item);
+	UOBJ_Item* GetItem() { return _item; }
+
+
+	void SetSlotNum(int32 num) {_slotNum = num;}
+	int32 GetSlotNum() {return _slotNum;}
+
+
 
 
 private:
 	
 	UPROPERTY(meta = (BindWidget))
 	class UImage* _IMG_Icon;
+
+	UPROPERTY(EditAnywhere, Category="SLOT")
+	int32 _slotNum;
+
+	UPROPERTY()
+	UOBJ_Item* _item;
+
+	UPROPERTY(VisibleAnywhere )
+	UTexture2D* _texture;
 };

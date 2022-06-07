@@ -2,11 +2,13 @@
 
 
 #include "UI/WG_Inventory_ItemSlot.h"
+#include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
 
 #include <Components/WrapBox.h>
 #include <Blueprint/WidgetTree.h>
 #include <Components/Image.h>
+#include <COmponents/Button.h>
 
 
 void UWG_Inventory_ItemSlot::NativePreConstruct()
@@ -19,6 +21,19 @@ void UWG_Inventory_ItemSlot::NativePreConstruct()
 
 }
 
+
+void UWG_Inventory_ItemSlot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (_BTN_Slot->IsHovered() && _inventory)
+	{
+		
+		_inventory->SetItemTooltipHovered(_item);
+
+	}
+
+}
 
 void UWG_Inventory_ItemSlot::RefreshUI()
 {
@@ -48,5 +63,6 @@ void UWG_Inventory_ItemSlot::SetItem(UOBJ_Item* item)
 	if (newTexture != nullptr)
 		_texture = newTexture;
 	
+	RefreshUI();
 
 }

@@ -15,6 +15,8 @@
  class UOBJ_Item;
  class UWG_Inventory_ItemSlot;
 
+
+
 UCLASS()
 class POT3D_API UWG_Inventory : public UUserWidget, public IInventory
 {
@@ -38,6 +40,8 @@ public:
 	virtual void RefreshInventory();
 	virtual int32 GetEmptySlot();
 
+	void SetItemTooltipHovered(UOBJ_Item* item);
+
 private:
 
 	UPROPERTY(EditAnywhere, Category="Item Slot")
@@ -57,5 +61,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_Gold;
 	
+	UPROPERTY(meta = (BindWidget))
+	class UWG_Tooltip* _WBP_Tooltip;
+
+	TWeakObjectPtr<UOBJ_Item> _hoveredItem;
 
 };

@@ -80,10 +80,21 @@ enum class ETableDatas : uint8
 };
 
 UENUM(BlueprintType)
-enum class EEquipmentTypes : uint8
+enum class EItemWeaponTypes : uint8
 {
 	NONE = 0 UMETA(DisplayName = "NONE"),
-	WEAPON UMETA(DisplayName = "WEAPON"),
+	SWORD UMETA(DisplayName = "SWORD"),
+	STAFF UMETA(DisplayName = "STAFF"),
+	SPEAR UMETA(DisplayName = "SPEAR"),
+	BOW UMETA(DisplayName = "BOW"),
+
+	END
+};
+
+UENUM(BlueprintType)
+enum class EItemArmorTypes : uint8
+{
+	NONE = 0 UMETA(DisplayName = "NONE"),
 	HELMET UMETA(DisplayName = "HELMET"),
 	ARMOR UMETA(DisplayName = "ARMOR"),
 	PANTS UMETA(DisplayName = "PANTS"),
@@ -91,12 +102,24 @@ enum class EEquipmentTypes : uint8
 
 	END
 };
+UENUM(BlueprintType)
+enum class EItemConsumableTypes : uint8
+{
+	NONE = 0 UMETA(DisplayName = "NONE"),
+	POTION UMETA(DisplayName = "HELMET"),
+	BUFF UMETA(DisplayName = "BUFF"),
+
+
+	END
+};
+
 
 UENUM(BlueprintType)
 enum class EItemTypes : uint8
 {
 	NONE = 0 UMETA(DisplayName = "NONE"),
-	EQUIPMENT UMETA(DisplayName = "EQUIPMENT"),
+	WEAPON UMETA(DisplayName = "WEAPON"),
+	ARMOR UMETA(DisplayName = "ARMOR"),
 	CONSUMABLE UMETA(DisplayName = "CONSUMABLE"),
 	JEWEL UMETA(DisplayName = "JEWEL"),
 	GOLD UMETA(DisplayName = "GOLD"),
@@ -113,6 +136,8 @@ enum class ERarity : uint8
 
 	END
 };
+
+
 
 UENUM(BlueprintType)
 enum class EPostProcess : uint8

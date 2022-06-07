@@ -10,8 +10,10 @@
  * 
  */
 
+class UWG_Inventory;
 class UOBJ_Item;
 class UTexture2D;
+class UButton;
 
 UCLASS()
 class POT3D_API UWG_Inventory_ItemSlot : public UUserWidget
@@ -24,8 +26,14 @@ class POT3D_API UWG_Inventory_ItemSlot : public UUserWidget
 public:
 
 	virtual void NativePreConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	void RefreshUI();
 
+
+	void SetInventory(UWG_Inventory* inventory) {_inventory = inventory; }
+
+	UButton* GetSlotBtn() {return _BTN_Slot;}
+	
 
 	void SetItem(UOBJ_Item* item);
 	UOBJ_Item* GetItem() { return _item; }
@@ -39,6 +47,12 @@ public:
 
 private:
 	
+	UPROPERTY()
+	UWG_Inventory* _inventory;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton* _BTN_Slot;
+
 	UPROPERTY(meta = (BindWidget))
 	class UImage* _IMG_Icon;
 

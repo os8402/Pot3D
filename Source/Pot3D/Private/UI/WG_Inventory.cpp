@@ -4,10 +4,12 @@
 #include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
 #include "UI/WG_Inventory_ItemSlot.h"
+#include "UI/WG_Tooltip.h"
 #include "Manager/GI_GmInst.h"
 
 #include <Components/WidgetComponent.h>
 #include <Components/WrapBox.h>
+#include <COmponents/Button.h>
 #include <Blueprint/WidgetTree.h>
 
 #include <Kismet/GameplayStatics.h>
@@ -26,12 +28,15 @@ void UWG_Inventory::NativePreConstruct()
 		{
 			UWG_Inventory_ItemSlot* itemSlot = CreateWidget<UWG_Inventory_ItemSlot>(this, _itemSlotClass);
 			slotBox->AddChild(itemSlot);
+
+			itemSlot->SetInventory(this);
 			itemSlot->SetSlotNum(i);
 
 			_inventoryData.Add(i, itemSlot);
-			UWG_Inventory_ItemSlot* const*  a = _inventoryData.Find(1);
 		
-			//auto dat =  _inventoryData.Find(1);
+			itemSlot->SetToolTip(_WBP_Tooltip);
+			itemSlot->ToolTipWidget->SetRenderTranslation(FVector2D(-500,0));
+
 
 		}
 	
@@ -78,7 +83,6 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 
 	else
 	{
-		//_inventoryData.Add(emptySlot, newItem);
 		_inventoryData[emptySlot]->SetItem(newItem);
 
 		FString str = FString::Printf(TEXT("Get Item :  %s"), *newItem->GetItemName().ToString());
@@ -145,4 +149,32 @@ int32 UWG_Inventory::GetEmptySlot()
 	}
 
 	return emptySlot;
+}
+
+void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
+{
+
+	if (item == nullptr)
+	{
+		_WBP_Tooltip->SetVisibility(ESlateVisibility::Hidden);
+
+		if (_hoveredItem.IsValid())
+			_hoveredItem.Reset();
+
+		return;
+	}
+
+	if(_hoveredItem == item)
+		return;
+
+	_hoveredItem = item;
+
+	_WBP_Tooltip->SetVisibility(ESlateVisibility::Visible);
+
+	FString goldStr = FString::Printf(TEXT("Item Info :  %s"), *item->GetItemName().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, goldStr);
+
+	//TODO : 툴팁 정보 갱신
+
+	_WBP_Tooltip->RefreshUI(item);
 }

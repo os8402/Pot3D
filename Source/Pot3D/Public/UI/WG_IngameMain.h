@@ -57,5 +57,5 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	UWG_Inventory* _WBP_Inventory;
-	
+
 };

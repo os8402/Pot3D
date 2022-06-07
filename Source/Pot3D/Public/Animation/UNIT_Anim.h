@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 DECLARE_MULTICAST_DELEGATE(FOnAttackHit)
 UCLASS()
 class POT3D_API UUNIT_Anim : public UAnimInstance

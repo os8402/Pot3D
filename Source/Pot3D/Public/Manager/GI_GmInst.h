@@ -20,7 +20,9 @@ struct FStatData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _job;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _attack;
+	int32 _minAtk;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _maxAtk;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _defence;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

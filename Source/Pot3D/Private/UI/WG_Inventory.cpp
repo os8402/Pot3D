@@ -3,6 +3,9 @@
 
 #include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
+#include "Item/OBJ_Weapon_Item.h"
+#include "Item/OBJ_Armor_Item.h"
+#include "Item/OBJ_Consumable_Item.h"
 #include "UI/WG_Inventory_ItemSlot.h"
 #include "UI/WG_Tooltip.h"
 #include "Manager/GI_GmInst.h"
@@ -83,8 +86,25 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 
 	else
 	{
-		_inventoryData[emptySlot]->SetItem(newItem);
 
+		if (itemtype == EItemTypes::WEAPON)
+		{
+			UOBJ_Weapon_Item* weaponItem = Cast<UOBJ_Weapon_Item>(newItem);	
+			_inventoryData[emptySlot]->SetItem(weaponItem);
+		}
+		
+		else if (itemtype == EItemTypes::ARMOR)
+		{
+			UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(newItem);
+			_inventoryData[emptySlot]->SetItem(armorItem);
+		}
+		
+		else if (itemtype == EItemTypes::CONSUMABLE)
+		{
+			UOBJ_Consumable_Item* consumableItem = Cast<UOBJ_Consumable_Item>(newItem);
+			_inventoryData[emptySlot]->SetItem(consumableItem);
+		}
+			
 		FString str = FString::Printf(TEXT("Get Item :  %s"), *newItem->GetItemName().ToString());
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
 	}

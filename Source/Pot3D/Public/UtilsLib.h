@@ -37,7 +37,19 @@ public:
 
 		return fText;
 	}
+	static FText ConvertToFText(int32 data1 , int32 data2)
+	{
+		FString conv = FString::Printf(TEXT("%d~%d"), data1, data2);
+		FText fText = FText::FromString(conv);
 
+		return fText;
+	}
+
+	static FText ConvertToFText(FString data)
+	{
+		FText fText = FText::FromString(data);
+		return fText;
+	}
 
 	template<typename t1>
 	static t1* FindObjHelper(const TCHAR* path)

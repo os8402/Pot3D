@@ -1,6 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Item/OBJ_Item.h"
+#include "Item/OBJ_Weapon_Item.h"
+#include "Item/OBJ_Armor_Item.h"
+#include "Item/OBJ_Consumable_Item.h"
 
 #include "Creature/UNIT_Monster.h"
 #include "Item/ACT_DropItem.h"
@@ -88,15 +91,41 @@ void AUNIT_Monster::DeadUnit()
 					return;
 				}
 				
-
-				auto newItemClass = UOBJ_Item::StaticClass();
-				auto newItem = NewObject<UOBJ_Item>(newItemClass);
+			
 
 				int32 index = FMath::RandRange(0, possibleItemList.Num() - 1);
 
 				int32 id = possibleItemList[index]._itemId;
 				int32 count = possibleItemList[index]._count;
 
+				auto newItemClass = UOBJ_Item::StaticClass();
+				UOBJ_Item* newItem= NewObject<UOBJ_Item>(newItemClass);
+
+				auto itemData = gmInst->GetTableData<FItemData>(ETableDatas::ITEM, id);
+
+				if (itemData)
+				{
+					EItemTypes itemType = itemData->_itemType;
+					if (itemType == EItemTypes::WEAPON)
+					{
+						auto weaponItemClass = UOBJ_Weapon_Item::StaticClass();
+						auto weaponItem = NewObject<UOBJ_Weapon_Item>(weaponItemClass);
+						newItem = weaponItem;
+					}
+					else if (itemType == EItemTypes::ARMOR)
+					{
+						auto armorItemClass = UOBJ_Armor_Item::StaticClass();
+						auto armorItem = NewObject<UOBJ_Armor_Item>(armorItemClass);
+						newItem = armorItem;
+					}
+					else if (itemType == EItemTypes::CONSUMABLE)
+					{
+						auto consumableItemClass = UOBJ_Consumable_Item::StaticClass();
+						auto consumableItem = NewObject<UOBJ_Consumable_Item>(consumableItemClass);
+						newItem = consumableItem;
+					}
+					
+				}
 				//골드는 랜덤으로..
 				if (id == 10001)
 				{

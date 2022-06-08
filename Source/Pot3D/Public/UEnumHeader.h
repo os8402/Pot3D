@@ -137,6 +137,18 @@ enum class ERarity : uint8
 	END
 };
 
+UENUM(BlueprintType)
+enum class EStatTypes : uint8
+{
+	STRENGH = 0 UMETA(DisplayName = "STRENGH"),
+	DEXTERITY UMETA(DisplayName = "DEXTERITY"),
+	INTELIGENCE UMETA(DisplayName = "INTELIGENCE"),
+	RESILIENCE UMETA(DisplayName = "RESILIENCE"),
+	LUCK UMETA(DisplayName = "LUCK"),
+	HP UMETA(DisplayName = "HP"),
+	MP UMETA(DisplayName = "MP"),
+	END
+};
 
 
 UENUM(BlueprintType)

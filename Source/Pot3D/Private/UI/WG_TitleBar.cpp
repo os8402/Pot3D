@@ -12,5 +12,10 @@ void UWG_TitleBar::SetTitle(FText name)
 	
 	_TB_Name->SetText(name);
 
-	//_IMG_Grade->SetBrushFromTexture();
+	//
+}
+
+void UWG_TitleBar::SetGradeTexture(UTexture2D* texure)
+{
+	_IMG_Grade->SetBrushFromTexture(texure);
 }

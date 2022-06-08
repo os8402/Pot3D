@@ -50,7 +50,8 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 			_maxMp = unitData->_statData._maxMp;
 			SetMp(unitData->_statData._maxMp);
 
-			_attack = unitData->_statData._attack;
+			_minAtk = unitData->_statData._minAtk;
+			_maxAtk = unitData->_statData._maxAtk;
 			_defence = unitData->_statData._defence;
 			_resilience = unitData->_statData._resilience;
 			_strength = unitData->_statData._strength;

@@ -43,7 +43,8 @@ public:
 	int32 GetLevel() { return _level; }
 	int32 GetJob() { return _job; }
 
-	int32 GetAttack() { return _attack; }
+	int32 GetMinAttack() { return _minAtk; }
+	int32 GetMaxAttack() { return _maxAtk; }
 	int32 GetDefense() { return _defence; }
 	int32 GetResilience() { return _resilience; }
 	int32 GetStrength() { return _strength; }
@@ -76,7 +77,9 @@ private:
 	int32 _maxMp;
 
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
-	int32 _attack;
+	int32 _minAtk;
+	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	int32 _maxAtk;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _defence;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))

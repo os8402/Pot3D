@@ -4,27 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WG_TitleBar.generated.h"
+#include "WG_BonusStat.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class POT3D_API UWG_TitleBar : public UUserWidget
+class POT3D_API UWG_BonusStat : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	void SetTitle(FText name);
-	void SetGradeTexture(UTexture2D* texure);
+	
+	void SetBonusStatText(FText text , FLinearColor color);
 
 private:
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* _IMG_Grade;
-
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Name;
-
-	
+	class UTextBlock* _TB_BonusStat;
 };
+

@@ -186,8 +186,9 @@ void AUNIT_Character::AttackCheck()
 		return;
 
 	FDamageEvent dmgEvent;
-	int32 attack = _ACP_Stat->GetAttack();
-	int32 dmg = FMath::RandRange(attack, attack * 2);
+	int32 minAtk = _ACP_Stat->GetMinAttack();
+	int32 maxAtk = _ACP_Stat->GetMaxAttack();
+	int32 dmg = FMath::RandRange(minAtk, maxAtk);
 
 	GetTargetEnemy().Get()->TakeDamage(dmg, dmgEvent, GetController(), this);
 

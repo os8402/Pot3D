@@ -5,17 +5,19 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "UEnumHeader.h"
+#include "Manager/GI_GmInst.h"
 #include "OBJ_Item.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class POT3D_API UOBJ_Item : public UObject
 {
 	GENERATED_BODY()
 
 public:
+
+
+
 	int32 GetItemId() {return _id;}
 	FText GetItemName() {return _name;}
 	FName GetMeshPath() {return _meshPath;}
@@ -23,11 +25,18 @@ public:
 	int32 GetCount() {return _count;}
 	bool GetIsConsumable(){return _isConsumable;}
 	ERarity GetRarity(){return _rarity;}
+	FStatData GetStatData() {return _statData;}
 	EItemTypes GetItemType(){return _itemType;}
+
+	TMap<int32, int32> GetBonusStats() {return _bonusStats;}
+
+	virtual void SetEquimentType();
+
 
 public:
 	bool SetItemInfo(class UGI_GmInst* gmInst , int32 id, int32 count);
 
+	void SetRandomBonusStat();
 
 private:
 
@@ -57,5 +66,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	EItemTypes _itemType;
+
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	FStatData _statData;
+
+
+	UPROPERTY()
+	TMap<int32, int32> _bonusStats;
 	
 };

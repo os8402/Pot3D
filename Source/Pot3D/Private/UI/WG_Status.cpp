@@ -14,7 +14,7 @@ void UWG_Status::RefreshStat(class UACP_StatInfo* statComp)
 	FText dex = UtilsLib::ConvertToFText(statComp->GetDexterity());
 	FText intel = UtilsLib::ConvertToFText(statComp->GetIntelligence());
 	FText luk = UtilsLib::ConvertToFText(statComp->GetLuck());
-	FText atk = UtilsLib::ConvertToFText(statComp->GetAttack());
+	FText atk = UtilsLib::ConvertToFText(statComp->GetMinAttack() , statComp->GetMaxAttack());
 	FText def = UtilsLib::ConvertToFText(statComp->GetDefense());
 	FText res = UtilsLib::ConvertToFText(statComp->GetResilience());
 

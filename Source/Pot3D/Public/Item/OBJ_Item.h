@@ -35,8 +35,10 @@ public:
 
 public:
 	bool SetItemInfo(class UGI_GmInst* gmInst , int32 id, int32 count);
-
 	void SetRandomBonusStat();
+
+	//º¸³Ê½º ½ºÅÈ±îÁö ÇÕÄ£ ÃÑ ½ºÅÈ
+	void SetFinalStat(int32 id, int32 num);
 
 private:
 

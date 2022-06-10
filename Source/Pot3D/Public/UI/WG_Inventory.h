@@ -12,8 +12,12 @@
  * 
  */
 
+ class AUNIT_Player;
+
  class UOBJ_Item;
  class UWG_Inventory_ItemSlot;
+ class UWG_Equipment_ItemSlot;
+
 
 
 
@@ -32,6 +36,11 @@ public:
 	virtual TMap<int32, UWG_Inventory_ItemSlot*>& GetInventoryData() { return _inventoryData; }
 
 public:
+
+	void SetCurrentOwner(AUNIT_Player* player) {_currentOwner = player;}
+	AUNIT_Player* GetCurrentOwner() {return _currentOwner.Get();}
+	
+
 	//ITEM
 
 	virtual bool AddItem(UOBJ_Item* newItem);
@@ -48,12 +57,13 @@ private:
 	TSubclassOf<UWG_Inventory_ItemSlot> _itemSlotClass; 
 
 
-	//TMap<int32, UOBJ_Item*> _inventoryData;
 	TMap<int32, UWG_Inventory_ItemSlot*> _inventoryData;
 	int32 _itemMaxSlotNum = 20;
 
 
 private:
+
+	TWeakObjectPtr<class AUNIT_Player> _currentOwner;
 
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Status* _WBP_Status;
@@ -65,5 +75,25 @@ private:
 	class UWG_Tooltip* _WBP_Tooltip;
 
 	TWeakObjectPtr<UOBJ_Item> _hoveredItem;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Equipment_ItemSlot* _WBP_Equipment_Weapon;
+		
+	UPROPERTY(meta = (BindWidget))
+	UWG_Equipment_ItemSlot* _WBP_Equipment_Helmet;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Equipment_ItemSlot* _WBP_Equipment_Armor;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Equipment_ItemSlot* _WBP_Equipment_Pants;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Equipment_ItemSlot* _WBP_Equipment_Boots;
+
+	
+	TMap<int32, UWG_Equipment_ItemSlot*> _equipment_ArmorLists;
+
+
 
 };

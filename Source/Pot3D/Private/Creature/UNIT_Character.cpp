@@ -52,7 +52,17 @@ AUNIT_Character::AUNIT_Character()
 	_ACP_Weapon->SetOwner(this);
 
 	_ACP_Armor = CreateDefaultSubobject<UACP_Armor>(TEXT("ARMOR"));
-	_ACP_Armor->SetOwner(this);
+	_ACP_Helmet = CreateDefaultSubobject<UACP_Armor>(TEXT("HELMET"));
+	_ACP_Pants = CreateDefaultSubobject<UACP_Armor>(TEXT("PANTS"));
+	_ACP_Boots = CreateDefaultSubobject<UACP_Armor>(TEXT("BOOTS"));
+
+	_armorList.Add((int32)EItemArmorTypes::ARMOR , _ACP_Armor);
+	_armorList.Add((int32)EItemArmorTypes::HELMET , _ACP_Helmet);
+	_armorList.Add((int32)EItemArmorTypes::PANTS , _ACP_Pants);
+	_armorList.Add((int32)EItemArmorTypes::BOOTS , _ACP_Boots);
+
+	for(auto& item : _armorList)
+		item.Value->SetOwner(this);
 
 	_WG_HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HP_BAR"));
 	_WG_HpBar->SetupAttachment(GetMesh());

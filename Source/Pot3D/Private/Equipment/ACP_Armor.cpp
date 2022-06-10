@@ -3,6 +3,8 @@
 
 #include "Equipment/ACP_Armor.h"
 
+
+
 // Sets default values for this component's properties
 UACP_Armor::UACP_Armor()
 {
@@ -17,12 +19,6 @@ void UACP_Armor::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-}
-
-
-void UACP_Armor::SetArmor(UOBJ_Item* item)
-{
 
 }
 

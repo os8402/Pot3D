@@ -11,6 +11,8 @@ DECLARE_MULTICAST_DELEGATE(FOnHpChanged)
 DECLARE_MULTICAST_DELEGATE(FOnMpChanged)
 DECLARE_MULTICAST_DELEGATE(FOnUnitDied)
 
+class UOBJ_Item;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POT3D_API UACP_StatInfo : public UActorComponent
 {

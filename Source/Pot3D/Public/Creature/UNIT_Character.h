@@ -88,7 +88,7 @@ public:
 
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
-	class UACP_Armor* GetArmor() { return _ACP_Armor; }
+	TMap<int32, class UACP_Armor*>  GetArmorList() { return _armorList; }
 
 
 private:
@@ -187,11 +187,19 @@ private:
 	class UAudioComponent* _Audio_Comp;
 
 private:
-	
+	//EQUIPMENT 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	class UACP_Weapon* _ACP_Weapon;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
 	class UACP_Armor* _ACP_Armor;
+	UPROPERTY(VisibleAnywhere, Category = "Armor")
+	class UACP_Armor* _ACP_Helmet;
+	UPROPERTY(VisibleAnywhere, Category = "Armor")
+	class UACP_Armor* _ACP_Pants;
+	UPROPERTY(VisibleAnywhere, Category = "Armor")
+	class UACP_Armor* _ACP_Boots;
+
+	TMap<int32, UACP_Armor*> _armorList;
 
 
 };

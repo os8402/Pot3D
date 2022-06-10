@@ -3,7 +3,9 @@
 #include <Components/AudioComponent.h>
 #include <Sound/SoundCue.h>
 
+#include "Item/OBJ_Item.h"
 #include "Creature/UNIT_Character.h"
+#include "Stat/ACP_StatInfo.h"
 
 UACP_Equipment::UACP_Equipment()
 {
@@ -22,13 +24,14 @@ void UACP_Equipment::SoundPlay(int32 index)
 
 }
 
-// Called when the game starts
 void UACP_Equipment::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
 }
 
-
+void UACP_Equipment::SetEquipItem(UOBJ_Item* item)
+{
+	_currentItem = item;
+	_currentOwner->GetStatComp()->RefreshStat();
+}

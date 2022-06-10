@@ -2,10 +2,6 @@
 
 
 #include "Equipment/ACP_Weapon.h"
-#include "Item/OBJ_Item.h"
-#include "Stat/ACP_StatInfo.h"
-#include "Creature/UNIT_Character.h"
-
 
 #include <Particles/ParticleSystemComponent.h>
 
@@ -23,13 +19,6 @@ UACP_Weapon::UACP_Weapon()
 
 }
 
-void UACP_Weapon::SetEquipWeapon(UOBJ_Item* item)
-{	
-	_currentWeapon = item;
-
-	_currentOwner->GetStatComp()->RefreshStat();
-
-}
 
 void UACP_Weapon::SoundPlay(int32 index)
 {

@@ -3,6 +3,9 @@
 
 #include "Stat/ACP_StatInfo.h"
 #include "Manager/GI_GmInst.h"
+
+#include "Item/OBJ_Item.h"
+
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values for this component's properties
@@ -87,19 +90,11 @@ void UACP_StatInfo::SetExp(int32 exp)
 
 void UACP_StatInfo::RefreshStat()
 {
-	int32 strength = _strength / 5;
-
-	_totalMinAtk += strength;
-	_totalMaxAtk += _strength;
-
 	
-	int32 defence  = _defence;
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, TEXT("Refresh Stat"));
 
-	_totalDef += defence;
+	//FStatData 불러와서 더해주고.. 갱신합니다. 
 
-	int32 res = _resilience;
-
-	_totalRes +=  res;
 
 
 

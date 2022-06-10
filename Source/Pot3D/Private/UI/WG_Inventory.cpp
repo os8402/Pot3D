@@ -40,11 +40,14 @@ void UWG_Inventory::NativePreConstruct()
 			itemSlot->SetToolTip(_WBP_Tooltip);
 			itemSlot->ToolTipWidget->SetRenderTranslation(FVector2D(-500,0));
 
-
 		}
-	
 
 	}
+
+	_equipment_ArmorLists.Add((int32)EItemArmorTypes::HELMET, _WBP_Equipment_Helmet);
+	_equipment_ArmorLists.Add((int32)EItemArmorTypes::ARMOR, _WBP_Equipment_Armor);
+	_equipment_ArmorLists.Add((int32)EItemArmorTypes::PANTS, _WBP_Equipment_Pants);
+	_equipment_ArmorLists.Add((int32)EItemArmorTypes::BOOTS, _WBP_Equipment_Boots);
 }
 
 
@@ -80,6 +83,9 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 			if (gmInst)
 			{
 				gmInst->SetGold(newItem->GetCount());
+
+				FString goldStr = FString::Printf(TEXT("Add Gold :  %d"), newItem->GetCount());
+				GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, goldStr);
 			}
 		}
 	}
@@ -139,10 +145,7 @@ void UWG_Inventory::RefreshInventory()
 		int32 gold = gmInst->GetGold();
 		_TB_Gold->SetText(FText::FromString(FString::FromInt(gold)));
 
-		FString goldStr = FString::Printf(TEXT("Add Gold :  %d"), gold);
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green , goldStr);
 	}
-
 
 	//Item Info Setting
 	

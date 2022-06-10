@@ -65,11 +65,44 @@ void UOBJ_Item::SetRandomBonusStat()
 			{	
 				int32 statRand = FMath::RandRange(1,10);
 				_bonusStats.Add(i , statRand);
+				SetFinalStat(i, statRand);
 				break;
 			}
 
 		}
 		cnt++;
+	}
+
+}
+
+void UOBJ_Item::SetFinalStat(int32 id , int32 num)
+{
+	EStatTypes statType = EStatTypes(id);
+	switch (statType)
+	{
+	case EStatTypes::STRENGH:
+		_statData._strength += num;
+		break;
+	case EStatTypes::DEXTERITY:
+		_statData._dexterity += num;
+		break;
+	case EStatTypes::INTELIGENCE:
+		_statData._intelligence += num;
+		break;
+	case EStatTypes::RESILIENCE:
+		_statData._resilience += num;
+		break;
+	case EStatTypes::LUCK:
+		_statData._luck += num;
+		break;
+	case EStatTypes::HP:
+		_statData._maxHp += num;
+		break;
+	case EStatTypes::MP:
+		_statData._maxMp += num;
+		break;
+	default:
+		break;
 	}
 
 }

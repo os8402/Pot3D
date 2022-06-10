@@ -25,8 +25,6 @@ public:
 
 	class UParticleSystemComponent* GetAttachEffComp() { return _PS_AttachEff; };
 
-	void SetEquipWeapon(UOBJ_Item* item);
-
 	virtual void SoundPlay(int32 index) override;
 
 private :
@@ -42,10 +40,7 @@ private :
 	class UParticleSystem* _temp_AttachEff;
 
 
-	////능력치 관련
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	UOBJ_Item* _currentWeapon;
 
 
 };

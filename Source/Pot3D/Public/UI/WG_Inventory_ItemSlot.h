@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "UEnumHeader.h"
 #include "WG_Inventory_ItemSlot.generated.h"
 
 /**
@@ -19,7 +20,6 @@ UCLASS()
 class POT3D_API UWG_Inventory_ItemSlot : public UUserWidget
 {
 	GENERATED_BODY()
-
 
 
 
@@ -42,13 +42,19 @@ public:
 	void SetSlotNum(int32 num) {_slotNum = num;}
 	int32 GetSlotNum() {return _slotNum;}
 
+	void EquipItem();
 
+
+protected:
+	
+	void NativeOnDragDetected( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation ) override;
+	bool NativeOnDrop( const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation ) override;
+	FReply NativeOnMouseButtonDown( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 
 
 private:
 	
-	UPROPERTY()
-	UWG_Inventory* _inventory;
+	TWeakObjectPtr<UWG_Inventory> _inventory;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* _BTN_Slot;

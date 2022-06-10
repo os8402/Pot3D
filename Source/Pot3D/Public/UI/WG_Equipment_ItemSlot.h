@@ -20,7 +20,15 @@ public:
 
 	virtual void NativePreConstruct() override;
 
-	void SetItemInfo(UOBJ_Item* item);
+	void RefreshUI();
+	void SetItem(UOBJ_Item* item);
+
+protected:
+
+	void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+	FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FLinearColor _color;
@@ -30,14 +38,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UTexture2D* _TEX_EmptyIcon;
 	
-
-public:
-
-	EItemTypes _itemType = EItemTypes::NONE;	
-
 private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* _IMG_Icon;
+
+	UPROPERTY()
+	UOBJ_Item* _item;
+
+	UPROPERTY(VisibleAnywhere)
+	UTexture2D* _texture;
 
 };

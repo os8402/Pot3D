@@ -18,6 +18,7 @@
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
+#include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
 
 
@@ -88,6 +89,7 @@ void AUNIT_PlayerCT::BeginPlay()
 	if (_ingameMainUI)
 	{
 		_ingameMainUI->BindStat(_UP_owned->GetStatComp());
+		_ingameMainUI->GetInventory()->SetCurrentOwner(_UP_owned);
 		//_ingameMainUI->UpdateHp();
 	}
 

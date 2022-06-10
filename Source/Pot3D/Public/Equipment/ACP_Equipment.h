@@ -23,6 +23,8 @@ public:
 
 	void SetOwner(AUNIT_Character* owner) { _currentOwner = owner; }
 
+	void SetEquipItem(UOBJ_Item* item);
+
 	virtual void SoundPlay(int32 index);
 
 
@@ -38,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Owner")
 	AUNIT_Character* _currentOwner;
 
+	////능력치 관련
 
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	UOBJ_Item* _currentItem;
 		
 };

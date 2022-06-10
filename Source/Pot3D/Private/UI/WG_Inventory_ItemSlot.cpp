@@ -5,12 +5,6 @@
 #include "UI/WG_Inventory.h"
 
 #include "Item/OBJ_Item.h"
-#include "Item/OBJ_Armor_Item.h"
-
-#include "Creature/UNIT_Player.h"
-
-#include "Equipment/ACP_Weapon.h"
-#include "Equipment/ACP_Armor.h"
 
 #include <Components/WrapBox.h>
 #include <Blueprint/WidgetTree.h>
@@ -18,32 +12,9 @@
 #include <COmponents/Button.h>
 
 
-void UWG_Inventory_ItemSlot::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
-	RefreshUI();
-
-}
-
-
-
-
-void UWG_Inventory_ItemSlot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if (_BTN_Slot->IsHovered() && _inventory.IsValid())
-	{
-		
-		_inventory->SetItemTooltipHovered(_item);
-
-	}
-
-}
-
 void UWG_Inventory_ItemSlot::RefreshUI()
 {
+
 	if (_item == nullptr)
 	{
 		_IMG_Icon->SetColorAndOpacity(FLinearColor::Transparent);
@@ -55,57 +26,6 @@ void UWG_Inventory_ItemSlot::RefreshUI()
 
 }
 
-void UWG_Inventory_ItemSlot::SetItem(UOBJ_Item* item)
-{
-	if(item == nullptr)
-		return;
-	
-	_item = item;
-
-	//TODO : Texture Set
-
-	UTexture2D* newTexture = Cast<UTexture2D>(
-		StaticLoadObject(UTexture2D::StaticClass(), nullptr , *item->GetTexturePath().ToString()));
-
-	if (newTexture != nullptr)
-		_texture = newTexture;
-	
-	RefreshUI();
-
-}
-
-void UWG_Inventory_ItemSlot::EquipItem()
-{
-	
-	if (_inventory.IsValid())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Equip Item"));
-		AUNIT_Player* player = _inventory->GetCurrentOwner();
-
-		if (player)
-		{
-			EItemTypes itemType = _item->GetItemType();
-
-			if (itemType == EItemTypes::WEAPON)
-			{
-				player->GetWeapon()->SetEquipItem(_item);
-			}
-		
-			else
-			{
-				UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(_item);
-				
-				EItemArmorTypes armorType = armorItem->GetArmorType();
-				player->GetArmorList()[(int32)armorType]->SetEquipItem(_item);
-				
-			}
-
-		}
-
-	}
-	
-
-}
 
 void UWG_Inventory_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
@@ -138,12 +58,12 @@ FReply UWG_Inventory_ItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeomet
 		
 			if (itemType == EItemTypes::WEAPON || itemType == EItemTypes::ARMOR)
 			{
-				EquipItem();
+				_inventory->EquipItem(GetSlotNum()); 
 			}
 
 			else if (itemType == EItemTypes::CONSUMABLE)
 			{
-
+				_inventory->UseItem(GetSlotNum());
 			}
 
 		}

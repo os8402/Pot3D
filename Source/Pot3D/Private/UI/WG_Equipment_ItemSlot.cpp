@@ -5,47 +5,28 @@
 #include "Item/OBJ_Item.h"
 #include "Components/Image.h"
 
-void UWG_Equipment_ItemSlot::NativePreConstruct()
-{
-	RefreshUI();
-}
-
 void UWG_Equipment_ItemSlot::RefreshUI()
 {
 	//빈 장비
 	if (_item == nullptr)
 	{	
 		_color = FLinearColor(.2f, .2f, .2f, .6f);
-		//TODO : 파츠별 컬러 및 아이콘
-		_IMG_Icon->SetColorAndOpacity(_color);
-		_IMG_Icon->SetBrushFromTexture(_TEX_EmptyIcon);
-		return;
+		_texture = _TEX_EmptyIcon;
+	
+	}
+	else
+	{
+		_color = FLinearColor(1, 1, 1, 1);
 	}
 
 
-	_color = FLinearColor::White;
+
+	_IMG_Icon->SetColorAndOpacity(_color);
 	_IMG_Icon->SetBrushFromTexture(_texture);
 	
 
 }	
 
-void UWG_Equipment_ItemSlot::SetItem(UOBJ_Item* item)
-{
-	if (item == nullptr)
-		return;
-
-	_item = item;
-
-	//TODO : Texture Set
-
-	UTexture2D* newTexture = Cast<UTexture2D>(
-		StaticLoadObject(UTexture2D::StaticClass(), nullptr, *item->GetTexturePath().ToString()));
-
-	if (newTexture != nullptr)
-		_texture = newTexture;
-
-	RefreshUI();
-}
 
 void UWG_Equipment_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {

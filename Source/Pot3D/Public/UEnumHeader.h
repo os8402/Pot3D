@@ -145,8 +145,18 @@ enum class EStatTypes : uint8
 	INTELIGENCE UMETA(DisplayName = "INTELIGENCE"),
 	RESILIENCE UMETA(DisplayName = "RESILIENCE"),
 	LUCK UMETA(DisplayName = "LUCK"),
-	HP UMETA(DisplayName = "HP"),
-	MP UMETA(DisplayName = "MP"),
+	HP UMETA(DisplayName = "HP_UP"),
+	MP UMETA(DisplayName = "MP_UP"),
+	END
+};
+
+UENUM(BlueprintType)
+enum class ESlotTypes : uint8
+{
+	ITEM = 0 UMETA(DisplayName = "ITEM"),
+	EQUIPMENT UMETA(DisplayName = "EQUIPMENT"),
+	SKILL UMETA(DisplayName = "SKILL"),
+
 	END
 };
 

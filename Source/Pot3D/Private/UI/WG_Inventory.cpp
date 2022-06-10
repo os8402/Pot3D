@@ -7,8 +7,13 @@
 #include "Item/OBJ_Armor_Item.h"
 #include "Item/OBJ_Consumable_Item.h"
 #include "UI/WG_Inventory_ItemSlot.h"
+#include "UI/WG_Equipment_ItemSlot.h"
 #include "UI/WG_Tooltip.h"
 #include "Manager/GI_GmInst.h"
+
+#include "Creature/UNIT_Player.h"
+#include "Equipment/ACP_Weapon.h"
+#include "Equipment/ACP_Armor.h"
 
 #include <Components/WidgetComponent.h>
 #include <Components/WrapBox.h>
@@ -44,10 +49,19 @@ void UWG_Inventory::NativePreConstruct()
 
 	}
 
+	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip);
+	_WBP_Equipment_Weapon->ToolTipWidget->SetRenderTranslation(FVector2D(-500, 0));
+
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::HELMET, _WBP_Equipment_Helmet);
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::ARMOR, _WBP_Equipment_Armor);
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::PANTS, _WBP_Equipment_Pants);
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::BOOTS, _WBP_Equipment_Boots);
+
+	for (auto& armor : _equipment_ArmorLists)
+	{
+		armor.Value->SetToolTip(_WBP_Tooltip);
+		armor.Value->ToolTipWidget->SetRenderTranslation(FVector2D(-500, 0));
+	}
 }
 
 
@@ -125,7 +139,8 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 
 void UWG_Inventory::RemoveItem(int32 slot)
 {
-	_inventoryData.Remove(slot);
+	_inventoryData[slot]->SetItem(nullptr);
+
 	RefreshInventory();
 }
 
@@ -133,6 +148,44 @@ void UWG_Inventory::UseItem(int32 slot)
 {
 	//_inventoryData[slot]->_count -= 1;
 	RefreshInventory();
+}
+
+void UWG_Inventory::EquipItem(int32 slot)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Equip Item"));
+
+	if (_currentOwner.IsValid())
+	{
+		UOBJ_Item* item = _inventoryData[slot]->GetItem();
+
+		if(item == nullptr)
+			return;
+
+		EItemTypes itemType = item->GetItemType();
+
+		if (itemType == EItemTypes::WEAPON)
+		{
+			_currentOwner->GetWeapon()->SetEquipItem(item);
+			//TODO : Equipment Slot
+			_WBP_Equipment_Weapon->SetItem(item);
+		}
+
+		else
+		{
+			UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(item);
+
+			EItemArmorTypes armorType = armorItem->GetArmorType();
+			_currentOwner->GetArmorList()[(int32)armorType]->SetEquipItem(item);
+			//TODO : Equipment Slot
+			_equipment_ArmorLists[(int32)armorType]->SetItem(item);
+
+		}
+
+		//슬롯 제거 작업
+
+		RemoveItem(slot);
+		RefreshInventory();
+	}
 }
 
 void UWG_Inventory::RefreshInventory()
@@ -149,11 +202,12 @@ void UWG_Inventory::RefreshInventory()
 
 	//Item Info Setting
 	
-	for (int i = 0; i < _itemMaxSlotNum; i++)
+	for (int32 i = 0; i < _itemMaxSlotNum; i++)
 	{
-		_inventoryData[i]->RefreshUI();
-	}
+		if(_inventoryData[i] != nullptr)
+			_inventoryData[i]->RefreshUI();
 
+	}
 }
 
 int32 UWG_Inventory::GetEmptySlot()

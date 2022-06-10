@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Blueprint/UserWidget.h"
 #include "UEnumHeader.h"
+#include "UI/WG_Slot.h"
 #include "WG_Equipment_ItemSlot.generated.h"
 
 
@@ -12,16 +14,14 @@ class UTexture2D;
 class UOBJ_Item;
 
 UCLASS()
-class POT3D_API UWG_Equipment_ItemSlot : public UUserWidget
+class POT3D_API UWG_Equipment_ItemSlot : public UWG_Slot
 {
 	GENERATED_BODY()
 
 public:
 
-	virtual void NativePreConstruct() override;
+	virtual void RefreshUI() override;
 
-	void RefreshUI();
-	void SetItem(UOBJ_Item* item);
 
 protected:
 
@@ -38,15 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UTexture2D* _TEX_EmptyIcon;
 	
-private:
 
-	UPROPERTY(meta = (BindWidget))
-	class UImage* _IMG_Icon;
-
-	UPROPERTY()
-	UOBJ_Item* _item;
-
-	UPROPERTY(VisibleAnywhere)
-	UTexture2D* _texture;
 
 };

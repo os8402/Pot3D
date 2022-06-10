@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Blueprint/UserWidget.h"
 #include "UEnumHeader.h"
+#include "UI/WG_Slot.h"
 #include "WG_Inventory_ItemSlot.generated.h"
 
 /**
@@ -17,32 +19,14 @@ class UTexture2D;
 class UButton;
 
 UCLASS()
-class POT3D_API UWG_Inventory_ItemSlot : public UUserWidget
+class POT3D_API UWG_Inventory_ItemSlot : public UWG_Slot
 {
 	GENERATED_BODY()
 
-
-
 public:
 
-	virtual void NativePreConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	void RefreshUI();
 
-
-	void SetInventory(UWG_Inventory* inventory) {_inventory = inventory; }
-
-	UButton* GetSlotBtn() {return _BTN_Slot;}
-	
-
-	void SetItem(UOBJ_Item* item);
-	UOBJ_Item* GetItem() { return _item; }
-
-
-	void SetSlotNum(int32 num) {_slotNum = num;}
-	int32 GetSlotNum() {return _slotNum;}
-
-	void EquipItem();
+	virtual void RefreshUI() override;
 
 
 protected:
@@ -52,22 +36,4 @@ protected:
 	FReply NativeOnMouseButtonDown( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 
 
-private:
-	
-	TWeakObjectPtr<UWG_Inventory> _inventory;
-	
-	UPROPERTY(meta = (BindWidget))
-	UButton* _BTN_Slot;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* _IMG_Icon;
-
-	UPROPERTY(EditAnywhere, Category="SLOT")
-	int32 _slotNum;
-
-	UPROPERTY()
-	UOBJ_Item* _item;
-
-	UPROPERTY(VisibleAnywhere )
-	UTexture2D* _texture;
 };

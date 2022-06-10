@@ -46,6 +46,7 @@ public:
 	virtual bool AddItem(UOBJ_Item* newItem);
 	virtual void RemoveItem(int32 slot);
 	virtual void UseItem(int32 slot);
+	virtual void EquipItem(int32 slot);
 	virtual void RefreshInventory();
 	virtual int32 GetEmptySlot();
 

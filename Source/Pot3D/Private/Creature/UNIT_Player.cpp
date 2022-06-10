@@ -4,7 +4,7 @@
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
 #include "Controller/UNIT_PlayerCT.h"
-#include "ACP_Weapon.h"
+#include "Equipment/ACP_Weapon.h"
 #include "Item/ACT_DropItem.h"
 
 #include <Camera/CameraComponent.h>
@@ -110,7 +110,7 @@ void AUNIT_Player::AttackCheck()
 
 void AUNIT_Player::GetReward(int32 id)
 {
-
+	
 
 }
 

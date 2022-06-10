@@ -55,6 +55,12 @@ public:
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
+public:
+	
+	void RefreshStat();
+
+
+
 private:
 
 
@@ -92,6 +98,13 @@ private:
 	int32 _intelligence;
 	UPROPERTY(EditAnyWhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _luck;
+
+
+	int32 _totalMinAtk;
+	int32 _totalMaxAtk;
+	int32 _totalDef;
+	int32 _totalRes;
+
 
 	FOnHpChanged _onHpChanged;
 	FOnHpChanged _onMpChanged;

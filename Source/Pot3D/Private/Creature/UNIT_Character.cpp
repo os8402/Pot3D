@@ -7,7 +7,9 @@
 #include "UI/WG_HpBar.h"
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
-#include "ACP_Weapon.h"
+
+#include "Equipment/ACP_Weapon.h"
+#include "Equipment/ACP_Armor.h"
 
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
@@ -47,7 +49,10 @@ AUNIT_Character::AUNIT_Character()
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
 
 	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
+	_ACP_Weapon->SetOwner(this);
 
+	_ACP_Armor = CreateDefaultSubobject<UACP_Armor>(TEXT("ARMOR"));
+	_ACP_Armor->SetOwner(this);
 
 	_WG_HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HP_BAR"));
 	_WG_HpBar->SetupAttachment(GetMesh());
@@ -232,6 +237,10 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	//
 	float dmg =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	//TODO : 능력치 합산 들어가야 함. 
+
+
 
 	_ACP_Stat->OnAttacked(DamageAmount);
 

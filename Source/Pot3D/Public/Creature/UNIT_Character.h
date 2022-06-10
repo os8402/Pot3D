@@ -88,6 +88,7 @@ public:
 
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
+	class UACP_Armor* GetArmor() { return _ACP_Armor; }
 
 
 private:
@@ -189,7 +190,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	class UACP_Weapon* _ACP_Weapon;
-
+	UPROPERTY(VisibleAnywhere, Category = "Armor")
+	class UACP_Armor* _ACP_Armor;
 
 
 };

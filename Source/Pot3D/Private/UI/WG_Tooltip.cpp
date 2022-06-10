@@ -20,11 +20,10 @@ void UWG_Tooltip::RefreshUI(UOBJ_Item* item)
 	_WBP_Inventory_ItemSlot->SetItem(item);
 
 	//TODO : Bonus Stat Widget
-	UVerticalBox* verticalBox = WidgetTree->FindWidget<UVerticalBox>("_VB_ItemList");
-	
+	UVerticalBox* verticalBox = WidgetTree->FindWidget<UVerticalBox>("_VB_BonusStatList");
 
 	//TODO : Bonus Stat All Clear
-
+	verticalBox->ClearChildren();
 
 	if (verticalBox && item)
 	{
@@ -35,14 +34,13 @@ void UWG_Tooltip::RefreshUI(UOBJ_Item* item)
 			verticalBox->AddChild(bonusStat);
 			
 			const UEnum* stateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EStatTypes") , true);
-
-		//	stateEnum->GetNameByValue()
 			
-
-			//FString conv = FString::Printf("+%d %s증가", bonus.Value, bonus.Key);
-		//	FText bonusText = UtilsLib::ConvertToFText(conv);
+			FString statName = stateEnum->GetNameStringByValue((int32)bonus.Key);
 			
-			//bonusStat->SetBonusStatText(bonusText , _gradeColors[(int32)item->GetRarity()]);
+			FString bonusStr = LocalizationUI::ConvertToUIText(statName);
+			FString conv = FString::Printf(TEXT("+%d %s 증가"), bonus.Value, *bonusStr);
+			
+			bonusStat->SetBonusStatText(FText::FromString(conv), _gradeColors[(int32)item->GetRarity()]);
 
 		}
 
@@ -180,7 +178,6 @@ void UWG_Tooltip::Localization(UOBJ_Item* item)
 	}
 
 
-	
 	_TB_Grade->SetText(FText::FromString(strRarity));
 	_TB_Grade->SetColorAndOpacity(_gradeColors[(int32)rarity]);
 

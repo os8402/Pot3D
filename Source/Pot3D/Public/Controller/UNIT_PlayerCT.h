@@ -73,12 +73,10 @@ private:
 	class UWidgetComponent* _WC_CursorAttack;
 
 	//현재 마우스로 보는 몬스터 + npc 정보
-	UPROPERTY(VisibleAnywhere)
 	TWeakObjectPtr<class AUNIT_Character> _currentLookTarget;
 
 
 	//현재 마우스로 보는 드랍 아이템 정보
-	UPROPERTY(VisibleAnywhere)
 	TWeakObjectPtr<class AACT_DropItem> _currentLookItem;
 
 

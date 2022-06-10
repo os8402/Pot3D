@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UEnumHeader.h"
 #include "UtilsLib.h"
+#include "LocalizationUI.h"
 #include "WG_Tooltip.generated.h"
 
 

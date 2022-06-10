@@ -85,3 +85,23 @@ void UACP_StatInfo::SetExp(int32 exp)
 	
 }
 
+void UACP_StatInfo::RefreshStat()
+{
+	int32 strength = _strength / 5;
+
+	_totalMinAtk += strength;
+	_totalMaxAtk += _strength;
+
+	
+	int32 defence  = _defence;
+
+	_totalDef += defence;
+
+	int32 res = _resilience;
+
+	_totalRes +=  res;
+
+
+
+}
+

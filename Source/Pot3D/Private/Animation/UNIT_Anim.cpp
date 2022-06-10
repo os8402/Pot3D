@@ -3,7 +3,7 @@
 
 #include "Animation/UNIT_Anim.h"
 #include "Creature/UNIT_Character.h"
-#include "ACP_Weapon.h"
+#include "Equipment/ACP_Weapon.h"
 
 
 void UUNIT_Anim::NativeUpdateAnimation(float DeltaSeconds)

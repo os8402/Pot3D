@@ -5,6 +5,8 @@
 #include "Item/OBJ_Item.h"
 #include "UI/WG_Inventory.h"
 
+#include "Components/Button.h"
+
 void UWG_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -12,7 +14,7 @@ void UWG_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if (_BTN_Slot->IsHovered() && _inventory.IsValid())
 	{
 
-		_inventory->SetItemTooltipHovered(_item);
+		_inventory->SetItemTooltipHovered(_item);	
 
 	}
 

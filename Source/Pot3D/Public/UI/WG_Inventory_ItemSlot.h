@@ -9,9 +9,6 @@
 #include "UI/WG_Slot.h"
 #include "WG_Inventory_ItemSlot.generated.h"
 
-/**
- * 
- */
 
 class UWG_Inventory;
 class UOBJ_Item;

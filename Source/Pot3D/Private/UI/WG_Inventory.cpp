@@ -34,6 +34,7 @@ void UWG_Inventory::NativePreConstruct()
 	{
 		for (int i = 0; i < _itemMaxSlotNum; i++)
 		{
+
 			UWG_Inventory_ItemSlot* itemSlot = CreateWidget<UWG_Inventory_ItemSlot>(this, _itemSlotClass);
 			slotBox->AddChild(itemSlot);
 
@@ -41,16 +42,16 @@ void UWG_Inventory::NativePreConstruct()
 			itemSlot->SetSlotNum(i);
 
 			_inventoryData.Add(i, itemSlot);
-		
+
 			itemSlot->SetToolTip(_WBP_Tooltip);
-			itemSlot->ToolTipWidget->SetRenderTranslation(FVector2D(-500,0));
+
 
 		}
 
 	}
 
 	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip);
-	_WBP_Equipment_Weapon->ToolTipWidget->SetRenderTranslation(FVector2D(-500, 0));
+	_WBP_Equipment_Weapon->SetInventory(this);
 
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::HELMET, _WBP_Equipment_Helmet);
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::ARMOR, _WBP_Equipment_Armor);
@@ -60,8 +61,12 @@ void UWG_Inventory::NativePreConstruct()
 	for (auto& armor : _equipment_ArmorLists)
 	{
 		armor.Value->SetToolTip(_WBP_Tooltip);
-		armor.Value->ToolTipWidget->SetRenderTranslation(FVector2D(-500, 0));
+		armor.Value->SetInventory(this);
+
 	}
+
+
+	_WBP_Tooltip->SetVisibility(ESlateVisibility::Hidden);
 }
 
 
@@ -165,6 +170,13 @@ void UWG_Inventory::EquipItem(int32 slot)
 
 		if (itemType == EItemTypes::WEAPON)
 		{
+			//TODO : 장비 해제 작업
+			if (_WBP_Equipment_Weapon->GetItem())
+			{
+				UOBJ_Item* equippedItem = _WBP_Equipment_Weapon->GetItem();
+				UnEquipItem(equippedItem);
+			}
+
 			_currentOwner->GetWeapon()->SetEquipItem(item);
 			//TODO : Equipment Slot
 			_WBP_Equipment_Weapon->SetItem(item);
@@ -175,9 +187,20 @@ void UWG_Inventory::EquipItem(int32 slot)
 			UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(item);
 
 			EItemArmorTypes armorType = armorItem->GetArmorType();
+
+			auto equipmentSlot = _equipment_ArmorLists[(int32)armorType];
+
+			//TODO : 장비 해제 작업
+			if (equipmentSlot->GetItem())
+			{
+				UOBJ_Item* equippedItem = equipmentSlot->GetItem();
+				UnEquipItem(equippedItem);
+			}
+
+			
 			_currentOwner->GetArmorList()[(int32)armorType]->SetEquipItem(item);
 			//TODO : Equipment Slot
-			_equipment_ArmorLists[(int32)armorType]->SetItem(item);
+			equipmentSlot->SetItem(item);
 
 		}
 
@@ -186,6 +209,48 @@ void UWG_Inventory::EquipItem(int32 slot)
 		RemoveItem(slot);
 		RefreshInventory();
 	}
+}
+
+
+
+void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Orange, TEXT("UnEquip Item"));
+
+	if(equippedItem == nullptr)
+		return;
+
+
+	EItemTypes itemType = equippedItem->GetItemType();
+
+	if (itemType == EItemTypes::WEAPON)
+	{
+		//TODO : UnEquipment Character
+		//_currentOwner->GetWeapon()->SetEquipItem(item);
+		//TODO : Equipment Slot
+		_WBP_Equipment_Weapon->SetItem(nullptr);
+
+		//TODO : 인벤토리에 다시 등록
+	}
+
+	else
+	{
+		UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(equippedItem);
+
+		EItemArmorTypes armorType = armorItem->GetArmorType();
+		//TODO : UnEquipment Character
+		//_currentOwner->GetArmorList()[(int32)armorType]->SetEquipItem(item);
+		//TODO : Equipment Slot
+		_equipment_ArmorLists[(int32)armorType]->SetItem(nullptr);
+
+		//TODO : 인벤토리에 다시 등록
+
+	}
+
+	AddItem(equippedItem);
+
+	RefreshInventory();
+
 }
 
 void UWG_Inventory::RefreshInventory()
@@ -247,6 +312,7 @@ void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
 	_hoveredItem = item;
 
 	_WBP_Tooltip->SetVisibility(ESlateVisibility::Visible);
+	_WBP_Tooltip->SetRenderTranslation(FVector2D(-500, -100));
 
 	FString goldStr = FString::Printf(TEXT("Item Info :  %s"), *item->GetItemName().ToString());
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, goldStr);

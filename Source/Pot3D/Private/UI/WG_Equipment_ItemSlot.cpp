@@ -2,6 +2,7 @@
 
 
 #include "UI/WG_Equipment_ItemSlot.h"
+#include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
 #include "Components/Image.h"
 
@@ -24,7 +25,8 @@ void UWG_Equipment_ItemSlot::RefreshUI()
 	_IMG_Icon->SetColorAndOpacity(_color);
 	_IMG_Icon->SetBrushFromTexture(_texture);
 	
-
+	FString str = this->GetName();
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
 }	
 
 
@@ -45,6 +47,25 @@ FReply UWG_Equipment_ItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeomet
 	FEventReply reply;
 
 	reply.NativeReply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
+	{
+
+		if (_inventory.IsValid())
+		{
+
+			if (_item == nullptr)
+				return reply.NativeReply;
+
+			_inventory->UnEquipItem(_item);
+
+		}
+
+	}
+	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) == true)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Equipment Left Click"));
+	}
 
 	return reply.NativeReply;
 }

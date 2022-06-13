@@ -23,6 +23,9 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativePreConstruct() override;
 	virtual void RefreshUI();
+	
+
+
 
 
 	UButton* GetSlotBtn() { return _BTN_Slot; }

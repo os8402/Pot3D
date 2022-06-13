@@ -9,13 +9,15 @@
 
 void UWG_Status::RefreshStat(class UACP_StatInfo* statComp)
 {
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Refrsh UI STAT"));
 	FText lv = UtilsLib::ConvertToFText(statComp->GetLevel());
 	FText str = UtilsLib::ConvertToFText(statComp->GetStrength());
 	FText dex = UtilsLib::ConvertToFText(statComp->GetDexterity());
 	FText intel = UtilsLib::ConvertToFText(statComp->GetIntelligence());
 	FText luk = UtilsLib::ConvertToFText(statComp->GetLuck());
 	FText atk = UtilsLib::ConvertToFText(statComp->GetMinAttack() , statComp->GetMaxAttack());
-	FText def = UtilsLib::ConvertToFText(statComp->GetDefense());
+	FText def = UtilsLib::ConvertToFText(statComp->GetDefence());
 	FText res = UtilsLib::ConvertToFText(statComp->GetResilience());
 
 

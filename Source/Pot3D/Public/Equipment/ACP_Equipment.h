@@ -7,7 +7,7 @@
 #include "ACP_Equipment.generated.h"
 
 class UOBJ_Item;
-class AUNIT_Character;
+class AUNIT_Player;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -21,9 +21,11 @@ public:
 
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 
-	void SetOwner(AUNIT_Character* owner) { _currentOwner = owner; }
+	void SetOwner(AUNIT_Player* owner) { _currentOwner = owner; }
 
-	void SetEquipItem(UOBJ_Item* item);
+	void EquipItem(UOBJ_Item* item);
+
+	void UnEquipItem();
 
 	virtual void SoundPlay(int32 index);
 
@@ -38,7 +40,7 @@ protected:
 	class UAudioComponent* _Audio_Comp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Owner")
-	AUNIT_Character* _currentOwner;
+	AUNIT_Player* _currentOwner;
 
 	////능력치 관련
 

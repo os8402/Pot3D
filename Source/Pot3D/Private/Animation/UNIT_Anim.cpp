@@ -3,6 +3,7 @@
 
 #include "Animation/UNIT_Anim.h"
 #include "Creature/UNIT_Character.h"
+#include "Creature/UNIT_Player.h"
 #include "Equipment/ACP_Weapon.h"
 
 
@@ -36,7 +37,10 @@ void UUNIT_Anim::AnimNotify_SoundPlay()
 	if (owner)
 	{
 		owner->SoundPlay((int)ECharacterSounds::NORMAL);
-		owner->GetWeapon()->SoundPlay((int)EWeaponSounds::NORMAL);
+
+		auto player = Cast<AUNIT_Player>(owner);
+		if(player)
+			player->GetWeapon()->SoundPlay((int)EWeaponSounds::NORMAL);
 	}
 		
 }

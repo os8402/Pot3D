@@ -16,17 +16,17 @@ class POT3D_API AUNIT_Character : public ACharacter
 
 
 public:
-	// Sets default values for this character's properties
+	
 	AUNIT_Character();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	
@@ -87,8 +87,6 @@ public:
 	EUnitJobs GetCharJobs() { return _UnitJobs; }
 
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
-	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
-	TMap<int32, class UACP_Armor*>  GetArmorList() { return _armorList; }
 
 
 private:
@@ -186,20 +184,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Audio")
 	class UAudioComponent* _Audio_Comp;
 
-private:
-	//EQUIPMENT 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	class UACP_Weapon* _ACP_Weapon;
-	UPROPERTY(VisibleAnywhere, Category = "Armor")
-	class UACP_Armor* _ACP_Armor;
-	UPROPERTY(VisibleAnywhere, Category = "Armor")
-	class UACP_Armor* _ACP_Helmet;
-	UPROPERTY(VisibleAnywhere, Category = "Armor")
-	class UACP_Armor* _ACP_Pants;
-	UPROPERTY(VisibleAnywhere, Category = "Armor")
-	class UACP_Armor* _ACP_Boots;
 
-	TMap<int32, UACP_Armor*> _armorList;
 
 
 };

@@ -93,7 +93,7 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UWG_Equipment_ItemSlot* _WBP_Equipment_Boots;
 
-	
+	UPROPERTY()
 	TMap<int32, UWG_Equipment_ItemSlot*> _equipment_ArmorLists;
 
 

@@ -7,6 +7,9 @@
 #include "Equipment/ACP_Weapon.h"
 #include "Item/ACT_DropItem.h"
 
+#include "Equipment/ACP_Weapon.h"
+#include "Equipment/ACP_Armor.h"
+
 #include <Camera/CameraComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Components/CapsuleComponent.h>
@@ -18,6 +21,20 @@
 AUNIT_Player::AUNIT_Player()
 {
 	SetUnitTypes(EUnitTypes::PLAYER);
+
+	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
+
+	_ACP_Armor = CreateDefaultSubobject<UACP_Armor>(TEXT("ARMOR"));
+	_ACP_Helmet = CreateDefaultSubobject<UACP_Armor>(TEXT("HELMET"));
+	_ACP_Pants = CreateDefaultSubobject<UACP_Armor>(TEXT("PANTS"));
+	_ACP_Boots = CreateDefaultSubobject<UACP_Armor>(TEXT("BOOTS"));
+
+	_armorList.Add((int32)EItemArmorTypes::ARMOR, _ACP_Armor);
+	_armorList.Add((int32)EItemArmorTypes::HELMET, _ACP_Helmet);
+	_armorList.Add((int32)EItemArmorTypes::PANTS, _ACP_Pants);
+	_armorList.Add((int32)EItemArmorTypes::BOOTS, _ACP_Boots);
+
+
 
 	_SPC_Arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPC_ARM"));
 	_SPC_Arm->SetupAttachment(GetCapsuleComponent());
@@ -50,6 +67,16 @@ AUNIT_Player::AUNIT_Player()
 		}
 	}
 
+}
+
+void AUNIT_Player::BeginPlay()
+{
+	Super::BeginPlay();
+
+	_ACP_Weapon->SetOwner(this);
+
+	for (auto& item : _armorList)
+		item.Value->SetOwner(this);
 }
 
 void AUNIT_Player::Tick(float DeltaTime)

@@ -4,7 +4,7 @@
 #include <Sound/SoundCue.h>
 
 #include "Item/OBJ_Item.h"
-#include "Creature/UNIT_Character.h"
+#include "Creature/UNIT_Player.h"
 #include "Stat/ACP_StatInfo.h"
 
 UACP_Equipment::UACP_Equipment()
@@ -30,8 +30,36 @@ void UACP_Equipment::BeginPlay()
 
 }
 
-void UACP_Equipment::SetEquipItem(UOBJ_Item* item)
+void UACP_Equipment::EquipItem(UOBJ_Item* item)
 {
 	_currentItem = item;
-	_currentOwner->GetStatComp()->RefreshStat();
+	
+	auto statComp = _currentOwner->GetStatComp();
+	if (statComp)
+	{
+		//_currentOwner->GetStatComp()->RefreshStat(item->GetStatData());
+		statComp->RefreshStat(item->GetStatData());
+	}
+
+	
+}
+
+void UACP_Equipment::UnEquipItem()
+{
+	// 스탯 전부 마이너스로
+	FStatData statData = _currentItem->GetStatData();
+	
+	statData._maxHp = -statData._maxHp;
+	statData._maxMp = -statData._maxMp;
+	statData._minAtk = -statData._minAtk;
+	statData._maxAtk = -statData._maxAtk;
+	statData._defence = -statData._defence;
+	statData._resilience = -statData._resilience;
+	statData._strength = -statData._strength;
+	statData._dexterity = -statData._dexterity;
+	statData._intelligence = -statData._intelligence;
+	statData._luck = -statData._luck;
+
+	_currentItem = nullptr;
+	_currentOwner->GetStatComp()->RefreshStat(statData);
 }

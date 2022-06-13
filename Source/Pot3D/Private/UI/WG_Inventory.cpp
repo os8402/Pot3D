@@ -9,6 +9,7 @@
 #include "UI/WG_Inventory_ItemSlot.h"
 #include "UI/WG_Equipment_ItemSlot.h"
 #include "UI/WG_Tooltip.h"
+#include "UI/WG_Status.h"
 #include "Manager/GI_GmInst.h"
 
 #include "Creature/UNIT_Player.h"
@@ -175,9 +176,10 @@ void UWG_Inventory::EquipItem(int32 slot)
 			{
 				UOBJ_Item* equippedItem = _WBP_Equipment_Weapon->GetItem();
 				UnEquipItem(equippedItem);
+
 			}
 
-			_currentOwner->GetWeapon()->SetEquipItem(item);
+			_currentOwner->GetWeapon()->EquipItem(item);
 			//TODO : Equipment Slot
 			_WBP_Equipment_Weapon->SetItem(item);
 		}
@@ -195,10 +197,10 @@ void UWG_Inventory::EquipItem(int32 slot)
 			{
 				UOBJ_Item* equippedItem = equipmentSlot->GetItem();
 				UnEquipItem(equippedItem);
+	
 			}
-
 			
-			_currentOwner->GetArmorList()[(int32)armorType]->SetEquipItem(item);
+			_currentOwner->GetArmorList()[(int32)armorType]->EquipItem(item);
 			//TODO : Equipment Slot
 			equipmentSlot->SetItem(item);
 
@@ -229,7 +231,7 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem)
 		//_currentOwner->GetWeapon()->SetEquipItem(item);
 		//TODO : Equipment Slot
 		_WBP_Equipment_Weapon->SetItem(nullptr);
-
+		_currentOwner->GetWeapon()->UnEquipItem();
 		//TODO : 인벤토리에 다시 등록
 	}
 
@@ -242,6 +244,7 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem)
 		//_currentOwner->GetArmorList()[(int32)armorType]->SetEquipItem(item);
 		//TODO : Equipment Slot
 		_equipment_ArmorLists[(int32)armorType]->SetItem(nullptr);
+		_currentOwner->GetArmorList()[(int32)armorType]->UnEquipItem();
 
 		//TODO : 인벤토리에 다시 등록
 
@@ -273,6 +276,14 @@ void UWG_Inventory::RefreshInventory()
 			_inventoryData[i]->RefreshUI();
 
 	}
+
+	//Status Setting
+
+	if (_currentOwner.IsValid())
+	{
+		_WBP_Status->RefreshStat(_currentOwner.Get()->GetStatComp());
+	}
+	
 }
 
 int32 UWG_Inventory::GetEmptySlot()

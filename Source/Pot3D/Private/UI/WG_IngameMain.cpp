@@ -54,10 +54,10 @@ void UWG_IngameMain::OpenInventory()
 
 	//TODO : ½ºÅÈ °»½Å 
 
-	if (_currentStatComp.IsValid())
-	{
-		_WBP_Inventory->GetStatus()->RefreshStat(_currentStatComp.Get());
-	}
+	//if (_currentStatComp.IsValid())
+	//{
+		//_WBP_Inventory->GetStatus()->RefreshStat(_currentStatComp.Get());
+	//}
 
 	_WBP_Inventory->RefreshInventory();
 

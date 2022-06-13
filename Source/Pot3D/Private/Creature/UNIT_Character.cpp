@@ -8,8 +8,7 @@
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
 
-#include "Equipment/ACP_Weapon.h"
-#include "Equipment/ACP_Armor.h"
+
 
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
@@ -47,22 +46,6 @@ AUNIT_Character::AUNIT_Character()
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
-
-	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
-	_ACP_Weapon->SetOwner(this);
-
-	_ACP_Armor = CreateDefaultSubobject<UACP_Armor>(TEXT("ARMOR"));
-	_ACP_Helmet = CreateDefaultSubobject<UACP_Armor>(TEXT("HELMET"));
-	_ACP_Pants = CreateDefaultSubobject<UACP_Armor>(TEXT("PANTS"));
-	_ACP_Boots = CreateDefaultSubobject<UACP_Armor>(TEXT("BOOTS"));
-
-	_armorList.Add((int32)EItemArmorTypes::ARMOR , _ACP_Armor);
-	_armorList.Add((int32)EItemArmorTypes::HELMET , _ACP_Helmet);
-	_armorList.Add((int32)EItemArmorTypes::PANTS , _ACP_Pants);
-	_armorList.Add((int32)EItemArmorTypes::BOOTS , _ACP_Boots);
-
-	for(auto& item : _armorList)
-		item.Value->SetOwner(this);
 
 	_WG_HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HP_BAR"));
 	_WG_HpBar->SetupAttachment(GetMesh());

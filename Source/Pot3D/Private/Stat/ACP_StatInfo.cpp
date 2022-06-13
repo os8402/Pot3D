@@ -88,14 +88,23 @@ void UACP_StatInfo::SetExp(int32 exp)
 	
 }
 
-void UACP_StatInfo::RefreshStat()
+void UACP_StatInfo::RefreshStat(const FStatData statData)
 {
 	
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, TEXT("Refresh Stat"));
 
-	//FStatData 불러와서 더해주고.. 갱신합니다. 
+	_maxHp += statData._maxHp;
+	_maxMp += statData._maxMp;
+	_minAtk += statData._minAtk;
+	_maxAtk += statData._maxAtk;
+	_defence += statData._defence;
+	_resilience += statData._resilience;
+	_strength += statData._strength;
+	_dexterity += statData._dexterity;
+	_intelligence += statData._intelligence;
+	_luck += statData._luck;
 
-
+	
 
 
 }

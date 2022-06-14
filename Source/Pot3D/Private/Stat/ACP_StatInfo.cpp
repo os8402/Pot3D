@@ -23,6 +23,12 @@ void UACP_StatInfo::InitializeComponent()
 {
 	Super::InitializeComponent();
 
+	//보너스 스탯 초기화
+	for (int i = 0; i < (int32)EStatTypes::END; i++)
+	{
+		_bonusStats.Add(i, 0);
+	}
+
 }
 
 void UACP_StatInfo::OnAttacked(int32 dmg)
@@ -88,7 +94,7 @@ void UACP_StatInfo::SetExp(int32 exp)
 	
 }
 
-void UACP_StatInfo::RefreshStat(const FStatData statData)
+void UACP_StatInfo::RefreshStat(const FStatData statData, const TMap<int32, int32> bonusStats)
 {
 	
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, TEXT("Refresh Stat"));
@@ -104,8 +110,15 @@ void UACP_StatInfo::RefreshStat(const FStatData statData)
 	_intelligence += statData._intelligence;
 	_luck += statData._luck;
 
+	for (auto& stat : bonusStats)
+	{
+		_bonusStats[stat.Key] += stat.Value;
+	}
 	
-
+	_bonusMinAtk += statData._minAtk;
+	_bonusMaxAtk += statData._maxAtk;
+	_bonusDef += statData._defence;
+	_bonusRes += statData._resilience;
 
 }
 

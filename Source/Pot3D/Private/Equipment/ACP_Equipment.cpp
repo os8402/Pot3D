@@ -34,19 +34,14 @@ void UACP_Equipment::EquipItem(UOBJ_Item* item)
 {
 	_currentItem = item;
 	
-	auto statComp = _currentOwner->GetStatComp();
-	if (statComp)
-	{
-		//_currentOwner->GetStatComp()->RefreshStat(item->GetStatData());
-		statComp->RefreshStat(item->GetStatData());
-	}
+	_currentOwner->GetStatComp()->RefreshStat(item->GetStatData() , item->GetBonusStats());
+	
 
 	
 }
 
 void UACP_Equipment::UnEquipItem()
 {
-	// 스탯 전부 마이너스로
 	FStatData statData = _currentItem->GetStatData();
 	
 	statData._maxHp = -statData._maxHp;
@@ -60,6 +55,13 @@ void UACP_Equipment::UnEquipItem()
 	statData._intelligence = -statData._intelligence;
 	statData._luck = -statData._luck;
 
+	TMap<int32, int32> bonusStats = _currentItem->GetBonusStats();
+
+	for (auto& stat : bonusStats)
+	{
+		stat.Value = -stat.Value;
+	}
+
 	_currentItem = nullptr;
-	_currentOwner->GetStatComp()->RefreshStat(statData);
+	_currentOwner->GetStatComp()->RefreshStat(statData, bonusStats);
 }

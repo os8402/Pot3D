@@ -32,6 +32,13 @@ bool UOBJ_Item::SetItemInfo(class UGI_GmInst* gmInst, int32 id, int32 count)
 			_statData = itemData->_statData;
 
 			SetEquimentType();
+
+			//보너스 스탯 초기화
+			for (int i = 0; i < (int32)EStatTypes::END; i++)
+			{
+				_bonusStats.Add(i,0);
+			}
+
 			SetRandomBonusStat();
 
 			flag = true;
@@ -54,7 +61,7 @@ void UOBJ_Item::SetRandomBonusStat()
 	while (cnt <  statBonusNum)
 	{
 		int32 sum = 0 ;
-		int32 probability = 100 / (int32)EStatTypes::END;
+		int32 probability = 100 / (int32)EStatTypes::END - 1;
 		int32 rand = FMath::RandRange(0, 101);
 
 		for (int32 i = 0; i < (int32)EStatTypes::END; i++)
@@ -64,7 +71,7 @@ void UOBJ_Item::SetRandomBonusStat()
 			if (rand <= sum)
 			{	
 				int32 statRand = FMath::RandRange(1,10);
-				_bonusStats.Add(i , statRand);
+				_bonusStats[i] += statRand;
 				SetFinalStat(i, statRand);
 				break;
 			}

@@ -30,6 +30,10 @@ void UWG_Tooltip::RefreshUI(UOBJ_Item* item)
 
 		for (auto& bonus : item->GetBonusStats())
 		{
+
+			if(bonus.Value == 0)
+				continue;
+			
 			UWG_BonusStat* bonusStat = CreateWidget<UWG_BonusStat>(this, _bonusStatClass);
 			verticalBox->AddChild(bonusStat);
 			

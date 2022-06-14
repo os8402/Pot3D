@@ -60,12 +60,19 @@ public:
 	int32 GetIntelligence() { return _intelligence; }
 	int32 GetLuck() { return _luck; }
 
+	TMap<int32, int32> GetBonuStats(){return _bonusStats;}
+
+	int32 GetBonusMinAttck() {return _bonusMinAtk; }
+	int32 GetBonusMaxAttck() {return _bonusMaxAtk; }
+	int32 GetBonusDefece() {return _bonusDef; }
+	int32 GetBonusResilience() {return _bonusRes; }
+
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
 public:
 	
-	void RefreshStat(const FStatData statData);
+	void RefreshStat(const FStatData statData , const TMap<int32, int32> bonusStats);
 
 
 
@@ -108,10 +115,17 @@ private:
 	int32 _luck;
 
 
-	int32 _totalMinAtk;
-	int32 _totalMaxAtk;
-	int32 _totalDef;
-	int32 _totalRes;
+	UPROPERTY()
+	TMap<int32, int32> _bonusStats;
+
+	UPROPERTY()
+	int32 _bonusMinAtk;
+	UPROPERTY()
+	int32 _bonusMaxAtk;
+	UPROPERTY()
+	int32 _bonusDef;
+	UPROPERTY()
+	int32 _bonusRes;
 
 
 	FOnHpChanged _onHpChanged;

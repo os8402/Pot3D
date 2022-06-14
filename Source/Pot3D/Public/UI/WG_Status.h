@@ -24,20 +24,20 @@ public:
 private:
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Lv;
+	class URichTextBlock* _TB_Stat_Lv;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Str;
+	class URichTextBlock* _TB_Stat_Str;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Dex;
+	class URichTextBlock* _TB_Stat_Dex;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Int;
+	class URichTextBlock* _TB_Stat_Int;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Luk;
+	class URichTextBlock* _TB_Stat_Luk;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Atk;
+	class URichTextBlock* _TB_Stat_Atk;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Def;
+	class URichTextBlock* _TB_Stat_Def;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* _TB_Stat_Res;
+	class URichTextBlock* _TB_Stat_Res;
 	
 };

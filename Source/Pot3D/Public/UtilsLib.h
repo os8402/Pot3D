@@ -50,6 +50,46 @@ public:
 		FText fText = FText::FromString(data);
 		return fText;
 	}
+	static FText IsBonusStat(int32 stat , int32* bonusStat)
+	{
+		FString str;
+		
+		if (*bonusStat > 0)
+			str = FString::Printf(TEXT("%d<Green>(+%d)</>"), stat, *bonusStat);
+		else
+			str = FString::FromInt(stat);
+		
+
+		FText fText = FText::FromString(str);
+		return fText;
+	}
+	static FText IsBonusStat(int32 stat, int32 bonusStat)
+	{
+		FString str;
+
+		if (bonusStat > 0)
+			str = FString::Printf(TEXT("%d<Green>(+%d)</>"), stat, bonusStat);
+		else
+			str = FString::FromInt(stat);
+
+
+		FText fText = FText::FromString(str);
+		return fText;
+	}
+	static FText IsBonusStat(int32 minAtk, int32 maxAtk, int32 bonusMinAtk, int32 bonusMaxAtk)
+	{
+		FString str;
+
+		if (bonusMinAtk > 0 || bonusMaxAtk > 0)
+			str = FString::Printf(TEXT("%d~%d<Green>(+%d~%d)</>"), minAtk ,maxAtk ,bonusMinAtk, bonusMaxAtk);
+		else
+			return ConvertToFText(minAtk, maxAtk);
+
+
+		FText fText = FText::FromString(str);
+		return fText;
+	}
+
 
 	template<typename t1>
 	static t1* FindObjHelper(const TCHAR* path)

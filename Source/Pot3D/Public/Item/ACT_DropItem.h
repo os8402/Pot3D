@@ -25,6 +25,8 @@ public:
 
 	void SetOutline(bool on);
 
+	UOBJ_Item* GetDropItem() {return _dropItem;};
+
 
 protected:
 

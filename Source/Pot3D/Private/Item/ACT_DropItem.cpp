@@ -94,25 +94,25 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 
 void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("overlapped"));
+	//UE_LOG(LogTemp, Log, TEXT("overlapped"));
 
-	AUNIT_Player* player = Cast<AUNIT_Player>(OtherActor);
+	//AUNIT_Player* player = Cast<AUNIT_Player>(OtherActor);
 
-	if (player)
-	{
-		UE_LOG(LogTemp, Log, TEXT("player check"));
+	//if (player)
+	//{
+	//	UE_LOG(LogTemp, Log, TEXT("player check"));
 
-		//TODO : 인벤토리에 넣음
-		auto pc = Cast<AUNIT_PlayerCT>(player->GetController());
-		bool flag = pc->GetMainUI()->GetInventory()->AddItem(_dropItem);
+	//	//TODO : 인벤토리에 넣음
+	//	auto pc = Cast<AUNIT_PlayerCT>(player->GetController());
+	//	bool flag = pc->GetMainUI()->GetInventory()->AddItem(_dropItem);
 
-		if (flag)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
-			Destroy();
-		}
+	//	if (flag)
+	//	{
+	//		UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
+	//		Destroy();
+	//	}
 
-	}
+	//}
 
 }
 

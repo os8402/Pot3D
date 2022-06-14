@@ -33,18 +33,22 @@ public:
 
 	void InitPlayerUnit();
 
-	void MoveToMouseCursor(float deltaTime);
+	void ClickMouseCursor();
+	void ClickMouseDown();
 
 	void SetMoveDest(const FVector destPos, float deltaTime);
 
 	// npc + 몬스터 정보 확인
-	void CheckActorOther(class AUNIT_Character* other);
+	void LookActorOther(class AUNIT_Character* other);
 	// 드랍 아이템 확인
-	void CheckDropItem(class AACT_DropItem* item);
+	void LookDropItem(class AACT_DropItem* item);
 
 
 	//적 추적
 	void ChaseToEnemy(float deltaTime);
+
+	//아이템 줍기
+	void PickUpItem(float deltaTime);
 
 
 	void CameraShake(float time);
@@ -75,7 +79,6 @@ private:
 	//현재 마우스로 보는 몬스터 + npc 정보
 	TWeakObjectPtr<class AUNIT_Character> _currentLookTarget;
 
-
 	//현재 마우스로 보는 드랍 아이템 정보
 	TWeakObjectPtr<class AACT_DropItem> _currentLookItem;
 
@@ -84,7 +87,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class AUNIT_Player* _UP_owned;
 
-
+	UPROPERTY(VisibleAnywhere)
+	class AACT_DropItem* _ACT_DropItem;
 
 //POST PROCESS
 private:
@@ -99,13 +103,21 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bClickMouse = 0;
 	UPROPERTY(EditAnywhere, Category = "Pawn")
+	bool _bClickMouseDown = 0;
+	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bMoving = 0;
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bAttacking = 0;
+	UPROPERTY(EditAnywhere, Category = "Pawn")
+	bool _bPicking = 0;
 
 	FVector _destPos;
-	FRotator _smoothRot; 
-
+	FRotator _smoothRot;
+	
+	float _destRimit;
+	
+	//픽업 이슈로 
+	int32 _pickupCnt = 0;
 
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TSubclassOf<class UMatineeCameraShake> _CS_NormalAttack;

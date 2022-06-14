@@ -107,14 +107,14 @@ void AUNIT_Player::SearchActorInfo()
 		{
 			//캐릭터 [ 몬스터, npc = 추후 멀티 추가되면 플레이어도 넣긴 할듯]
 			auto other = Cast<AUNIT_Character>(hitOther.Actor);
-			pc->CheckActorOther(other);
+			pc->LookActorOther(other);
 		}
 
 		if (hitItem.bBlockingHit)
 		{
 			//드랍 아이템 확인
 			auto dropItem = Cast<AACT_DropItem>(hitItem.Actor);
-			pc->CheckDropItem(dropItem);
+			pc->LookDropItem(dropItem);
 		}
 
 	}

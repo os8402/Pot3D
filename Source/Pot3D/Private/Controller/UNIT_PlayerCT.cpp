@@ -1,6 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+/////
 #include "Controller/UNIT_PlayerCT.h"
 #include <Components/WidgetComponent.h>
 #include <Kismet/KismetMathLibrary.h>
@@ -19,8 +17,9 @@
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
 #include "UI/WG_Inventory.h"
-#include "Item/OBJ_Item.h"
 
+#include "Item/OBJ_Item.h"
+#include "Item/ACT_DropItem.h"
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {
@@ -96,13 +95,10 @@ void AUNIT_PlayerCT::BeginPlay()
 	//TODO : Post process
 
 	TArray<AActor*> actors;
-
 	UGameplayStatics::GetAllActorsOfClass(this, APostProcessVolume::StaticClass(), actors);
 
 	if (actors.Num() > 0)
 	{
-		
-
 		_ppv = Cast<APostProcessVolume>(actors[0]);
 
 		if (_ppv)
@@ -139,7 +135,6 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-
 	FHitResult cursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, true, cursorHit);
 	FVector cursorNormal = cursorHit.ImpactNormal;
@@ -154,14 +149,23 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 		if (state == EUnitStates::DEAD)
 			return;
 
-		if (_bClickMouse)
-			MoveToMouseCursor(DeltaTime);
 
+
+		if (_bClickMouseDown)
+			ClickMouseDown();
+
+		if (_bClickMouse)
+			ClickMouseCursor();
+
+//==============================================
 		if (_bMoving)
 			SetMoveDest(_destPos, DeltaTime);
-	
-		else if (_bAttacking)
+
+		if (_bAttacking)
 			ChaseToEnemy(DeltaTime);
+		else if (_bPicking)
+			PickUpItem(DeltaTime);
+
 
 	}
 
@@ -174,7 +178,6 @@ void AUNIT_PlayerCT::SetupInputComponent()
 
 	InputComponent->BindAction("Move", IE_Pressed, this, &AUNIT_PlayerCT::OnMovePressed);
 	InputComponent->BindAction("Move", IE_Released, this, &AUNIT_PlayerCT::OnMoveReleased);
-	
 	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUNIT_PlayerCT::OpenInventory);
 }
 
@@ -183,106 +186,80 @@ void AUNIT_PlayerCT::InitPlayerUnit()
 	_bClickMouse = _bMoving = _bAttacking = false;
 
 	auto unitCharacter = Cast<AUNIT_Character>(GetPawn());
-
-
-
 }
 
-void AUNIT_PlayerCT::MoveToMouseCursor(float deltaTime)
+void AUNIT_PlayerCT::ClickMouseCursor()
 {
+
 	_bClickMouse = true;
-	_bAttacking = false;
-	_bMoving = false;
-//	_DECAL_CursorToWorld->SetVisibility(false);
 
 
 	if (_UP_owned == nullptr)
 		return;
 
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Pawn, false, Hit);
-
-	if (Hit.bBlockingHit == false)
+	if (_UP_owned->IsAttacking())
 		return;
 
-	auto hit = Cast<AUNIT_Monster>(Hit.Actor);
-
-	EUnitStates state = _UP_owned->GetUnitStates();
-
-	switch (state)
-	{
-
-	case EUnitStates::IDLE:
-
-		//타게팅중이였으면 
-		//공격으로 변경
-
-		if (_currentLookTarget.IsValid())
-		{
-			if (hit && hit == _currentLookTarget.Get())
-			{
-				_UP_owned->SetTargetEnemy(_currentLookTarget.Get());
-				// TODO : 아웃라인 _UP_owned->GetTargetEnemy().Get()->
-
-				_UP_owned->SetUnitStates(EUnitStates::ATTACK);
-
-				
+	if (_bAttacking || _bPicking)
+		return;
 		
-			}
-
-		}
-
-		break; 
-
-	case EUnitStates::ATTACK:
-
-		//공격 취소
-
-		bool bTarget = _UP_owned->GetTargetEnemy().IsValid();
-
-		if (bTarget)
-		{
-			if (hit && hit == _UP_owned->GetTargetEnemy().Get())
-			{
-				//여전히 같은대상임
-				_bAttacking = true;
-				return;
-			}
-			
-
-
-		}
-
-		//취소 진행
-		_UP_owned->SetUnitStates(EUnitStates::IDLE);
-
-	//	_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Hidden);
-
-		if (bTarget)
-		{
-			// TODO : 리스너 전부 해제
-
-			/*_owned->GetEnemyTarget().Get()->GetStatComp()->GetOnUnitDied()
-				.Remove(targetHandle);
-
-			_owned->GetEnemyTarget().Get()->GetOutLineMesh()->SetVisibility(false);
-			_owned->GetEnemyTarget().Reset();*/
-
-		}
-
-		break;
-
 	
-	}
+	FHitResult hit;
+	GetHitResultUnderCursor(ECC_Pawn, false, hit);
 
+
+	//UI를 클릭한 경우 리턴
+	if (hit.bBlockingHit == false)
+		return;
+
+	//이동 목적지
+	_destPos = hit.ImpactPoint;
+
+
+}
+
+void AUNIT_PlayerCT::ClickMouseDown()
+{
+
+	if (_UP_owned == nullptr)
+		return;
+
+	if (_UP_owned->IsAttacking())
+		return;
+
+
+	_bClickMouseDown = _bMoving =  _bAttacking = _bPicking = false;
+
+	_bMoving = true;
+
+
+	// 플레이어와 충돌이 일어나는 모든 오브젝트 
+	FHitResult objHit;
+	GetHitResultUnderCursor(ECC_Pawn, false, objHit);
+
+	//아이템 오브젝트
+	FHitResult itemHit;
+	GetHitResultUnderCursor(ECC_GameTraceChannel3, false, itemHit);
+
+	auto monster = Cast<AUNIT_Monster>(objHit.Actor);
+	auto dropItem = Cast<AACT_DropItem>(itemHit.Actor);
+
+	if (monster == nullptr && dropItem == nullptr)
+		return;
+
+	//애니메이션 취소
 	_UP_owned->GetUnitAnim()->StopAllMontages(.1f);
-	
-	//여기선 이동..
-	_destPos = Hit.ImpactPoint;
-	_bMoving = true; 
 
-
-
+	if (monster)
+	{
+		_UP_owned->SetTargetEnemy(monster);
+		_bAttacking = true;
+	}
+	else if (dropItem)
+	{
+		_bPicking = true;
+		_ACT_DropItem = dropItem;
+	}
 
 }
 
@@ -291,16 +268,16 @@ void AUNIT_PlayerCT::SetMoveDest(const FVector destPos, float deltaTime)
 	if (_UP_owned == nullptr)
 		return;
 
+
 	float const dist = FVector::Dist(destPos, _UP_owned->GetActorLocation());
 
 	if (dist > 100.f)
 	{
 		UCharacterMovementComponent* movementComp = _UP_owned->GetCharacterMovement();
-		float speed = movementComp->MaxWalkSpeed;
 
 		FVector Dir = (destPos - _UP_owned->GetActorLocation()).GetSafeNormal();
-
 		movementComp->AddInputVector(Dir);
+		// Rot 
 
 		FRotator targetRot = UKismetMathLibrary::FindLookAtRotation(_UP_owned->GetActorLocation(), destPos);
 		
@@ -311,18 +288,14 @@ void AUNIT_PlayerCT::SetMoveDest(const FVector destPos, float deltaTime)
 
 		_UP_owned->SetActorRotation(_smoothRot);
 
-		
 
 	}
-
-
 }
 
-void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
+void AUNIT_PlayerCT::LookActorOther(class AUNIT_Character* other)
 {
 	if (_UP_owned == nullptr)
 		return;
-
 
 
 	//타겟이 x  or  기존에 잡아둔 타겟이 아님 + 본인이 아닐 시 
@@ -340,7 +313,6 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 
 		if (_currentLookTarget.IsValid())
 		{
-			//	_currentLookTarget.Get()-> TODO 아웃라인 해제
 			_currentLookTarget->SetOutline(false);
 			_currentLookTarget.Reset();
 		}
@@ -366,13 +338,9 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 			{
 				if (_currentLookTarget.Get() == _UP_owned->GetTargetEnemy().Get())
 					return;
-
-
 			}
 
 			//TODO : 아웃라인 비활성화
-			//	_currentLookTarget.Get()->
-		
 			_currentLookTarget.Reset();
 			
 
@@ -382,7 +350,7 @@ void AUNIT_PlayerCT::CheckActorOther(class AUNIT_Character* other)
 
 }
 
-void AUNIT_PlayerCT::CheckDropItem(class AACT_DropItem* item)
+void AUNIT_PlayerCT::LookDropItem(class AACT_DropItem* item)
 {
 
 	if (_currentLookItem.IsValid())
@@ -409,20 +377,55 @@ void AUNIT_PlayerCT::ChaseToEnemy(float deltaTime)
 	if (_UP_owned->GetTargetEnemy().IsValid() == false)
 		return;
 
-	if (_UP_owned->IsAttacking())
-		return;
-
 	float const dist = FVector::Dist(_UP_owned->GetTargetEnemy().Get()->GetActorLocation(), _UP_owned->GetActorLocation());
 
-	if (dist > 200.f)
+
+	if (dist >= 200.f)
 	{
-		SetMoveDest(_UP_owned->GetTargetEnemy().Get()->GetActorLocation(), deltaTime);
+		_destPos = _UP_owned->GetTargetEnemy().Get()->GetActorLocation();
 	}
 	else
 	{
+		_bMoving = false;
+
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Attack Enemy"));
+
 		_UP_owned->AttackEnemy();
+
+		_bAttacking = false;
+
 	}
 
+}
+
+
+
+void AUNIT_PlayerCT::PickUpItem(float deltaTime)
+{
+	float const dist = FVector::Dist(_ACT_DropItem->GetActorLocation(), _UP_owned->GetActorLocation());
+
+
+	if (dist >= 200.f)
+	{
+		_destPos = _ACT_DropItem->GetActorLocation();
+	}
+	else
+	{	
+
+		_bMoving = false;
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Pick up item"));
+
+		bool flag = _ingameMainUI->GetInventory()->AddItem(_ACT_DropItem->GetDropItem());
+
+		if (flag)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
+			_ACT_DropItem->Destroy();
+		}
+		_bPicking = false;
+		_pickupCnt = 1;
+
+	}
 }
 
 void AUNIT_PlayerCT::CameraShake(float time)
@@ -444,17 +447,17 @@ void AUNIT_PlayerCT::SetTargetEmpty()
 
 void AUNIT_PlayerCT::OnMovePressed()
 {
-	_bClickMouse = true;
+	_bClickMouse = _bClickMouseDown = true;
 }
 
 void AUNIT_PlayerCT::OnMoveReleased()
 {
-	_bClickMouse = false;
+	_bClickMouse = _bClickMouseDown = false;
 }
 
 void AUNIT_PlayerCT::OpenDeadPanel()
 {
-
+	
 }
 
 

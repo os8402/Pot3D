@@ -112,6 +112,8 @@ protected:
 
 	FOnAttackEnded _onAttackEnded;
 
+	int32 _attackIndex = 0;
+
 protected:
 
 	FTimerHandle _deadHandle;

@@ -24,6 +24,9 @@ public:
 public:
 
 	void PlayAttackMontage();
+	void JumpToSection(int32 index);
+	
+	FName GetAttackMontageName(int32 index);
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();

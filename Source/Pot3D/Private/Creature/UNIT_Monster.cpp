@@ -174,9 +174,9 @@ void AUNIT_Monster::DeadUnit()
 				spawnParams.Owner = this;
 
 				FVector spawnPos = GetActorLocation();
-				FRotator spawnRot = GetActorRotation();
+				FRotator spawnRot = FRotator(0, 0 , 0);
 
-				FVector dropPos = FVector(spawnPos.X + randPos.X, spawnPos.Y + randPos.Y, spawnPos.Z + 200);
+				FVector dropPos = FVector(spawnPos.X + randPos.X, spawnPos.Y + randPos.Y, spawnPos.Z);
 
 				auto dropItem = Cast<AACT_DropItem>(
 					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, dropPos, spawnRot, spawnParams));

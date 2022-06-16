@@ -22,21 +22,17 @@ AACT_DropItem::AACT_DropItem()
 	RootComponent = defalutRoot;
 
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
+	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
+	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
 
 	_BOX_Trigger->SetupAttachment(RootComponent);
 	_MESH_Comp->SetupAttachment(_BOX_Trigger);
 
-
-	_MESH_Comp->SetCollisionProfileName(TEXT("DropMesh"));
-	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
-	_BOX_Trigger->SetBoxExtent(FVector(30.f, 30.f, 30.f));
-	_BOX_Trigger->SetGenerateOverlapEvents(true);
-
 	_WC_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
-	_WC_Info->SetupAttachment(_MESH_Comp);
+	_WC_Info->SetupAttachment(_BOX_Trigger);
 	_WC_Info->SetWidgetSpace(EWidgetSpace::Screen);
-
+	//_WC_Info->SetRelativeLocation(FVector(0, 0 ,));
 
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
@@ -46,22 +42,65 @@ AACT_DropItem::AACT_DropItem()
 		_WC_Info->SetDrawSize(FVector2D(150.f, 25.f));
 	}
 
+	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 
+
+void AACT_DropItem::Tick(float DeltaSeconds)
+{
+	
+	Super::Tick(DeltaSeconds);
+
+	if (_bFlotting)
+	{
+		_MESH_Comp->AddForce(FVector::UpVector * _force);
+		_MESH_Comp->AddAngularImpulse(FVector::LeftVector * (_force * 0.1f));
+	}
+	
+
+	_timeDestroy += DeltaSeconds;
+
+
+
+
+	if (_timeDestroy > 0.3f && _bFlotting)
+	{
+		_bFlotting = false; 
+		_MESH_Comp->SetEnableGravity(true);
+	}
+	
+
+	if (_timeDestroy > 5.f)
+	{
+		//Destroy();
+	}
+}
+
+void AACT_DropItem::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//_BOX_Trigger->AddForce(this->GetActorUpVector() * _force * _MESH_Comp->GetMass());
+}
 
 void AACT_DropItem::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	_WC_Info->InitWidget();
+	_WC_Info->SetVisibility(false);
+
 
 	_MESH_Comp->SetSimulatePhysics(true);
-	_MESH_Comp->SetEnableGravity(true);
 	_BOX_Trigger->SetSimulatePhysics(true);
 	_BOX_Trigger->SetEnableGravity(true);
 
-	_BOX_Trigger->OnComponentBeginOverlap.AddDynamic(this, &AACT_DropItem::OnCharacterOverlap);
+//	_MESH_Comp->OnComponentBeginOverlap.AddDynamic(this, &AACT_DropItem::OnPlaneOverlap);
 
+	_MESH_Comp->OnComponentHit.AddDynamic(this, &AACT_DropItem::OnPlaneHit);
+
+	_timeDestroy = 0;
 
 }
 
@@ -92,29 +131,37 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 
 }
 
-void AACT_DropItem::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AACT_DropItem::SetPhysicsOption(bool on)
 {
-	//UE_LOG(LogTemp, Log, TEXT("overlapped"));
 
-	//AUNIT_Player* player = Cast<AUNIT_Player>(OtherActor);
+//	_BOX_Trigger->SetEnableGravity(on);
+//	_BOX_Trigger->SetSimulatePhysics(on);
+}
 
-	//if (player)
-	//{
-	//	UE_LOG(LogTemp, Log, TEXT("player check"));
+void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	_WC_Info->SetVisibility(true);
 
-	//	//TODO : 인벤토리에 넣음
-	//	auto pc = Cast<AUNIT_PlayerCT>(player->GetController());
-	//	bool flag = pc->GetMainUI()->GetInventory()->AddItem(_dropItem);
+	FRotator newRot; 
+	
+	newRot = (_dropItem->GetItemId() == 10001)? FRotator(0, 0, 0) : FRotator(0 , 0 , -90.f);
+	
 
-	//	if (flag)
-	//	{
-	//		UE_LOG(LogTemp, Log, TEXT("Pick up Item"));
-	//		Destroy();
-	//	}
+	FQuat quatRot = FQuat(newRot);
 
-	//}
+	//AddActorLocalRotation(quatRot, false , 0 , ETeleportType::None);
+
+	_MESH_Comp->SetEnableGravity(false);
+	_MESH_Comp->SetSimulatePhysics(false);
+	_MESH_Comp->SetRelativeRotation(quatRot);
+
 
 }
+//
+//void AACT_DropItem::OnPlaneOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+//{
+//
+//}
 
 
 void AACT_DropItem::SetPickUpMesh()

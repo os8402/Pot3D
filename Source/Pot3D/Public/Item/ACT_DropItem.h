@@ -20,6 +20,10 @@ public:
 	AACT_DropItem();
 
 public:
+	
+	virtual void Tick( float DeltaSeconds ) override;
+	virtual void BeginPlay() override;
+
 	class UStaticMesh* GetPickUpMesh() { return _MESH_Pickup; }
 	void  SetPickUpMesh();
 
@@ -35,10 +39,11 @@ protected:
 
 public:
 	void CreateItem(UOBJ_Item* newItem);
+	void SetPhysicsOption(bool on);
 
 private:
 	UFUNCTION()
-	void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
 
@@ -48,6 +53,8 @@ private:
 	class UBoxComponent* _BOX_Trigger;
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* _WC_Info;
+
+
 
 
 //필요한 정보만 세팅하면 됨 
@@ -66,4 +73,18 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	class UWG_DropItemInfo* _WG_DropInfo;
+
+	
+	bool _bFlotting = true;
+	float _timeDestroy;
+	float _force = 15000.f;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float _pitch = 90.f;
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float _yaw = 0.f;
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float _roll = 0.f;
+
+	
 };

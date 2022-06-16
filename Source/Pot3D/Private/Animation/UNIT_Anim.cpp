@@ -25,6 +25,17 @@ void UUNIT_Anim::PlayAttackMontage()
 	Montage_Play(_AM_attackMontage);
 }
 
+void UUNIT_Anim::JumpToSection(int32 index)
+{
+	FName name = GetAttackMontageName(index);
+	Montage_JumpToSection(name , _AM_attackMontage);
+}
+
+FName UUNIT_Anim::GetAttackMontageName(int32 index)
+{
+	return FName(*FString::Printf(TEXT("Attack%d"), index));
+}
+
 void UUNIT_Anim::AnimNotify_AttackHit()
 {
 	_onAttackHit.Broadcast();

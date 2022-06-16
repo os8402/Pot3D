@@ -174,6 +174,9 @@ void AUNIT_Character::AttackEnemy()
 	SetActorRotation(destRot);
 
 	GetUnitAnim()->PlayAttackMontage();
+	GetUnitAnim()->JumpToSection(_attackIndex);
+
+	_attackIndex = (_attackIndex + 1) % 3;
 
 }
 

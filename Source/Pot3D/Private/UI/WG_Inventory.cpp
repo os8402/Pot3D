@@ -332,3 +332,5 @@ void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
 
 	_WBP_Tooltip->RefreshUI(item);
 }
+
+

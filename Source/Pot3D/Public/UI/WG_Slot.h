@@ -25,9 +25,6 @@ public:
 	virtual void RefreshUI();
 	
 
-
-
-
 	UButton* GetSlotBtn() { return _BTN_Slot; }
 
 	void SetItem(UOBJ_Item* item);
@@ -38,6 +35,8 @@ public:
 
 	void SetSlotNum(int32 num) { _slotNum = num; }
 	int32 GetSlotNum() { return _slotNum; }
+	
+
 
 public:
 	UPROPERTY(EditAnywhere)

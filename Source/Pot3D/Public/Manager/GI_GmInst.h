@@ -98,7 +98,10 @@ struct FItemData : public FTableRowBase
 	FName _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _meshPath;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector _dropPosition;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _scale;
 };
 
 

@@ -27,12 +27,13 @@ AACT_DropItem::AACT_DropItem()
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
 
 	_BOX_Trigger->SetupAttachment(RootComponent);
+
 	_MESH_Comp->SetupAttachment(_BOX_Trigger);
 
 	_WC_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
 	_WC_Info->SetupAttachment(_BOX_Trigger);
 	_WC_Info->SetWidgetSpace(EWidgetSpace::Screen);
-	//_WC_Info->SetRelativeLocation(FVector(0, 0 ,));
+	_WC_Info->SetWorldLocation(FVector(0, 0 , 100));
 
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
@@ -56,16 +57,13 @@ void AACT_DropItem::Tick(float DeltaSeconds)
 	if (_bFlotting)
 	{
 		_MESH_Comp->AddForce(FVector::UpVector * _force);
-		_MESH_Comp->AddAngularImpulse(FVector::LeftVector * (_force * 0.1f));
+		_MESH_Comp->AddAngularImpulse(FVector::LeftVector * (_force));
 	}
 	
 
 	_timeDestroy += DeltaSeconds;
 
-
-
-
-	if (_timeDestroy > 0.3f && _bFlotting)
+	if (_timeDestroy > 0.2f && _bFlotting)
 	{
 		_bFlotting = false; 
 		_MESH_Comp->SetEnableGravity(true);
@@ -74,7 +72,7 @@ void AACT_DropItem::Tick(float DeltaSeconds)
 
 	if (_timeDestroy > 5.f)
 	{
-		//Destroy();
+		Destroy();
 	}
 }
 
@@ -82,7 +80,6 @@ void AACT_DropItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//_BOX_Trigger->AddForce(this->GetActorUpVector() * _force * _MESH_Comp->GetMass());
 }
 
 void AACT_DropItem::PostInitializeComponents()
@@ -93,11 +90,6 @@ void AACT_DropItem::PostInitializeComponents()
 
 
 	_MESH_Comp->SetSimulatePhysics(true);
-	_BOX_Trigger->SetSimulatePhysics(true);
-	_BOX_Trigger->SetEnableGravity(true);
-
-//	_MESH_Comp->OnComponentBeginOverlap.AddDynamic(this, &AACT_DropItem::OnPlaneOverlap);
-
 	_MESH_Comp->OnComponentHit.AddDynamic(this, &AACT_DropItem::OnPlaneHit);
 
 	_timeDestroy = 0;
@@ -131,31 +123,31 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 
 }
 
-void AACT_DropItem::SetPhysicsOption(bool on)
-{
-
-//	_BOX_Trigger->SetEnableGravity(on);
-//	_BOX_Trigger->SetSimulatePhysics(on);
-}
 
 void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if(OtherComponent->GetCollisionProfileName() == TEXT("DropItem"))
+		return;
+	
 	_WC_Info->SetVisibility(true);
 
-	FRotator newRot; 
+	FRotator newRot = FRotator(0, 0, 0);
+
+	_BOX_Trigger->SetRelativeRotation(newRot);
 	
-	newRot = (_dropItem->GetItemId() == 10001)? FRotator(0, 0, 0) : FRotator(0 , 0 , -90.f);
+	if(_dropItem->GetItemId() != 10001)
+		newRot = FRotator(0 , 0 , -90.f);
 	
 
 	FQuat quatRot = FQuat(newRot);
 
-	//AddActorLocalRotation(quatRot, false , 0 , ETeleportType::None);
-
-	_MESH_Comp->SetEnableGravity(false);
 	_MESH_Comp->SetSimulatePhysics(false);
-	_MESH_Comp->SetRelativeRotation(quatRot);
+	_MESH_Comp->SetWorldRotation(quatRot);
 
+	FVector getPos = _MESH_Comp->GetRelativeLocation();
+	FVector dropPos = _dropItem->GetDropPos();
 
+	_MESH_Comp->SetRelativeLocation(getPos + dropPos);
 }
 //
 //void AACT_DropItem::OnPlaneOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -172,6 +164,7 @@ void AACT_DropItem::SetPickUpMesh()
 	if (newMesh)
 	{
 		_MESH_Pickup = newMesh;
+		_MESH_Comp->SetRelativeScale3D(FVector::OneVector * _dropItem->GetScale());
 	}
 }
 

@@ -27,6 +27,8 @@ public:
 	ERarity GetRarity(){return _rarity;}
 	FStatData GetStatData() {return _statData;}
 	EItemTypes GetItemType(){return _itemType;}
+	FVector GetDropPos(){return _dropPosition;}
+	float GetScale(){return _scale;}
 
 	TMap<int32, int32> GetBonusStats() {return _bonusStats;}
 
@@ -72,6 +74,11 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FStatData _statData;
 
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	FVector _dropPosition;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	float _scale;
 
 	UPROPERTY()
 	TMap<int32, int32> _bonusStats;

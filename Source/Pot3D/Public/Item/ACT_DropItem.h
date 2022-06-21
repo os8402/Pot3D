@@ -39,7 +39,6 @@ protected:
 
 public:
 	void CreateItem(UOBJ_Item* newItem);
-	void SetPhysicsOption(bool on);
 
 private:
 	UFUNCTION()

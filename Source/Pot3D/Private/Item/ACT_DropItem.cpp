@@ -56,21 +56,21 @@ void AACT_DropItem::Tick(float DeltaSeconds)
 
 	if (_bFlotting)
 	{
-		_MESH_Comp->AddForce(FVector::UpVector * _force);
-		_MESH_Comp->AddAngularImpulse(FVector::LeftVector * (_force));
+		_MESH_Comp->AddForce(FVector::UpVector * _upforce);
+		_MESH_Comp->AddAngularImpulse(FVector::LeftVector * (_rotforce));
 	}
 	
 
 	_timeDestroy += DeltaSeconds;
 
-	if (_timeDestroy > 0.2f && _bFlotting)
+	if (_timeDestroy > 0.13f && _bFlotting)
 	{
 		_bFlotting = false; 
 		_MESH_Comp->SetEnableGravity(true);
 	}
 	
 
-	if (_timeDestroy > 5.f)
+	if (_timeDestroy > 20.f)
 	{
 		Destroy();
 	}
@@ -91,6 +91,9 @@ void AACT_DropItem::PostInitializeComponents()
 
 	_MESH_Comp->SetSimulatePhysics(true);
 	_MESH_Comp->OnComponentHit.AddDynamic(this, &AACT_DropItem::OnPlaneHit);
+
+	_BOX_Trigger->SetSimulatePhysics(true);
+	_BOX_Trigger->SetEnableGravity(true);
 
 	_timeDestroy = 0;
 
@@ -140,14 +143,8 @@ void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 	
 
 	FQuat quatRot = FQuat(newRot);
-
-	_MESH_Comp->SetSimulatePhysics(false);
 	_MESH_Comp->SetWorldRotation(quatRot);
 
-	FVector getPos = _MESH_Comp->GetRelativeLocation();
-	FVector dropPos = _dropItem->GetDropPos();
-
-	_MESH_Comp->SetRelativeLocation(getPos + dropPos);
 }
 //
 //void AACT_DropItem::OnPlaneOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

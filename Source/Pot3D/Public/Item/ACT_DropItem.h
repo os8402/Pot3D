@@ -76,7 +76,9 @@ private:
 	
 	bool _bFlotting = true;
 	float _timeDestroy;
-	float _force = 15000.f;
+
+	float _upforce = 20000.f;
+	float _rotforce = 30000.f;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float _pitch = 90.f;

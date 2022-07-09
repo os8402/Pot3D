@@ -215,7 +215,7 @@ void UWG_Inventory::EquipItem(int32 slot)
 
 
 
-void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem)
+void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Orange, TEXT("UnEquip Item"));
 
@@ -250,10 +250,25 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem)
 
 	}
 
-	AddItem(equippedItem);
+	if(bAdd)
+		AddItem(equippedItem);
 
 	RefreshInventory();
 
+}
+
+void UWG_Inventory::ChangeItemSlot(int32 prev, int32 next)
+{
+	UOBJ_Item* prevItem = _inventoryData[prev]->GetItem();
+	UOBJ_Item* nextItem = _inventoryData[next]->GetItem();
+
+	//_inventoryData[prev]->SetItem(nullptr);
+	//_inventoryData[next]->SetItem(nullptr);
+
+	_inventoryData[next]->SetItem(prevItem);
+	_inventoryData[prev]->SetItem(nextItem);
+
+	RefreshInventory();
 }
 
 void UWG_Inventory::RefreshInventory()

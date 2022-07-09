@@ -4,7 +4,10 @@
 #include "UI/WG_Equipment_ItemSlot.h"
 #include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
+
+#include "UI/WG_Drag.h"
 #include "Components/Image.h"
+#include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UWG_Equipment_ItemSlot::RefreshUI()
 {
@@ -33,6 +36,21 @@ void UWG_Equipment_ItemSlot::RefreshUI()
 void UWG_Equipment_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+
+	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
+
+
+	dragDropOperation->_widgetRef = this;
+	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+
+	dragDropOperation->DefaultDragVisual = this;
+	dragDropOperation->Pivot = EDragPivot::MouseDown;
+
+	dragDropOperation->SetSlot(this);
+
+	OutOperation = dragDropOperation;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Dragging"));
 }
 
 bool UWG_Equipment_ItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -42,7 +60,7 @@ bool UWG_Equipment_ItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDr
 	return true;
 }
 
-FReply UWG_Equipment_ItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UWG_Equipment_ItemSlot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	FEventReply reply;
 
@@ -62,9 +80,15 @@ FReply UWG_Equipment_ItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeomet
 		}
 
 	}
-	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) == true)
+	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Equipment Left Click"));
+		
+		if (GetItem() == nullptr)
+			return reply.NativeReply;
+
+		reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
+	
 	}
 
 	return reply.NativeReply;

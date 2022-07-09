@@ -47,7 +47,8 @@ public:
 	virtual void RemoveItem(int32 slot);
 	virtual void UseItem(int32 slot);
 	virtual void EquipItem(int32 slot);
-	virtual void UnEquipItem(UOBJ_Item* equippedItem);
+	virtual void UnEquipItem(UOBJ_Item* equippedItem , bool bAdd = true);
+	virtual void ChangeItemSlot(int32 prev, int32 next);
 	virtual void RefreshInventory();
 	virtual int32 GetEmptySlot();
 

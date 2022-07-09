@@ -1,4 +1,3 @@
-/////
 #include "Controller/UNIT_PlayerCT.h"
 #include <Components/WidgetComponent.h>
 #include <Kismet/KismetMathLibrary.h>
@@ -55,6 +54,12 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_ITEM(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
 	if (MID_ITEM.Succeeded())
 		_MID_Outline.Add(MID_ITEM.Object);
+
+	_fadeRadius = 50.f;
+	_traceOffsetHeight = 0.f;
+	_traceDistanceFromPlayer = 0.f;
+	_traceChannel = TraceTypeQuery2; // CAMERA:
+	_debugFadeTrace = false;
 }
 
 void AUNIT_PlayerCT::OnPossess(APawn* aPawn)
@@ -426,6 +431,55 @@ void AUNIT_PlayerCT::PickUpItem(float deltaTime)
 		_pickupCnt = 1;
 
 	}
+}
+
+FVector AUNIT_PlayerCT::LocationPointBetweenAAndB(FVector A, FVector B, float offSet, float radius)
+{
+	FVector dir = (A - B).GetSafeNormal();
+
+	int32 sum = offSet + radius;
+
+	dir *= sum;
+
+	return A + dir;
+
+}
+
+void AUNIT_PlayerCT::CheckFadeThisMesh()
+{
+	FVector playerPos = _UP_owned->GetActorLocation();
+	FVector cameraPos = PlayerCameraManager->GetCameraLocation();
+
+	FVector calcPos = LocationPointBetweenAAndB(playerPos , cameraPos ,
+	_traceDistanceFromPlayer, _fadeRadius); 
+
+	TArray<AActor*> ignoreActors; // 무시할 액터들.
+	TArray<FHitResult> outHits;
+
+	bool result = UKismetSystemLibrary::SphereTraceMulti
+	(
+		GetWorld(),
+		cameraPos,
+		calcPos + _traceOffsetHeight,
+		_fadeRadius,
+		_traceChannel,
+		false,
+		ignoreActors,
+		EDrawDebugTrace::ForDuration,
+		outHits,
+		true
+
+	);
+
+	if (result)
+	{
+		for (auto& hit : outHits)
+		{
+			//TODO : ToFadeThisActor 추가 후에 진행
+
+		}
+	}
+
 }
 
 void AUNIT_PlayerCT::CameraShake(float time)

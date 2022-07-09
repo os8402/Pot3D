@@ -50,6 +50,10 @@ public:
 	//아이템 줍기
 	void PickUpItem(float deltaTime);
 
+	FVector LocationPointBetweenAAndB(FVector A, FVector B, float offSet, float radius);
+	void CheckFadeThisMesh();
+
+	
 
 	void CameraShake(float time);
 	//타켓이 사라질 경우
@@ -119,11 +123,19 @@ private:
 	//픽업 이슈로 
 	int32 _pickupCnt = 0;
 
+	float _fadeRadius;
+	float _traceOffsetHeight;
+	float _traceDistanceFromPlayer;
+	ETraceTypeQuery _traceChannel;
+	bool _debugFadeTrace;
+
+
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TSubclassOf<class UMatineeCameraShake> _CS_NormalAttack;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<class UWG_IngameMain> _ingameMainClass;
+	TSubclassOf<UWG_IngameMain> _ingameMainClass;
+	UPROPERTY(VisibleAnywhere)
 	UWG_IngameMain* _ingameMainUI;
 
 

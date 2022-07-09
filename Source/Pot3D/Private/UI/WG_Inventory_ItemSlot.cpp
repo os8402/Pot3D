@@ -35,6 +35,8 @@ void UWG_Inventory_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
+
+
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
 
@@ -44,16 +46,43 @@ void UWG_Inventory_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 	dragDropOperation->DefaultDragVisual = this;
 	dragDropOperation->Pivot = EDragPivot::MouseDown;
 
+	dragDropOperation->SetSlot(this);
+
 	OutOperation = dragDropOperation;
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Drag : Draging again"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Dragging"));
 }
 
 bool UWG_Inventory_ItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent , InOperation);
 
-	return true;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Item Drop"));
+
+	UWG_Drag* dragDropOperation = Cast<UWG_Drag>(InOperation);
+
+	if (dragDropOperation)
+	{
+		int32 prevSlotNum = dragDropOperation->GetSlot()->GetSlotNum();
+		int32 currentSlotNum = GetSlotNum();
+
+
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("Item Slot %d , Current Num %d") , 
+			prevSlotNum, currentSlotNum));
+
+		if(prevSlotNum == currentSlotNum)
+			return false;
+
+		_inventory->ChangeItemSlot(prevSlotNum , currentSlotNum);
+
+
+		return true;
+	}
+	
+	return false; 
+
+
 }
 
 FReply UWG_Inventory_ItemSlot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -92,7 +121,10 @@ FReply UWG_Inventory_ItemSlot::NativeOnPreviewMouseButtonDown(const FGeometry& I
 	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
 	{
 
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Left Click"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Left Click %d") , GetSlotNum()));
+
+		if(GetItem() == nullptr)
+			return reply.NativeReply;
 
 		reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton );
 	}

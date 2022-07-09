@@ -36,7 +36,7 @@ public:
 	void SetSlotNum(int32 num) { _slotNum = num; }
 	int32 GetSlotNum() { return _slotNum; }
 	
-
+	ESlotTypes GetSlotType() {return _slotType;}
 
 public:
 	UPROPERTY(EditAnywhere)

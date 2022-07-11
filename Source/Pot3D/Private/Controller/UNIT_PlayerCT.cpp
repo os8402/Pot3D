@@ -8,9 +8,11 @@
 #include <Components/CanvasPanel.h>
 #include <Engine/PostProcessVolume.h>
 
+
 #include "Creature/UNIT_Character.h"
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
+
 #include "Item/ACT_DropItem.h"
 #include "Animation/UNIT_Anim.h"
 #include "UI/WG_IngameMain.h"
@@ -55,11 +57,7 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	if (MID_ITEM.Succeeded())
 		_MID_Outline.Add(MID_ITEM.Object);
 
-	_fadeRadius = 50.f;
-	_traceOffsetHeight = 0.f;
-	_traceDistanceFromPlayer = 0.f;
-	_traceChannel = TraceTypeQuery2; // CAMERA:
-	_debugFadeTrace = false;
+
 }
 
 void AUNIT_PlayerCT::OnPossess(APawn* aPawn)
@@ -153,8 +151,6 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 
 		if (state == EUnitStates::DEAD)
 			return;
-
-
 
 		if (_bClickMouseDown)
 			ClickMouseDown();
@@ -433,54 +429,6 @@ void AUNIT_PlayerCT::PickUpItem(float deltaTime)
 	}
 }
 
-FVector AUNIT_PlayerCT::LocationPointBetweenAAndB(FVector A, FVector B, float offSet, float radius)
-{
-	FVector dir = (A - B).GetSafeNormal();
-
-	int32 sum = offSet + radius;
-
-	dir *= sum;
-
-	return A + dir;
-
-}
-
-void AUNIT_PlayerCT::CheckFadeThisMesh()
-{
-	FVector playerPos = _UP_owned->GetActorLocation();
-	FVector cameraPos = PlayerCameraManager->GetCameraLocation();
-
-	FVector calcPos = LocationPointBetweenAAndB(playerPos , cameraPos ,
-	_traceDistanceFromPlayer, _fadeRadius); 
-
-	TArray<AActor*> ignoreActors; // 무시할 액터들.
-	TArray<FHitResult> outHits;
-
-	bool result = UKismetSystemLibrary::SphereTraceMulti
-	(
-		GetWorld(),
-		cameraPos,
-		calcPos + _traceOffsetHeight,
-		_fadeRadius,
-		_traceChannel,
-		false,
-		ignoreActors,
-		EDrawDebugTrace::ForDuration,
-		outHits,
-		true
-
-	);
-
-	if (result)
-	{
-		for (auto& hit : outHits)
-		{
-			//TODO : ToFadeThisActor 추가 후에 진행
-
-		}
-	}
-
-}
 
 void AUNIT_PlayerCT::CameraShake(float time)
 {

@@ -50,11 +50,6 @@ public:
 	//아이템 줍기
 	void PickUpItem(float deltaTime);
 
-	FVector LocationPointBetweenAAndB(FVector A, FVector B, float offSet, float radius);
-	void CheckFadeThisMesh();
-
-	
-
 	void CameraShake(float time);
 	//타켓이 사라질 경우
 	void SetTargetEmpty();
@@ -122,12 +117,6 @@ private:
 	
 	//픽업 이슈로 
 	int32 _pickupCnt = 0;
-
-	float _fadeRadius;
-	float _traceOffsetHeight;
-	float _traceDistanceFromPlayer;
-	ETraceTypeQuery _traceChannel;
-	bool _debugFadeTrace;
 
 
 	UPROPERTY(VisibleAnywhere, Category="Camera")

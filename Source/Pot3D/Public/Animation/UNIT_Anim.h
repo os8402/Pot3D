@@ -27,6 +27,7 @@ public:
 	void JumpToSection(int32 index);
 	
 	FName GetAttackMontageName(int32 index);
+	int32 GetMaxAttackNum() {return _maxAttackNum;}
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();
@@ -48,6 +49,8 @@ private :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true));
 	bool _bDead;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true));
+	int32 _maxAttackNum = 2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, meta = (AllowPrivateAccess = true))
 	UAnimMontage* _AM_attackMontage;

@@ -13,8 +13,8 @@ UACP_PlayerToCameraChecker::UACP_PlayerToCameraChecker()
 
 	PrimaryComponentTick.bCanEverTick = true;
 
-	_fadeRadius = 300.f;
-	_traceOffsetHeight = 100.f;
+	_fadeRadius = 50.f;
+	_traceOffsetHeight = 0.f;
 	_traceDistanceFromPlayer = 0;
 	_tickInterval = 0.09f;
 	_traceChannel = TraceTypeQuery2; // CAMERA:

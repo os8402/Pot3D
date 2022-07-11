@@ -10,6 +10,7 @@
 #include "Manager/GI_GmInst.h"
 #include "UI/WG_NamePlateSmall.h"
 
+#include "Controller/UNIT_MonsterCT.h"
 
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -25,7 +26,8 @@ AUNIT_Monster::AUNIT_Monster()
 	if (DIT.Succeeded())
 		_ACT_DropItem = DIT.Class;
 
-
+	AIControllerClass = AUNIT_MonsterCT::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 }
 

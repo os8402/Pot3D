@@ -165,7 +165,6 @@ UENUM(BlueprintType)
 enum class EPostProcess : uint8
 {
 	OUTLINE = 0 UMETA(DisplayName = "OUTLINE"),
-	
 
 	END
 };

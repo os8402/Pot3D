@@ -178,7 +178,9 @@ void AUNIT_Character::AttackEnemy()
 	GetUnitAnim()->PlayAttackMontage();
 	GetUnitAnim()->JumpToSection(_attackIndex);
 
-	_attackIndex = (_attackIndex + 1) % 3;
+	int32 maxAttackNum = GetUnitAnim()->GetMaxAttackNum();
+
+	_attackIndex = (_attackIndex + 1) % maxAttackNum;
 
 }
 

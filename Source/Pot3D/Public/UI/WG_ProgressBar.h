@@ -18,7 +18,7 @@ class POT3D_API UWG_ProgressBar : public UUserWidget
 
 
 protected:
-	virtual void NativeOnInitialized();
+	virtual void NativePreConstruct();
 
 public:
 	UFUNCTION()

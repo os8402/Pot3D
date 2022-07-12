@@ -26,9 +26,11 @@ void AUNIT_MonsterCT::OnPossess(APawn* InPawn)
 
 	if (UseBlackboard(_BB_MonsterAIData, Blackboard))
 	{
+		Blackboard->SetValueAsVector(FName(TEXT("OriginPos")), InPawn->GetActorLocation());
+
 		if (RunBehaviorTree(_BT_MonsterAITree))
 		{
-
+			
 		}
 	}
 

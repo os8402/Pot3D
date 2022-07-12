@@ -22,6 +22,6 @@ bool UBTDecorator_CanAttack::CalculateRawConditionValue(UBehaviorTreeComponent& 
 	if(target == nullptr)
 		return false;
 
-	return bResult && target->GetDistanceTo(curPawn) <= 200.f;
+	return bResult && target->GetDistanceTo(curPawn) <= 100.f;
 
 }

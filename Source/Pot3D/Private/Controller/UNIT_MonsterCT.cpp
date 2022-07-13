@@ -32,6 +32,8 @@ void AUNIT_MonsterCT::OnPossess(APawn* InPawn)
 		{
 			
 		}
+
+
 	}
 
 }
@@ -39,4 +41,5 @@ void AUNIT_MonsterCT::OnPossess(APawn* InPawn)
 void AUNIT_MonsterCT::OnUnPossess()
 {
 	Super::OnUnPossess();
+
 }

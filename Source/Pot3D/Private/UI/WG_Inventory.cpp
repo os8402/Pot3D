@@ -50,7 +50,6 @@ void UWG_Inventory::NativePreConstruct()
 		}
 
 	}
-
 	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip);
 	_WBP_Equipment_Weapon->SetInventory(this);
 

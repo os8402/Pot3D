@@ -96,8 +96,12 @@ private:
 	class APostProcessVolume* _ppv;
 
 	UPROPERTY(EditAnywhere, Category = "Post Process")
-	TArray<UMaterialInterface*> _MID_Outline;
+	TArray<UMaterialInterface*> _MI_PostProcess;
 	
+	UPROPERTY(EditAnywhere, Category = "Post Process")
+	TArray<UMaterialInterface*> _MI_Outlines;
+
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bClickMouse = 0;

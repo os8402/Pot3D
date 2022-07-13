@@ -19,6 +19,22 @@
 
 AUNIT_Monster::AUNIT_Monster()
 {
+
+
+	/*_WG_HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HP_BAR"));
+	_WG_HpBar->SetupAttachment(GetMesh());
+	_WG_HpBar->SetWidgetSpace(EWidgetSpace::Screen);
+	_WG_HpBar->SetRelativeLocation(FVector(0.f, 0.f, _hpZPos));
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_HpBar(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/NamePlate/WBP_NamePlateSmall_1.WBP_NamePlateSmall_1_C'"));
+
+	if (WBP_HpBar.Succeeded())
+	{
+		_WG_HpBar->SetWidgetClass(WBP_HpBar.Class);
+		_WG_HpBar->SetDrawSize(_hpDrawSize);
+	}*/
+
+
 	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Red);
 
 	static ConstructorHelpers::FClassFinder<AActor> DIT(TEXT("Blueprint'/Game/BluePrints/Item/BP_DropItemActor.BP_DropItemActor_C'"));
@@ -35,13 +51,18 @@ void AUNIT_Monster::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	auto hpBarWidget = Cast<UWG_NamePlateSmall>(_WG_HpBar->GetUserWidgetObject());
 
-	if (hpBarWidget)
-	{
-	
-		hpBarWidget->BindHp(_ACP_Stat);
-	}
+	//_WG_HpBar->InitWidget();
+	//_WG_HpBar->SetVisibility(false);
+
+	//auto hpBarWidget = Cast<UWG_NamePlateSmall>(_WG_HpBar->GetUserWidgetObject());
+
+	//if (hpBarWidget)
+	//{
+	//	hpBarWidget->BindHp(_ACP_Stat);
+	//}
+	//	
+
 }
 
 void AUNIT_Monster::Tick(float DeltaTime)
@@ -52,6 +73,14 @@ void AUNIT_Monster::Tick(float DeltaTime)
 void AUNIT_Monster::DeadUnit()
 {
 	Super::DeadUnit();
+
+	/*GetWorld()->GetTimerManager().ClearTimer(_hpBarTimer);
+	_WG_HpBar->SetVisibility(false);*/
+
+	AController* controller = GetController<AController>();
+
+	controller->Destroy();
+	
 	//아이템 드랍
 	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -185,9 +214,6 @@ void AUNIT_Monster::DeadUnit()
 
 	
 				dropItem->CreateItem(item);
-
-
-
 			}
 		}
 
@@ -195,6 +221,21 @@ void AUNIT_Monster::DeadUnit()
 
 	}
 
+	//Destroy();
 
+	
+
+}
+
+void AUNIT_Monster::VisibleHpBar()
+{
+	//GetWorld()->GetTimerManager().ClearTimer(_hpBarTimer);
+
+	//_WG_HpBar->SetVisibility(true);
+
+	//GetWorld()->GetTimerManager().SetTimer(_hpBarTimer, FTimerDelegate::CreateLambda([&]()
+	//	{
+	//		_WG_HpBar->SetVisibility(false);
+	//	}), 1.5f, false);
 }
 

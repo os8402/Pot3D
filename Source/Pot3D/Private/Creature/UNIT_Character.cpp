@@ -8,13 +8,11 @@
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
 
-
-
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 #include <Components/CapsuleComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
-#include <Components/WidgetComponent.h>
+
 #include <Components/SceneCaptureComponent2D.h>
 #include "PaperSpriteComponent.h"
 #include "PaperSprite.h"
@@ -32,8 +30,6 @@ AUNIT_Character::AUNIT_Character()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	
-
 	SetCharJobs(EUnitJobs::WARRIOR);
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
@@ -49,18 +45,7 @@ AUNIT_Character::AUNIT_Character()
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
 
-	_WG_HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HP_BAR"));
-	_WG_HpBar->SetupAttachment(GetMesh());
-	_WG_HpBar->SetWidgetSpace(EWidgetSpace::Screen);
-	_WG_HpBar->SetRelativeLocation(FVector(0.f, 0.f, _hpZPos));
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_HpBar(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/NamePlate/WBP_NamePlateSmall_1.WBP_NamePlateSmall_1_C'"));
-
-	if (WBP_HpBar.Succeeded())
-	{
-		_WG_HpBar->SetWidgetClass(WBP_HpBar.Class);
-		_WG_HpBar->SetDrawSize(_hpDrawSize);
-	}
 
 	static ConstructorHelpers::FClassFinder<AActor> DTC(TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
 
@@ -113,8 +98,6 @@ AUNIT_Character::AUNIT_Character()
 		_PS_HitEff->bAutoActivate = false;
 
 	}
-
-
 }
 
 // Called when the game starts or when spawned
@@ -143,8 +126,6 @@ void AUNIT_Character::PostInitializeComponents()
 
 	_ACP_Stat->GetOnUnitDied().AddUObject(this, &AUNIT_Character::SetUnitStates, EUnitStates::DEAD);
 
-	_WG_HpBar->InitWidget();
-	_WG_HpBar->SetVisibility(false);
 
 }
 
@@ -270,24 +251,14 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 void AUNIT_Character::VisibleHpBar()
 {
-	if (GetUnitStates() == EUnitStates::DEAD)
-		return;
 
-	GetWorld()->GetTimerManager().ClearTimer(_hpBarTimer);
 
-	_WG_HpBar->SetVisibility(true);
-
-	GetWorld()->GetTimerManager().SetTimer(_hpBarTimer, FTimerDelegate::CreateLambda([&]()
-	{
-		_WG_HpBar->SetVisibility(false);
-	}), 1.5f, false);
 }
 
 
 void AUNIT_Character::DeadUnit()
 {
-	GetWorld()->GetTimerManager().ClearTimer(_hpBarTimer);
-	_WG_HpBar->SetVisibility(false);
+
 	GetCapsuleComponent()->DestroyComponent(true);
 	SoundPlay((int)ECharacterSounds::DEAD);
 	

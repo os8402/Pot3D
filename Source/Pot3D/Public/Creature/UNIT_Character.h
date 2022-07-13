@@ -45,7 +45,7 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	void VisibleHpBar();
+	virtual void VisibleHpBar();
 	virtual void DeadUnit();
 
 	void SetOutline(bool on = true);
@@ -133,21 +133,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="UI")
 	class AACT_DamgeText* _currentDmgActor;
-
-
-protected:
-	
-	
-	UPROPERTY(EditAnywhere, Category = "UI")
-	float _hpZPos = 250.f;
-
-	UPROPERTY(EditAnywhere, Category = "UI")
-	FVector2D _hpDrawSize = {200.f , 70.f};
-
-	UPROPERTY(VisibleAnywhere , Category="UI")
-	class UWidgetComponent* _WG_HpBar;
-
-	FTimerHandle _hpBarTimer;
 
 
 private :

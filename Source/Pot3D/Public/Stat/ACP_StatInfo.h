@@ -48,6 +48,9 @@ public:
 	int32 GetHp() { return _hp; }
 	int32 GetMaxHp() { return _maxHp; }
 	float GetHpRatio() { return  _hp / (float)_maxHp; }
+	int32 GetMp() { return _mp; }
+	int32 GetMaxMp() { return _maxMp; }
+	float GetMpRatio() { return  _mp / (float)_maxMp; }
 	int32 GetLevel() { return _level; }
 	int32 GetJob() { return _job; }
 

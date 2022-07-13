@@ -22,6 +22,7 @@ AACT_DropItem::AACT_DropItem()
 	RootComponent = defalutRoot;
 
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
+	_BOX_Trigger->SetCollisionProfileName(TEXT("NoCollision"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
@@ -72,7 +73,7 @@ void AACT_DropItem::Tick(float DeltaSeconds)
 
 	if (_timeDestroy > 20.f)
 	{
-		Destroy();
+		//Destroy();
 	}
 }
 

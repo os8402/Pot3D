@@ -12,6 +12,7 @@ void UWG_NamePlateSmall::BindHp(class UACP_StatInfo* statComp)
 {
 	_currentStatComp = statComp;
 	statComp->GetOnHpChanged().AddUObject(this, &UWG_NamePlateSmall::UpdateHp);
+	UpdateHp();
 
 	//FString chrName =  statComp->GetChracterName();
 	//FString chrLv = FString::Printf(TEXT("%d"), statComp->GetLevel());

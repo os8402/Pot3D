@@ -15,9 +15,11 @@
 
 #include "Item/ACT_DropItem.h"
 #include "Animation/UNIT_Anim.h"
+
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_NamePlate.h"
 #include "UI/WG_Inventory.h"
+#include "UI/WG_MainBar.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/ACT_DropItem.h"
@@ -51,12 +53,15 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_MONSTER(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Monster.MI_InteractiveOutline_Monster'"));
 	if(MID_MONSTER.Succeeded())
-		_MID_Outline.Add(MID_MONSTER.Object);
+		_MI_Outlines.Add(MID_MONSTER.Object);
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_ITEM(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
 	if (MID_ITEM.Succeeded())
-		_MID_Outline.Add(MID_ITEM.Object);
+		_MI_Outlines.Add(MID_ITEM.Object);
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_NPC(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
+	if (MID_NPC.Succeeded())
+		_MI_Outlines.Add(MID_NPC.Object);
 
 }
 
@@ -90,9 +95,9 @@ void AUNIT_PlayerCT::BeginPlay()
 
 	if (_ingameMainUI)
 	{
-		_ingameMainUI->BindStat(_UP_owned->GetStatComp());
+		_ingameMainUI->GetMainBar()->BindStat(_UP_owned->GetStatComp());
 		_ingameMainUI->GetInventory()->SetCurrentOwner(_UP_owned);
-		//_ingameMainUI->UpdateHp();
+
 	}
 
 	//TODO : Post process
@@ -106,13 +111,16 @@ void AUNIT_PlayerCT::BeginPlay()
 
 		if (_ppv)
 		{
+
+			_MI_PostProcess.Add(_MI_Outlines[0]);
+
 			FPostProcessSettings& postProcessSettings = _ppv->Settings;
-			FWeightedBlendable weightBlendable;
-			weightBlendable.Object = _MID_Outline[0];
+			FWeightedBlendable weightBlendable;	
 			weightBlendable.Weight = 1;
 
-			for (int32 i = 0; i < (int32)EPostProcess::END; i++)
+			for (int32 i = 0; i < _MI_PostProcess.Num(); i++)
 			{
+				weightBlendable.Object = _MI_PostProcess[i];
 				postProcessSettings.WeightedBlendables.Array.Add(weightBlendable);
 			}
 
@@ -127,7 +135,7 @@ void AUNIT_PlayerCT::SetPostProcessOutline(EOutline outline)
 	FPostProcessSettings& postProcessSettings = _ppv->Settings;
 
 	FWeightedBlendable weightBlendable;
-	weightBlendable.Object = _MID_Outline[(int32)outline];
+	weightBlendable.Object = _MI_Outlines[(int32)outline];
 	weightBlendable.Weight = 1;
 
 	postProcessSettings.WeightedBlendables.Array[(int32)EPostProcess::OUTLINE] = weightBlendable;
@@ -309,7 +317,7 @@ void AUNIT_PlayerCT::LookActorOther(class AUNIT_Character* other)
 		SetMouseCursorWidget(EMouseCursor::Default, _WC_CursorAttack->GetUserWidgetObject());
 		_ingameMainUI->GetNamePlate()->SetVisibility(ESlateVisibility::Visible);
 		_ingameMainUI->GetNamePlate()->BindHp(other->GetStatComp());
-
+		
 	
 
 		if (_currentLookTarget.IsValid())

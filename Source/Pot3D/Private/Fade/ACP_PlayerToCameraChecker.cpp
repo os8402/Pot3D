@@ -97,15 +97,10 @@ void UACP_PlayerToCameraChecker::CheckFadeThisMesh()
 	{
 		TArray<UACP_FadeThisMesh*> FTM_update;
 
-		UE_LOG(LogTemp, Log, TEXT("Hit Length : %d"), outHits.Num());
-
 		for (auto& hit : outHits)
 		{
 			FString name;
 			hit.Actor->GetName(name);
-
-			UE_LOG(LogTemp, Log, TEXT("Fade to Object : %s"), *name);
-
 
 			//TODO : ToFadeThisActor 추가 후에 진행
 			auto fadeMesh = Cast<UACP_FadeThisMesh>

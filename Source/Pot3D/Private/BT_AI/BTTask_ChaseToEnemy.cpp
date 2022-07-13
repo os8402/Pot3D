@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTask_ChaseToEnemy::ExecuteTask(UBehaviorTreeComponent& Ow
 		return EBTNodeResult::Failed;
 
 
-	UAIBlueprintHelperLibrary::SimpleMoveToActor(OwnerComp.GetAIOwner() , _target.Get());
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(OwnerComp.GetAIOwner() , _target.Get()->GetActorLocation());
 
 	
 	return EBTNodeResult::Succeeded;

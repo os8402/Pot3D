@@ -165,6 +165,8 @@ UENUM(BlueprintType)
 enum class EPostProcess : uint8
 {
 	OUTLINE = 0 UMETA(DisplayName = "OUTLINE"),
+	DEPTH  UMETA(DisplayName = "DEPTH"),
+
 
 	END
 };

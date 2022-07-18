@@ -2,10 +2,7 @@
 
 
 #include "Stat/ACP_StatInfo.h"
-#include "Manager/GI_GmInst.h"
-
 #include "Item/OBJ_Item.h"
-
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values for this component's properties

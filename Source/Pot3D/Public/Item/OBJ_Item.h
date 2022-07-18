@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "UEnumHeader.h"
-#include "Manager/GI_GmInst.h"
+#include "Data/GameDataTable.h"
 #include "OBJ_Item.generated.h"
 
 

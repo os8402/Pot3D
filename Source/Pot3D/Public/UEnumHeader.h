@@ -29,7 +29,8 @@ enum class EUnitTypes : uint8
 UENUM(BlueprintType)
 enum class EUnitJobs : uint8
 {
-	WARRIOR UMETA(DisplayName = "WARRIOR"),
+	NONE  UMETA(DisplayName = "NONE"),
+	PALADIN UMETA(DisplayName = "PALADIN"),
 	ARCHER UMETA(DisplayName = "ARCHER"),
 	MAGE UMETA(DisplayName = "MAGE"),
 	END
@@ -147,6 +148,27 @@ enum class EStatTypes : uint8
 	LUCK UMETA(DisplayName = "LUCK"),
 	HP UMETA(DisplayName = "HP_UP"),
 	MP UMETA(DisplayName = "MP_UP"),
+	END
+};
+
+UENUM(BlueprintType)
+enum class ESkillTypes : uint8
+{
+	ACTIVE = 0 UMETA(DisplayName = "ACTIVE"),
+	PASSIVE UMETA(DisplayName = "PASSIVE"),
+
+	END
+};
+
+UENUM(BlueprintType)
+enum class ESkillAttackTypes : uint8
+{
+	MELEE = 0 UMETA(DisplayName = "MELEE"),
+	MAGIC UMETA(DisplayName = "MAGIC"),
+	RECOVERY UMETA(DisplayName = "RECOVERY"),
+	BUFF UMETA(DisplayName = "BUFF"),
+	DEBUFF UMETA(DisplayName = "DEBUFF"),
+
 	END
 };
 

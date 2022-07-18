@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "UEnumHeader.h"
 #include "Manager/GI_GmInst.h" 
+#include "Data/GameDataTable.h"
 #include "ACP_StatInfo.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnHpChanged)

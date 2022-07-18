@@ -75,7 +75,7 @@ private:
 	class UTextBlock* _TB_Gold;
 	
 	UPROPERTY(meta = (BindWidget))
-	class UWG_Tooltip* _WBP_Tooltip;
+	class UWG_Tooltip_Item* _WBP_Tooltip_Item;
 
 	TWeakObjectPtr<UOBJ_Item> _hoveredItem;
 

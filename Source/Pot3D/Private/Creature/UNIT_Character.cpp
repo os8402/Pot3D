@@ -30,8 +30,6 @@ AUNIT_Character::AUNIT_Character()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
-	SetCharJobs(EUnitJobs::WARRIOR);
-
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
 	bUseControllerRotationPitch = false;

@@ -1,11 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
+#include "Creature/UNIT_Monster.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/OBJ_Weapon_Item.h"
 #include "Item/OBJ_Armor_Item.h"
 #include "Item/OBJ_Consumable_Item.h"
 
-#include "Creature/UNIT_Monster.h"
+
 #include "Item/ACT_DropItem.h"
 #include "Manager/GI_GmInst.h"
 #include "UI/WG_NamePlateSmall.h"

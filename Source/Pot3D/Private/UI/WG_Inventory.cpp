@@ -8,7 +8,7 @@
 #include "Item/OBJ_Consumable_Item.h"
 #include "UI/WG_Inventory_ItemSlot.h"
 #include "UI/WG_Equipment_ItemSlot.h"
-#include "UI/WG_Tooltip.h"
+#include "UI/WG_Tooltip_Item.h"
 #include "UI/WG_Status.h"
 #include "Manager/GI_GmInst.h"
 
@@ -44,13 +44,13 @@ void UWG_Inventory::NativePreConstruct()
 
 			_inventoryData.Add(i, itemSlot);
 
-			itemSlot->SetToolTip(_WBP_Tooltip);
+			itemSlot->SetToolTip(_WBP_Tooltip_Item);
 
 
 		}
 
 	}
-	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip);
+	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip_Item);
 	_WBP_Equipment_Weapon->SetInventory(this);
 
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::HELMET, _WBP_Equipment_Helmet);
@@ -60,13 +60,13 @@ void UWG_Inventory::NativePreConstruct()
 
 	for (auto& armor : _equipment_ArmorLists)
 	{
-		armor.Value->SetToolTip(_WBP_Tooltip);
+	//	armor.Value->SetToolTip(_WBP_Tooltip);
 		armor.Value->SetInventory(this);
 
 	}
 
 
-	_WBP_Tooltip->SetVisibility(ESlateVisibility::Hidden);
+	_WBP_Tooltip_Item->SetVisibility(ESlateVisibility::Hidden);
 }
 
 
@@ -323,7 +323,7 @@ void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
 
 	if (item == nullptr)
 	{
-		_WBP_Tooltip->SetVisibility(ESlateVisibility::Hidden);
+		_WBP_Tooltip_Item->SetVisibility(ESlateVisibility::Hidden);
 
 		if (_hoveredItem.IsValid())
 			_hoveredItem.Reset();
@@ -336,15 +336,15 @@ void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
 
 	_hoveredItem = item;
 
-	_WBP_Tooltip->SetVisibility(ESlateVisibility::Visible);
-	_WBP_Tooltip->SetRenderTranslation(FVector2D(-500, -100));
+	_WBP_Tooltip_Item->SetVisibility(ESlateVisibility::Visible);
+	_WBP_Tooltip_Item->SetRenderTranslation(FVector2D(-500, -100));
 
 	FString goldStr = FString::Printf(TEXT("Item Info :  %s"), *item->GetItemName().ToString());
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, goldStr);
 
 	//TODO : 툴팁 정보 갱신
 
-	_WBP_Tooltip->RefreshUI(item);
+	_WBP_Tooltip_Item->RefreshUI(item);
 }
 
 

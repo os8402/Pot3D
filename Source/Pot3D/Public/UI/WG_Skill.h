@@ -6,9 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "WG_Skill.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class POT3D_API UWG_Skill : public UUserWidget
 {

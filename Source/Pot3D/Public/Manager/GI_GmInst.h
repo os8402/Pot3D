@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "Engine/DataTable.h"
+#include "Data/GameDataTable.h"
 #include "UtilsLib.h"
 #include "UEnumHeader.h"
 #include "GI_GmInst.generated.h"
@@ -52,6 +52,8 @@ private:
 	UPROPERTY()
 	class UDataTable* _unitData;
 	UPROPERTY()
+	class UDataTable* _skillData;
+	UPROPERTY()
 	TArray<UDataTable*> _tableLists;
 
 private:
@@ -91,12 +93,15 @@ public:
 	}
 
 	int32 GetGold() { return _gold; }
+	TArray<FSkillData*> GetSkillDatas() {return _skillDatas;}
 
 
 private:
 	int32 _gold = 0;
+	TArray<FSkillData*> _skillDatas;
 
 };
+
 template<typename T>
 T* UGI_GmInst::GetTableData(ETableDatas type, int32 id)
 {

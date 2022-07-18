@@ -8,9 +8,6 @@
 
 UGI_GmInst::UGI_GmInst()
 {
-	//static ConstructorHelpers::FObjectFinder<UDataTable> StatData(TEXT("DataTable'/Game/Resources/Data/StatDataTable.StatDataTable'"));
-	//if (StatData.Succeeded())
-	//	_statData = StatData.Object;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DropItemData(TEXT("DataTable'/Game/Resources/Data/DropRewardDataTable.DropRewardDataTable'"));
 	if (DropItemData.Succeeded())
@@ -25,13 +22,20 @@ UGI_GmInst::UGI_GmInst()
 		_unitData = UnitData.Object;
 
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> SkillData(TEXT("DataTable'/Game/Resources/Data/SkillDataTable.SkillDataTable'"));
+	if (SkillData.Succeeded())
+		_skillData = SkillData.Object;
+
+
 	//테이블에 넣는 서순주의 
 	_tableLists.Add(_unitData);
 	_tableLists.Add(_dropRewardData);
 	_tableLists.Add(_itemData);
+	_tableLists.Add(_skillData);
 
 
-	
+
+
 	static ConstructorHelpers::FClassFinder<AUNIT_Monster> EM(TEXT("Blueprint'/Game/BluePrints/Monster/001/BP_001_UnitMonster.BP_001_UnitMonster_C'"));
 	if (EM.Succeeded())
 		_spawnMonster = EM.Class;
@@ -47,6 +51,10 @@ void UGI_GmInst::Init()
 	Super::Init();
 
 	GetWorld()->GetTimerManager().SetTimer(_respawnTimer, this, &UGI_GmInst::RespawnMonster, 4.f, true);
+
+	//Skill 
+	_skillData->GetAllRows<FSkillData>(TEXT("") , _skillDatas);
+
 }
 
 void UGI_GmInst::RespawnMonster()
@@ -73,8 +81,6 @@ void UGI_GmInst::RespawnMonster()
 		_monsterLists.Add(_keyMonsterCount, respawnMonster);
 
 		_keyMonsterCount++;
-
-
 	}
 
 }

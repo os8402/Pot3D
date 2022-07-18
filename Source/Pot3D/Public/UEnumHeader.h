@@ -75,6 +75,7 @@ enum class ETableDatas : uint8
 	UNIT  = 0 UMETA(DisplayName = "UNIT"), 
 	MONSTER UMETA(DisplayName = "MONSTER"),
 	ITEM UMETA(DisplayName = "ITEM"),
+	SKILL UMETA(DisplayName = "SKILL"),
 
 
 	END

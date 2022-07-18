@@ -3,7 +3,10 @@
 
 #include "Creature/UNIT_Character.h"
 #include "Animation/UNIT_Anim.h"
+
 #include "Stat/ACP_StatInfo.h"
+#include "Skill/ACP_SKillInfo.h"
+
 #include "UI/WG_HpBar.h"
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
@@ -42,14 +45,13 @@ AUNIT_Character::AUNIT_Character()
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
-
+	_ACP_Skill = CreateDefaultSubobject<UACP_SKillInfo>(TEXT("SKILL"));
 
 
 	static ConstructorHelpers::FClassFinder<AActor> DTC(TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
 
 	if (DTC.Succeeded())
 		_ACT_DmgText = DTC.Class;
-
 
 	_SPR_MinimapSpring = CreateDefaultSubobject<USpringArmComponent>(TEXT("MINIMAP_SPRING"));
 	_SPR_MinimapSpring->SetupAttachment(GetCapsuleComponent());
@@ -112,6 +114,7 @@ void AUNIT_Character::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	_ACP_Stat->SetCharacterId(_chrId);
+	_ACP_Skill->SetSkillData(_ACP_Stat->GetJob());
 
 	_unitAnim = Cast<UUNIT_Anim>(GetMesh()->GetAnimInstance());
 
@@ -127,10 +130,26 @@ void AUNIT_Character::PostInitializeComponents()
 
 }
 
+void AUNIT_Character::TickRecovery(float DeltaTime)
+{	
+	_tickRecoveryTime += DeltaTime;
+
+	if (_tickRecoveryTime >= 1.f)
+	{
+		int32 curHP = _ACP_Stat->GetHp();
+		int32 resilience = _ACP_Stat->GetResilience();
+		
+		_ACP_Stat->SetHp(curHP + resilience);
+
+		_tickRecoveryTime = 0.f;
+	}
+}
+
 // Called every frame
 void AUNIT_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	TickRecovery(DeltaTime);
 
 }
 

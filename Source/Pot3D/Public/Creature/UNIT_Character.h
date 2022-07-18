@@ -23,6 +23,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
+	virtual void TickRecovery(float DeltaTime);
 
 
 public:	
@@ -72,6 +73,7 @@ public:
 
 	FOnAttackEnded& GetOnAttackEnded() { return _onAttackEnded; }
 	class UACP_StatInfo* GetStatComp() { return _ACP_Stat; }
+	class UACP_SKillInfo* GetSkillComp() { return _ACP_Skill; }
 
 
 public:
@@ -79,12 +81,6 @@ public:
 	//확장여지잇음 
 	void SetUnitStates(EUnitStates state);
 	EUnitStates GetUnitStates() { return _UnitStates; }
-
-	void SetUnitTypes(EUnitTypes type) { _UnitTypes = type; }
-	EUnitTypes GetUnitTypes() { return _UnitTypes; }
-
-	void SetCharJobs(EUnitJobs type) { _UnitJobs = type; }
-	EUnitJobs GetCharJobs() { return _UnitJobs; }
 
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 
@@ -125,6 +121,14 @@ protected:
 	UPROPERTY(VisibleAnywhere,  Category="Stat")
 	class UACP_StatInfo* _ACP_Stat;
 
+	float _tickRecoveryTime = 0.f;
+
+protected:
+
+// 스킬
+
+	UPROPERTY(VisibleAnywhere, Category = "Skill")
+	class UACP_SKillInfo* _ACP_Skill;
 
 protected:
 	
@@ -139,12 +143,6 @@ private :
 	//ENUM
 	UPROPERTY(VisibleAnywhere, Category="Pawn")
 	EUnitStates _UnitStates; 
-
-	UPROPERTY(VisibleAnywhere, Category = "Pawn")
-	EUnitTypes _UnitTypes;
-
-	UPROPERTY(VisibleAnywhere, Category = "Pawn")
-	EUnitJobs _UnitJobs;
 
 private :
 

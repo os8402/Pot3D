@@ -51,6 +51,7 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 			_level = unitData->_statData._level;
 			_chrName = unitData->_name;
 			_job = unitData->_statData._job;
+			_unitType = unitData->_type;
 			_maxHp = unitData->_statData._maxHp;
 			SetHp(unitData->_statData._maxHp);
 			_maxMp = unitData->_statData._maxMp;

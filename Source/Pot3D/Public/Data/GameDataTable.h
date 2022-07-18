@@ -16,7 +16,7 @@ struct FStatData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _level;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _job;
+	EUnitJobs _job;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _minAtk;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -66,7 +66,7 @@ struct FSkillData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _reduceMana;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 value;
+	int32 _value;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _coolTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -143,6 +143,8 @@ struct FUnitData : public FTableRowBase
 	int32 _id;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString _name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EUnitTypes _type;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStatData _statData;
 

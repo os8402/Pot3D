@@ -51,15 +51,15 @@ protected:
 private:
 	//EQUIPMENT 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-		class UACP_Weapon* _ACP_Weapon;
+	class UACP_Weapon* _ACP_Weapon;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
-		class UACP_Armor* _ACP_Armor;
+	class UACP_Armor* _ACP_Armor;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
-		class UACP_Armor* _ACP_Helmet;
+	class UACP_Armor* _ACP_Helmet;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
-		class UACP_Armor* _ACP_Pants;
+	class UACP_Armor* _ACP_Pants;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
-		class UACP_Armor* _ACP_Boots;
+	class UACP_Armor* _ACP_Boots;
 
 	TMap<int32, UACP_Armor*> _armorList;
 };

@@ -4,6 +4,7 @@
 #include "UI/ACT_DamgeText.h"
 #include "UI/WG_DamgeText.h"
 #include "Creature/UNIT_Character.h"
+#include "Stat/ACP_StatInfo.h"
 #include <Components/WidgetComponent.h>
 
 
@@ -65,7 +66,8 @@ void AACT_DamgeText::Tick(float DeltaTime)
 void AACT_DamgeText::UpdateDamage()
 {
 
-	int32 colorIndex = (int32)(_myOwner->GetUnitTypes());
+
+	int32 colorIndex = (int32)_myOwner->GetStatComp()->GetUnitTypes();
 
 	auto dmgWidget = Cast<UWG_DamgeText>(_WG_DmgText->GetUserWidgetObject());
 	dmgWidget->UpdateText(_dmg, _colorList[colorIndex]);

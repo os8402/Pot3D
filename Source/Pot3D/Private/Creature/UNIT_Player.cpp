@@ -21,8 +21,6 @@
 
 AUNIT_Player::AUNIT_Player()
 {
-	SetUnitTypes(EUnitTypes::PLAYER);
-	SetCharJobs(EUnitJobs::PALADIN);
 
 	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
 

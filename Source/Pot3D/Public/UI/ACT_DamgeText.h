@@ -41,7 +41,7 @@ private:
 
 	int32 _dmg = 0;
 
-	TArray<FLinearColor> _colorList = { FLinearColor::Yellow, FLinearColor::Red,  FLinearColor::Blue };
+	TArray<FLinearColor> _colorList = { FLinearColor::Red, FLinearColor::Yellow,  FLinearColor::Blue };
 	
 	UPROPERTY(VisibleAnywhere)
 	class AUNIT_Character* _myOwner;

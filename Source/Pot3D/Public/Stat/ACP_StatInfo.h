@@ -35,6 +35,8 @@ public:
 public:
 
 	void SetCharacterId(int32 id);
+	void SetUnitTypes(EUnitTypes type) { _unitType = type; }
+
 	void SetHp(int32 newHp);
 	void SetMp(int32 newMp);
 	void SetExp(int32 exp);
@@ -53,7 +55,8 @@ public:
 	int32 GetMaxMp() { return _maxMp; }
 	float GetMpRatio() { return  _mp / (float)_maxMp; }
 	int32 GetLevel() { return _level; }
-	int32 GetJob() { return _job; }
+	EUnitJobs GetJob() { return _job; }
+	EUnitTypes GetUnitTypes() { return _unitType; }
 
 	int32 GetMinAttack() { return _minAtk; }
 	int32 GetMaxAttack() { return _maxAtk; }
@@ -90,7 +93,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _level;
 	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
-	int32 _job;
+	EUnitJobs _job;
+	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
+	EUnitTypes _unitType;
 
 	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _hp;

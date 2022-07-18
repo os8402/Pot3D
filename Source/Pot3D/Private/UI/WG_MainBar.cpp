@@ -19,8 +19,6 @@ void UWG_MainBar::NativePreConstruct()
 	_WBP_Tooltip_Mp->SetUIInfo(FText::FromString(TEXT("마력이 모이면 스킬을 쓸 수 있습니다.")));
 	_WBP_Tooltip_Mp->SetStatType(EStatTypes::MP);
 
-
-
 }
 
 void UWG_MainBar::BindStat(class UACP_StatInfo* statComp)
@@ -41,10 +39,4 @@ void UWG_MainBar::UpdateHp()
 		_GB_HpBar->UpdateGauge(_currentStatComp->GetHpRatio());
 	}
 
-}
-
-void UWG_MainBar::SetGaugeTooltipHovered()
-{
-	_WBP_Tooltip_Hp->SetVisibility(ESlateVisibility::Visible);
-	UE_LOG(LogTemp, Log, TEXT("hovered"));
 }

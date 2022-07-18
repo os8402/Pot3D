@@ -22,7 +22,6 @@ AACT_DropItem::AACT_DropItem()
 	RootComponent = defalutRoot;
 
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
-	_BOX_Trigger->SetCollisionProfileName(TEXT("NoCollision"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
@@ -64,10 +63,12 @@ void AACT_DropItem::Tick(float DeltaSeconds)
 
 	_timeDestroy += DeltaSeconds;
 
-	if (_timeDestroy > 0.13f && _bFlotting)
+	if (_timeDestroy > 0.1f && _bFlotting)
 	{
 		_bFlotting = false; 
+
 		_MESH_Comp->SetEnableGravity(true);
+
 	}
 	
 
@@ -132,6 +133,13 @@ void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 {
 	if(OtherComponent->GetCollisionProfileName() == TEXT("DropItem"))
 		return;
+
+	if(HitComponent == _BOX_Trigger)
+		return;
+
+	FString str = FString::Printf(TEXT("%s : Hit World Static -> %s") , *HitComponent->GetName(),  *OtherActor->GetName());
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
 	
 	_WC_Info->SetVisibility(true);
 
@@ -146,13 +154,13 @@ void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 	FQuat quatRot = FQuat(newRot);
 	_MESH_Comp->SetWorldRotation(quatRot);
 
-}
-//
-//void AACT_DropItem::OnPlaneOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-//{
-//
-//}
+	_BOX_Trigger->SetSimulatePhysics(false);
+	_MESH_Comp->SetSimulatePhysics(false);
 
+	_MESH_Comp->SetRelativeLocation(_BOX_Trigger->GetRelativeLocation());
+
+
+}
 
 void AACT_DropItem::SetPickUpMesh()
 {

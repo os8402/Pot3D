@@ -244,7 +244,7 @@ void AUNIT_PlayerCT::ClickMouseDown()
 
 	// 플레이어와 충돌이 일어나는 모든 오브젝트 
 	FHitResult objHit;
-	GetHitResultUnderCursor(ECC_Pawn, false, objHit);
+	GetHitResultUnderCursor(ECC_GameTraceChannel5, false, objHit);
 
 	//아이템 오브젝트
 	FHitResult itemHit;

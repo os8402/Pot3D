@@ -27,22 +27,17 @@ public:
 
 	UButton* GetSlotBtn() { return _BTN_Slot; }
 
-	void SetItem(UOBJ_Item* item);
-	UOBJ_Item* GetItem() { return _item; }
-
-	void SetInventory(UWG_Inventory* inventory) { _inventory = inventory; }
-
-
 	void SetSlotNum(int32 num) { _slotNum = num; }
 	int32 GetSlotNum() { return _slotNum; }
 	
 	ESlotTypes GetSlotType() {return _slotType;}
 
-public:
-	UPROPERTY(EditAnywhere)
-	ESlotTypes _slotType;
+
 
 protected:
+
+	UPROPERTY(EditAnywhere , Category = "Slot" , meta = (AllowPrivateAccess = true))
+	ESlotTypes _slotType;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* _IMG_Icon;
@@ -50,16 +45,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* _BTN_Slot;
 
-	UPROPERTY(EditAnywhere, Category = "SLOT")
+	UPROPERTY(EditAnywhere, Category = "Slot")
 	int32 _slotNum;
-
-	UPROPERTY()
-	UOBJ_Item* _item;
 
 	UPROPERTY(VisibleAnywhere)
 	UTexture2D* _texture;
 
-	TWeakObjectPtr<UWG_Inventory> _inventory;
+
 
 
 

@@ -6,7 +6,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "UEnumHeader.h"
-#include "UI/WG_Slot.h"
+#include "UI/WG_ItemSlot.h"
 #include "WG_Equipment_ItemSlot.generated.h"
 
 
@@ -14,7 +14,7 @@ class UTexture2D;
 class UOBJ_Item;
 
 UCLASS()
-class POT3D_API UWG_Equipment_ItemSlot : public UWG_Slot
+class POT3D_API UWG_Equipment_ItemSlot : public UWG_ItemSlot
 {
 	GENERATED_BODY()
 

@@ -98,10 +98,10 @@ void AUNIT_Player::SearchActorInfo()
 	if (pc)
 	{
 		FHitResult hitOther;
-		pc->GetHitResultUnderCursor(ECC_Pawn, true, hitOther);
+		pc->GetHitResultUnderCursor(ECC_GameTraceChannel5, false, hitOther);
 
 		FHitResult hitItem;
-		pc->GetHitResultUnderCursor(ECC_GameTraceChannel3, true, hitItem);
+		pc->GetHitResultUnderCursor(ECC_GameTraceChannel3, false, hitItem);
 
 
 		if (hitOther.bBlockingHit)

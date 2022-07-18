@@ -78,7 +78,7 @@ private:
 	float _timeDestroy;
 
 	float _upforce = 20000.f;
-	float _rotforce = 30000.f;
+	float _rotforce = 100000.f;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float _pitch = 90.f;

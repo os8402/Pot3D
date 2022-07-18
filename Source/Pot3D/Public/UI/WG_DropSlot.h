@@ -9,7 +9,7 @@
 /**
  * 
  */
- class UWG_Slot;
+ class UWG_ItemSlot;
 
 UCLASS()
 class POT3D_API UWG_DropSlot : public UUserWidget
@@ -17,7 +17,7 @@ class POT3D_API UWG_DropSlot : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SpawnItem(UWG_Slot* slot);
+	void SpawnItem(UWG_ItemSlot* slot);
 
 protected:
 	void NativeConstruct() override;
@@ -27,6 +27,7 @@ protected:
 private:
 	class AUNIT_Player* _player; 
 	class UWG_Inventory* _inventory;
+
 
 
 	UPROPERTY(EditAnywhere, Category="ItemSpawn")

@@ -4,7 +4,7 @@
 #include "UI/WG_DropSlot.h"
 #include "UI/WG_Drag.h"
 #include "Creature/UNIT_Player.h"
-#include "UI/WG_Slot.h"
+#include "UI/WG_ItemSlot.h"
 #include "Item/ACT_DropItem.h"
 #include "Controller/UNIT_PlayerCT.h"
 #include "UI/WG_IngameMain.h"
@@ -42,7 +42,7 @@ bool UWG_DropSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Spawn Item"));
 		
-		UWG_Slot* slot = dragDropOperation->GetSlot();
+		UWG_ItemSlot* slot = dragDropOperation->GetSlot();
 
 		if(slot == nullptr)
 			return false;
@@ -73,7 +73,7 @@ bool UWG_DropSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	return false;
 }
 
-void UWG_DropSlot::SpawnItem(UWG_Slot* slot)
+void UWG_DropSlot::SpawnItem(UWG_ItemSlot* slot)
 {
 	FTransform spawnTransform = _player->GetActorTransform();
 

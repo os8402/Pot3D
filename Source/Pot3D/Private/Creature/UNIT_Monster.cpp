@@ -207,10 +207,12 @@ void AUNIT_Monster::DeadUnit()
 				FVector spawnPos = GetActorLocation();
 				FRotator spawnRot = FRotator(0, 0 , 0);
 
-				FVector dropPos = FVector(spawnPos.X + randPos.X, spawnPos.Y + randPos.Y, spawnPos.Z + 20.f);
+				
+				FVector dropPos = item->GetDropPos() + FVector(randPos.X , randPos.Y, 0);
+				FVector finalPos = spawnPos + dropPos;
 
 				auto dropItem = Cast<AACT_DropItem>(
-					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, dropPos, spawnRot, spawnParams));
+					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, finalPos, spawnRot, spawnParams));
 
 	
 				dropItem->CreateItem(item);

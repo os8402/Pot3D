@@ -260,6 +260,7 @@ void AUNIT_Character::DeadUnit()
 {
 
 	GetCapsuleComponent()->DestroyComponent(true);
+	GetMesh()->SetCollisionProfileName("IgnoreOnlyPawn");
 	SoundPlay((int)ECharacterSounds::DEAD);
 	
 	_PSPR_MinimapIcon->SetSprite(nullptr);

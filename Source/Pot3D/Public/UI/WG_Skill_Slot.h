@@ -13,8 +13,16 @@ class POT3D_API UWG_Skill_Slot : public UWG_Slot
 public:
 
 	virtual void NativePreConstruct() override;
+
+
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 	virtual void RefreshUI() override;
 	void SetSkillIcon(UTexture2D* texture);
+
+	void SetSlotLocked(bool bLocked) { _bLocked =bLocked;}
 
 private:
 	
@@ -23,5 +31,7 @@ private:
 
 	UPROPERTY()
 	class UTexture2D* _TEX_lock;
+
+	bool _bLocked = false;
 	
 };

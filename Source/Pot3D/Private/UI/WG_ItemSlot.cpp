@@ -7,9 +7,7 @@ void UWG_ItemSlot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	if (_BTN_Slot->IsHovered() && _inventory.IsValid())
 	{
-
 		_inventory->SetItemTooltipHovered(_item);
-
 	}
 }
 

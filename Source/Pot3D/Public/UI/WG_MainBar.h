@@ -6,9 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "WG_MainBar.generated.h"
 
-/**
- * 
- */
+class UWG_MainBar_Slot;
+
 UCLASS()
 class POT3D_API UWG_MainBar : public UUserWidget
 {
@@ -23,7 +22,10 @@ public:
 	void SetGaugeTooltipHovered();
 
 private:
-	
+
+	UPROPERTY()
+	TSubclassOf<UWG_MainBar_Slot> _mainBarSlotClass;
+
 	TWeakObjectPtr<class UACP_StatInfo> _currentStatComp;
 
 	UPROPERTY(meta = (BindWidget))

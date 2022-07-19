@@ -1,7 +1,9 @@
 #include "UI/WG_Skill_Slot.h"
+#include "UI/WG_Drag.h"
 #include <Components/Button.h>
 #include <Components/Image.h>
 #include <Components/TextBlock.h>
+#include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UWG_Skill_Slot::NativePreConstruct()
 {
@@ -12,6 +14,61 @@ void UWG_Skill_Slot::NativePreConstruct()
 
 	SetSkillIcon(nullptr);
 
+}
+
+void UWG_Skill_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+
+
+	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
+
+
+	dragDropOperation->_widgetRef = this;
+	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+
+	dragDropOperation->DefaultDragVisual = this;
+	dragDropOperation->Pivot = EDragPivot::MouseDown;
+
+	dragDropOperation->SetSlot(this);
+
+	OutOperation = dragDropOperation;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Dragging"));
+}
+
+bool UWG_Skill_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+
+
+
+	return false;
+}
+
+FReply UWG_Skill_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	FEventReply reply;
+
+	reply.NativeReply = Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
+
+	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Right Click"));
+
+
+	}
+	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+	{
+		if(_bLocked)
+			return reply.NativeReply;
+
+
+		reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
+	}
+
+
+	return reply.NativeReply;
 }
 
 void UWG_Skill_Slot::RefreshUI()
@@ -30,7 +87,6 @@ void UWG_Skill_Slot::SetSkillIcon(UTexture2D* texture)
 		return;
 
 	}
-
 
 	_IMG_Icon->SetBrushFromTexture(texture);
 

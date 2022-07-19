@@ -9,7 +9,7 @@
 /**
  * 
  */
-class UWG_ItemSlot;
+class UWG_Slot;
 
 UCLASS()
 class POT3D_API UWG_Drag : public UDragDropOperation
@@ -17,8 +17,8 @@ class POT3D_API UWG_Drag : public UDragDropOperation
 	GENERATED_BODY()
 
 public:
-	UWG_ItemSlot* GetSlot(){ return _slot;}
-	void SetSlot(UWG_ItemSlot* slot) {_slot = slot;}
+	UWG_Slot* GetSlot(){ return _slot;}
+	void SetSlot(UWG_Slot* slot) {_slot = slot;}
 
 public:
 
@@ -31,6 +31,6 @@ public:
 private:
 
 	UPROPERTY()
-	UWG_ItemSlot* _slot;
+	UWG_Slot* _slot;
 	
 };

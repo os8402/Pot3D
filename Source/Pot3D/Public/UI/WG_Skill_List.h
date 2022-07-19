@@ -17,7 +17,7 @@ class POT3D_API UWG_Skill_List : public UUserWidget
 public:
 	virtual void NativePreConstruct() override;
 
-	void SetSkillData(FSkillData* skillData , bool bACquired);
+	void SetSkillData(FSkillData* skillData , bool bAcquired);
 
 	UFUNCTION()
 	void AcquireSkill();

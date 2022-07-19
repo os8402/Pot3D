@@ -45,7 +45,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* _BTN_Slot;
 
-	UPROPERTY(EditAnywhere, Category = "Slot")
 	int32 _slotNum;
 
 	UPROPERTY(VisibleAnywhere)

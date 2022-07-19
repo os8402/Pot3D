@@ -14,7 +14,7 @@ void UWG_Skill_List::NativePreConstruct()
 
 }
 
-void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bACquired)
+void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bAcquired)
 {
 	
 	if(_skillData == nullptr)
@@ -28,12 +28,13 @@ void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bACquired)
 			StaticLoadObject(UTexture2D::StaticClass(), nullptr, *skillData->_iconPath.ToString()));
 
 		_WBP_Skill_Slot->SetSkillIcon(newTexture);
+		_WBP_Skill_Slot->SetSlotLocked(!bAcquired);
 		_TB_SkillName->SetText(skillData->_skillName);
 
 		_BD_Lock->SetRenderOpacity(1.f);
 
 
-		if (bACquired)
+		if (bAcquired)
 		{
 			_BD_Lock->SetRenderOpacity(0.f);
 

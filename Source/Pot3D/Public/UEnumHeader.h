@@ -176,7 +176,8 @@ enum class ESkillAttackTypes : uint8
 UENUM(BlueprintType)
 enum class ESlotTypes : uint8
 {
-	ITEM = 0 UMETA(DisplayName = "ITEM"),
+	NONE UMETA(DisplayName = "NONE"),
+	ITEM UMETA(DisplayName = "ITEM"),
 	EQUIPMENT UMETA(DisplayName = "EQUIPMENT"),
 	SKILL UMETA(DisplayName = "SKILL"),
 

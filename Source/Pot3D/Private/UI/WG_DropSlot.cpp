@@ -42,7 +42,7 @@ bool UWG_DropSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Spawn Item"));
 		
-		UWG_ItemSlot* slot = dragDropOperation->GetSlot();
+		UWG_ItemSlot* slot = Cast<UWG_ItemSlot>(dragDropOperation->GetSlot());
 
 		if(slot == nullptr)
 			return false;

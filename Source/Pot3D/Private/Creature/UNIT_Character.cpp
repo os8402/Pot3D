@@ -137,9 +137,11 @@ void AUNIT_Character::TickRecovery(float DeltaTime)
 	if (_tickRecoveryTime >= 1.f)
 	{
 		int32 curHP = _ACP_Stat->GetHp();
+		int32 maxHP = _ACP_Stat->GetMaxHp();
 		int32 resilience = _ACP_Stat->GetResilience();
 		
-		_ACP_Stat->SetHp(curHP + resilience);
+		if(curHP < maxHP)
+			_ACP_Stat->SetHp(curHP + resilience);
 
 		_tickRecoveryTime = 0.f;
 	}

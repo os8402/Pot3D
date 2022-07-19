@@ -23,19 +23,26 @@ protected:
 public:
 
 	void SetSkillData(EUnitJobs job);
+	void SetAcquireSkill(int32 id , FSkillData* skillData);
 
 public:
 	EUnitJobs GetUnitJobs() {return _unitJob;}
 	TMap<int32 , FSkillData*> GetActiveSkills() {return _activeSkills;}
 	TMap<int32 , FSkillData*> GetPassiveSkills() {return _passiveSkills;}
+	TMap<int32 , FSkillData*> GetAcquiredSkills() {return _acquiredSkills;}
+
 
 private:
 
 	UPROPERTY()
 	EUnitJobs _unitJob;  
 
+	//그 클래스가 배울 수 있는 액티브 / 패시브 모두 모음
 	TMap<int32, FSkillData*> _activeSkills;
 	TMap<int32, FSkillData*> _passiveSkills;
+
+	//습득한 스킬들
+	TMap<int32, FSkillData*> _acquiredSkills;
 
 
 };

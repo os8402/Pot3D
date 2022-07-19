@@ -16,6 +16,9 @@ class POT3D_API UWG_Button : public UUserWidget
 	
 public:
 	virtual void NativePreConstruct() override;
+	
+public:
+	class UButton* GetSlotBtn() {return _BTN_Slot;}
 
 public:
 
@@ -23,8 +26,18 @@ public:
 	FText _btnName; 
 
 private:
+	
+	UPROPERTY(meta = (BindWidget))
+	class UImage* _IMG_Icon;
 
+	UPROPERTY(meta = (BindWidget))
+	class UButton* _BTN_Slot;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_Name;
+
+	UPROPERTY(EditAnywhere, Category = "Texture" , meta=(AllowPrivateAccess = true))
+	class UTexture2D* _texture;
+	UPROPERTY(EditAnywhere, Category = "Texture", meta = (AllowPrivateAccess = true))
+	FLinearColor _iconColor;
 };

@@ -34,16 +34,32 @@ void UACP_SKillInfo::SetSkillData(EUnitJobs job)
 
 			if (_unitJob == skillDatas[i]->_job && skillType == ESkillTypes::ACTIVE)
 			{
-				_activeSkills.Add(id , skillDatas[i]);
-				
+				_activeSkills.Add(id, skillDatas[i]);
+
 			}
 			else if (skillType == ESkillTypes::PASSIVE)
 			{
-				_passiveSkills.Add(id , skillDatas[i]);
+				_passiveSkills.Add(id, skillDatas[i]);
 			}
 
 		}
 
 	}
+}
+
+
+void UACP_SKillInfo::SetAcquireSkill(int32 id, FSkillData* skillData)
+{
+	if (_acquiredSkills.Find(id))
+		return;
+
+	FString skillStr = FString::Printf(TEXT("Acquire Skill Id : %d"), id);
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, skillStr);
+
+	//µî·Ï 
+	_acquiredSkills.Add(id , skillData);
+
+
+
 }
 

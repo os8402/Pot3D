@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Data/GameDataTable.h"
 #include "WG_Skill_List.generated.h"
 
-/**
- * 
- */
+class UWG_Skill;
+
 UCLASS()
 class POT3D_API UWG_Skill_List : public UUserWidget
 {
@@ -17,10 +17,25 @@ class POT3D_API UWG_Skill_List : public UUserWidget
 public:
 	virtual void NativePreConstruct() override;
 
+	void SetSkillData(FSkillData* skillData , bool bACquired);
+
+	UFUNCTION()
+	void AcquireSkill();
+	UFUNCTION()
+	void RemoveSkill();
+
+	void SetUIOwner(UWG_Skill* skill) {	if (skill) 	_UIOwner = skill; }
+	
+
+
 private:
+	
+	
+	TWeakObjectPtr<UWG_Skill> _UIOwner;
+	FSkillData* _skillData; 
 
 	UPROPERTY(meta = (BindWidget))
-	class UWG_Skill_Slot* _WBP_SkillSlot;
+	class UWG_Skill_Slot* _WBP_Skill_Slot;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_SkillName;
@@ -36,7 +51,7 @@ private:
 	class UButton* _BTN_AddSkill;
 	UPROPERTY(meta = (BindWidget))
 	class UButton* _BTN_RemoveSkill;
-
 	UPROPERTY(meta = (BindWidget))
 	class UBorder* _BD_Lock;
+
 };

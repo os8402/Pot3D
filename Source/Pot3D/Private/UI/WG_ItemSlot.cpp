@@ -21,8 +21,8 @@ void UWG_ItemSlot::NativePreConstruct()
 }
 
 void UWG_ItemSlot::RefreshUI()
-
 {
+
 }
 
 void UWG_ItemSlot::SetItem(UOBJ_Item* item)

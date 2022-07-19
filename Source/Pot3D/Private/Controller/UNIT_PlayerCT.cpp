@@ -20,6 +20,7 @@
 #include "UI/WG_NamePlate.h"
 #include "UI/WG_Inventory.h"
 #include "UI/WG_MainBar.h"
+#include "UI/WG_Skill.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/ACT_DropItem.h"
@@ -97,6 +98,8 @@ void AUNIT_PlayerCT::BeginPlay()
 	{
 		_ingameMainUI->GetMainBar()->BindStat(_UP_owned->GetStatComp());
 		_ingameMainUI->GetInventory()->SetCurrentOwner(_UP_owned);
+		_ingameMainUI->GetSkillPanel()->SetCurrentOwner(_UP_owned);
+		_ingameMainUI->GetSkillPanel()->InitializeUI();
 
 	}
 
@@ -188,6 +191,7 @@ void AUNIT_PlayerCT::SetupInputComponent()
 	InputComponent->BindAction("Move", IE_Pressed, this, &AUNIT_PlayerCT::OnMovePressed);
 	InputComponent->BindAction("Move", IE_Released, this, &AUNIT_PlayerCT::OnMoveReleased);
 	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUNIT_PlayerCT::OpenInventory);
+	InputComponent->BindAction("Skill", IE_Pressed, this, &AUNIT_PlayerCT::OpenSkillPanel);
 }
 
 void AUNIT_PlayerCT::InitPlayerUnit()
@@ -474,4 +478,9 @@ void AUNIT_PlayerCT::OpenDeadPanel()
 void AUNIT_PlayerCT::OpenInventory()
 {
 	_ingameMainUI->OpenInventory();
+}
+
+void AUNIT_PlayerCT::OpenSkillPanel()
+{
+	_ingameMainUI->OpenSkill();
 }

@@ -7,6 +7,7 @@
 class UWG_Inventory;
 class UWG_NamePlate;
 class UWG_MainBar;
+class UWG_Skill;
 
 UCLASS()
 class POT3D_API UWG_IngameMain : public UUserWidget
@@ -18,12 +19,16 @@ public:
 	void BindStat(class UACP_StatInfo* statComp);
 	void BindCreatureInfo();
 
+	void CheckWidgetVisibilty(UUserWidget* widget);
+
 	void OpenInventory();
+	void OpenSkill();
 
 public:
 	UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
 	UWG_Inventory* GetInventory() {return _WBP_Inventory;}
 	UWG_MainBar* GetMainBar() {return _WBP_MainBar;}
+	UWG_Skill* GetSkillPanel() {return _WBP_Skill;}
 
 private :
 	
@@ -37,5 +42,8 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	UWG_Inventory* _WBP_Inventory;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Skill* _WBP_Skill;
 
 };

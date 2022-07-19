@@ -61,6 +61,7 @@ public:
 	void OnMoveReleased();
 
 	void OpenInventory();
+	void OpenSkillPanel();
 	void OpenDeadPanel();
 
 public:

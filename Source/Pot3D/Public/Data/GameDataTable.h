@@ -70,6 +70,8 @@ struct FSkillData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _coolTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 _requestLevel;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _iconPath;
 
 };

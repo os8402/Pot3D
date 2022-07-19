@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "UI/WG_Inventory.h"
+﻿#include "UI/WG_Inventory.h"
 #include "Item/OBJ_Item.h"
 #include "Item/OBJ_Weapon_Item.h"
 #include "Item/OBJ_Armor_Item.h"
@@ -260,9 +257,6 @@ void UWG_Inventory::ChangeItemSlot(int32 prev, int32 next)
 {
 	UOBJ_Item* prevItem = _inventoryData[prev]->GetItem();
 	UOBJ_Item* nextItem = _inventoryData[next]->GetItem();
-
-	//_inventoryData[prev]->SetItem(nullptr);
-	//_inventoryData[next]->SetItem(nullptr);
 
 	_inventoryData[next]->SetItem(prevItem);
 	_inventoryData[prev]->SetItem(nextItem);

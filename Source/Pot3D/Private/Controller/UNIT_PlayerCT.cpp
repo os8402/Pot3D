@@ -13,6 +13,8 @@
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
 
+#include "Stat/ACP_StatInfo.h"
+
 #include "Item/ACT_DropItem.h"
 #include "Animation/UNIT_Anim.h"
 
@@ -21,6 +23,7 @@
 #include "UI/WG_Inventory.h"
 #include "UI/WG_MainBar.h"
 #include "UI/WG_Skill.h"
+#include "UI/WG_MainBar_Slot.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/ACT_DropItem.h"
@@ -192,6 +195,9 @@ void AUNIT_PlayerCT::SetupInputComponent()
 	InputComponent->BindAction("Move", IE_Released, this, &AUNIT_PlayerCT::OnMoveReleased);
 	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUNIT_PlayerCT::OpenInventory);
 	InputComponent->BindAction("Skill", IE_Pressed, this, &AUNIT_PlayerCT::OpenSkillPanel);
+	InputComponent->BindAction("MainBarSlotEvent", IE_Pressed , this , &AUNIT_PlayerCT::MainBarSlotEvent);
+
+
 }
 
 void AUNIT_PlayerCT::InitPlayerUnit()
@@ -473,6 +479,47 @@ void AUNIT_PlayerCT::OpenDeadPanel()
 {
 	
 }
+
+
+void AUNIT_PlayerCT::MainBarSlotEvent()
+{
+	int32 slotIndex = 0;
+
+	if (IsInputKeyDown(EKeys::One)) slotIndex = 0;
+	else if(IsInputKeyDown(EKeys::Two)) slotIndex = 1;
+	else if(IsInputKeyDown(EKeys::Three)) slotIndex = 2;
+	else if(IsInputKeyDown(EKeys::Four)) slotIndex = 3;
+	else if(IsInputKeyDown(EKeys::Five)) slotIndex = 4;
+	else if(IsInputKeyDown(EKeys::Six)) slotIndex = 5;
+	else if(IsInputKeyDown(EKeys::Seven)) slotIndex = 6;
+	else return;
+
+	//TODO : 슬롯 정보 불러옴 - > 캐릭터 스킬 연동
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::FromInt(slotIndex + 1));
+
+	UWG_MainBar_Slot* slot = _ingameMainUI->GetMainBar()->GetMainBarSlot(slotIndex);
+
+	//스킬 아이디를 불러와야 함.. 
+	//그 전에..
+	//1.쿨타임 체크 .
+	//2.마나는 충분한가
+
+	if (slot)
+	{
+		int32 curMp = _UP_owned->GetStatComp()->GetMp();
+
+		bool bCanSkill = slot->CanUseSkillEvent(curMp);
+		ESlotTypes slotType = slot->GetSlotType();
+
+		if(bCanSkill == false || slotType == ESlotTypes::NONE)
+			return;
+
+		slot->StartSkillEvent();
+		
+	}
+
+}
+
 
 
 void AUNIT_PlayerCT::OpenInventory()

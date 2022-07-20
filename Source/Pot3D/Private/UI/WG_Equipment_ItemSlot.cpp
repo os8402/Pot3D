@@ -15,7 +15,7 @@ void UWG_Equipment_ItemSlot::RefreshUI()
 	if (_item == nullptr)
 	{	
 		_color = FLinearColor(.2f, .2f, .2f, .6f);
-		_texture = _TEX_EmptyIcon;
+		SetTextureIcon(_TEX_EmptyIcon);
 	
 	}
 	else
@@ -23,13 +23,8 @@ void UWG_Equipment_ItemSlot::RefreshUI()
 		_color = FLinearColor(1, 1, 1, 1);
 	}
 
-
-
 	_IMG_Icon->SetColorAndOpacity(_color);
-	_IMG_Icon->SetBrushFromTexture(_texture);
-	
-	FString str = this->GetName();
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
+
 }	
 
 
@@ -38,7 +33,6 @@ void UWG_Equipment_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
-
 
 	dragDropOperation->_widgetRef = this;
 	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());

@@ -45,12 +45,13 @@ void UWG_MainBar::NativePreConstruct()
 
 			mainbarSlot->SetSlotNum(i + 1);
 			mainbarSlot->RefreshUI();
+			mainbarSlot->SetUIOwner(this);
+			
+			_mainBarSlots.Add(mainbarSlot);
 
 		}
 
 	}
-	
-
 }
 
 void UWG_MainBar::BindStat(class UACP_StatInfo* statComp)
@@ -71,4 +72,9 @@ void UWG_MainBar::UpdateHp()
 		_GB_HpBar->UpdateGauge(_currentStatComp->GetHpRatio());
 	}
 
+}
+
+void UWG_MainBar::RefreshSlot(int32 id)
+{
+	
 }

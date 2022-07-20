@@ -21,6 +21,10 @@ public:
 
 	void SetGaugeTooltipHovered();
 
+	void RefreshSlot(int32 id);
+	
+	UWG_MainBar_Slot* GetMainBarSlot(int32 id){ return _mainBarSlots[id]; }
+
 private:
 
 	UPROPERTY()
@@ -39,7 +43,7 @@ private:
 	class UWG_Tooltip_Gauge* _WBP_Tooltip_Mp;
 
 
-
+	TArray<UWG_MainBar_Slot*> _mainBarSlots;
 
 
 };

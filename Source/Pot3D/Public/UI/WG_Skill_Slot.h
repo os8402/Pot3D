@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/WG_Slot.h"
+#include "Data/GameDataTable.h"
 #include "WG_Skill_Slot.generated.h"
 
 
@@ -20,11 +21,15 @@ public:
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 	virtual void RefreshUI() override;
-	void SetSkillIcon(UTexture2D* texture);
-
 	void SetSlotLocked(bool bLocked) { _bLocked =bLocked;}
 
+	FSkillData* GetSkillData() {return _skillData;}
+	void SetSkillData(FSkillData* skillData) {_skillData = skillData;}
+
 private:
+
+
+	FSkillData* _skillData;
 	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_SkillLv;

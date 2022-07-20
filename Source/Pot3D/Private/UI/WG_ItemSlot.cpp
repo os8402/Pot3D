@@ -35,9 +35,8 @@ void UWG_ItemSlot::SetItem(UOBJ_Item* item)
 		newTexture = Cast<UTexture2D>(
 			StaticLoadObject(UTexture2D::StaticClass(), nullptr, *item->GetTexturePath().ToString()));
 
+		SetTextureIcon(newTexture);
 	}
-
-	_texture = newTexture;
 
 	RefreshUI();
 }

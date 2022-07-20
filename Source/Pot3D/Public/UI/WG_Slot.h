@@ -11,6 +11,7 @@ class UWG_Inventory;
 class UOBJ_Item;
 class UTexture2D;
 class UButton;
+class UImage;
 
 UCLASS()
 class POT3D_API UWG_Slot : public UUserWidget
@@ -23,16 +24,16 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativePreConstruct() override;
 	virtual void RefreshUI();
-	
+	virtual void SetTextureIcon(UTexture2D* texture);
+	UTexture2D* GetTextureIcon() {return _iconTexture;}
 
 	UButton* GetSlotBtn() { return _BTN_Slot; }
 
 	void SetSlotNum(int32 num) { _slotNum = num; }
 	int32 GetSlotNum() { return _slotNum; }
 	
+	void SetSlotType(ESlotTypes slotType) {_slotType = slotType;}
 	ESlotTypes GetSlotType() {return _slotType;}
-
-
 
 protected:
 
@@ -47,11 +48,6 @@ protected:
 
 	int32 _slotNum;
 
-	UPROPERTY(VisibleAnywhere)
-	UTexture2D* _texture;
-
-
-
-
-
+private:
+	UTexture2D* _iconTexture;
 };

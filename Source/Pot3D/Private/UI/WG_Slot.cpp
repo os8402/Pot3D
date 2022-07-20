@@ -20,3 +20,12 @@ void UWG_Slot::RefreshUI()
 {
 	
 }
+
+void UWG_Slot::SetTextureIcon(UTexture2D* texture)
+{
+	if (texture)
+	{
+		_IMG_Icon->SetBrushFromTexture(texture);
+		_iconTexture = texture;
+	}
+}

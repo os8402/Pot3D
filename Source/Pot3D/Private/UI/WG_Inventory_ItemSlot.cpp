@@ -26,8 +26,6 @@ void UWG_Inventory_ItemSlot::RefreshUI()
 	}
 
 	_IMG_Icon->SetColorAndOpacity(FLinearColor::White);
-	_IMG_Icon->SetBrushFromTexture(_texture);
-
 }
 
 
@@ -35,10 +33,7 @@ void UWG_Inventory_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
-
-
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
-
 
 	dragDropOperation->_widgetRef = this;
 	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());

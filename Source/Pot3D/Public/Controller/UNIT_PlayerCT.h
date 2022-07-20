@@ -64,6 +64,8 @@ public:
 	void OpenSkillPanel();
 	void OpenDeadPanel();
 
+	void MainBarSlotEvent();
+	
 public:
 	UWG_IngameMain* GetMainUI() {return _ingameMainUI;}
 
@@ -131,6 +133,8 @@ private:
 	TSubclassOf<UWG_IngameMain> _ingameMainClass;
 	UPROPERTY(VisibleAnywhere)
 	UWG_IngameMain* _ingameMainUI;
+
+
 
 
 };

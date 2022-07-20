@@ -43,10 +43,9 @@ void UWG_Inventory::NativePreConstruct()
 
 			itemSlot->SetToolTip(_WBP_Tooltip_Item);
 
-
 		}
-
 	}
+
 	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip_Item);
 	_WBP_Equipment_Weapon->SetInventory(this);
 
@@ -61,7 +60,6 @@ void UWG_Inventory::NativePreConstruct()
 		armor.Value->SetInventory(this);
 
 	}
-
 
 	_WBP_Tooltip_Item->SetVisibility(ESlateVisibility::Hidden);
 }

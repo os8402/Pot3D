@@ -11,8 +11,9 @@ void UWG_Skill_Slot::NativePreConstruct()
 		StaticLoadObject(UTexture2D::StaticClass(), nullptr, 
 		TEXT("Texture2D'/Game/Resources/fantasy_gui_4/textures/icons/brown/fg4_iconsBrown_lockClosed.fg4_iconsBrown_lockClosed'")));
 		
+	_TB_SkillLv->SetText(FText::FromString(""));
 
-	SetSkillIcon(nullptr);
+	SetTextureIcon(_TEX_lock);
 
 }
 
@@ -74,20 +75,5 @@ FReply UWG_Skill_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometr
 void UWG_Skill_Slot::RefreshUI()
 {
 	Super::RefreshUI();
-
-
-}
-
-void UWG_Skill_Slot::SetSkillIcon(UTexture2D* texture)
-{
-	if (texture == nullptr)
-	{
-		_IMG_Icon->SetBrushFromTexture(_TEX_lock);
-		_TB_SkillLv->SetText(FText::FromString(""));
-		return;
-
-	}
-
-	_IMG_Icon->SetBrushFromTexture(texture);
 
 }

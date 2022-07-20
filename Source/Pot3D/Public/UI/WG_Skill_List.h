@@ -32,7 +32,7 @@ private:
 	
 	
 	TWeakObjectPtr<UWG_Skill> _UIOwner;
-	FSkillData* _skillData; 
+	FSkillData*_skillData; 
 
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Skill_Slot* _WBP_Skill_Slot;

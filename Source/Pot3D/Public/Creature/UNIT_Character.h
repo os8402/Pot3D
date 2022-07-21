@@ -25,12 +25,9 @@ protected:
 	virtual void PostInitializeComponents() override;
 	virtual void TickRecovery(float DeltaTime);
 
-
 public:	
 
 	virtual void Tick(float DeltaTime) override;
-
-	
 
 
 public:
@@ -40,9 +37,11 @@ public:
 	void SoundPlay(int32 index);
 	bool CanAttack();
 
-
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted);
+
+	void UseActiveSKill(int32 skillId);
+
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -68,7 +67,6 @@ public:
 
 	TWeakObjectPtr<class AUNIT_Character>& GetTargetEnemy() { return _targetEnemy; }
 	void SetTargetEnemy(class AUNIT_Character* target) { _targetEnemy = target; }
-
 	bool IsAttacking() { return _bAttacking; }
 
 	FOnAttackEnded& GetOnAttackEnded() { return _onAttackEnded; }
@@ -105,10 +103,9 @@ protected:
 	TWeakObjectPtr<class AUNIT_Character> _targetEnemy;
 
 	bool _bAttacking = 0;
-
 	FOnAttackEnded _onAttackEnded;
-
 	int32 _attackIndex = 0;
+
 
 protected:
 

@@ -14,6 +14,7 @@
 #include "Creature/UNIT_Monster.h"
 
 #include "Stat/ACP_StatInfo.h"
+#include "Skill/ACP_SkillInfo.h"
 
 #include "Item/ACT_DropItem.h"
 #include "Animation/UNIT_Anim.h"
@@ -166,6 +167,10 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 		if (state == EUnitStates::DEAD)
 			return;
 
+		if(_bUseSkill)
+			return;
+			
+
 		if (_bClickMouseDown)
 			ClickMouseDown();
 
@@ -202,8 +207,7 @@ void AUNIT_PlayerCT::SetupInputComponent()
 
 void AUNIT_PlayerCT::InitPlayerUnit()
 {
-	_bClickMouse = _bMoving = _bAttacking = false;
-
+	InitializePlayerState();
 	auto unitCharacter = Cast<AUNIT_Character>(GetPawn());
 }
 
@@ -514,8 +518,19 @@ void AUNIT_PlayerCT::MainBarSlotEvent()
 		if(bCanSkill == false || slotType == ESlotTypes::NONE)
 			return;
 
+		int32 skillId = slot->GetSKillId();
+		UACP_SKillInfo* skillComp = _UP_owned->GetSkillComp();
+	
+		//아이디가 유효하지 않거나.. 스킬 습득한 정보가 없을 경우
+		if(skillId == -1 || skillComp->IsAcquiredSkill(skillId) == false)
+			return;
+
 		slot->StartSkillEvent();
+		_UP_owned->UseActiveSKill(skillId);
 		
+		InitializePlayerState();
+		_bUseSkill = true;
+
 	}
 
 }

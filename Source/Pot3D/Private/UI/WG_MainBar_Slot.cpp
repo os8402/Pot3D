@@ -66,8 +66,7 @@ bool UWG_MainBar_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 			SetTextureIcon(newTexture);
 			
 			FSkillData* skillData = skillSlot->GetSkillData();
-
-			SetConditionValue(skillData->_reduceMana , skillData->_coolTime);
+			SetConditionToUseSlot(skillData);
 			
 		}
 		//메인 바 슬롯끼리 이동하는 경우
@@ -140,7 +139,7 @@ void UWG_MainBar_Slot::TickSlotCoolTime(float InDeltaTime)
 bool UWG_MainBar_Slot::CanUseSkillEvent(int32 mp)
 {
 	bool bCan = !(_bCoolTimeFlag);   
-	bool bcan = (mp >= _reduceMana);
+	bool bcan = (mp >= _skillData->_coolTime);
 
 	return bCan;
 }

@@ -20,20 +20,24 @@ void UUNIT_Anim::NativeUpdateAnimation(float DeltaSeconds)
 
 }
 
-void UUNIT_Anim::PlayAttackMontage()
+void UUNIT_Anim::PlayMontageAnim()
 {
 	Montage_Play(_AM_attackMontage);
 }
 
-void UUNIT_Anim::JumpToSection(int32 index)
+void UUNIT_Anim::JumpToSection(FName name)
 {
-	FName name = GetAttackMontageName(index);
 	Montage_JumpToSection(name , _AM_attackMontage);
 }
 
 FName UUNIT_Anim::GetAttackMontageName(int32 index)
 {
 	return FName(*FString::Printf(TEXT("Attack%d"), index));
+}
+
+FName UUNIT_Anim::GetSkillMontageName(int32 index)
+{
+	return FName(*FString::Printf(TEXT("Skill%d"), index));
 }
 
 void UUNIT_Anim::AnimNotify_AttackHit()

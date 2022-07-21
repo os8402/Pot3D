@@ -31,6 +31,16 @@ public:
 	TMap<int32 , FSkillData*> GetPassiveSkills() {return _passiveSkills;}
 	TMap<int32 , FSkillData*> GetAcquiredSkills() {return _acquiredSkills;}
 
+	bool IsAcquiredSkill(int32 id) 
+	{
+		if(_acquiredSkills.Num() == 0)
+			return false;
+
+		if(_acquiredSkills.Find(id) == false)
+			return false;
+		
+		return true;
+	};
 
 private:
 

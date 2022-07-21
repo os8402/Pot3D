@@ -32,7 +32,6 @@ public :
 public:
 
 	void InitPlayerUnit();
-
 	void ClickMouseCursor();
 	void ClickMouseDown();
 
@@ -65,6 +64,14 @@ public:
 	void OpenDeadPanel();
 
 	void MainBarSlotEvent();
+
+
+	void InitializePlayerState()
+	{
+		_bClickMouse = _bMoving = _bAttacking = _bPicking = _bUseSkill = false;
+	}
+
+	void SetSkillEnded() {_bUseSkill = false;} 
 	
 public:
 	UWG_IngameMain* GetMainUI() {return _ingameMainUI;}
@@ -106,6 +113,8 @@ private:
 
 
 private:
+
+
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bClickMouse = 0;
 	UPROPERTY(EditAnywhere, Category = "Pawn")
@@ -116,6 +125,8 @@ private:
 	bool _bAttacking = 0;
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bPicking = 0;
+	UPROPERTY(EditAnywhere, Category = "Pawn")
+	bool _bUseSkill = 0;
 
 	FVector _destPos;
 	FRotator _smoothRot;

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "UI/WG_Slot.h"
 #include "UtilsLib.h"
+#include "Data/GameDataTable.h"
 #include "WG_MainBar_Slot.generated.h"
 
 
@@ -26,7 +27,6 @@ public:
 	
 	void TickSlotCoolTime(float InDeltaTime);
 
-	void SetReduceMana(float reduceMana) {_reduceMana = reduceMana;}
 	void SetMaxCoolTime(float maxCoolTime) {_maxCoolTime = maxCoolTime;}
 
 	float GetCoolTimeRatio() {return _coolTime/ _maxCoolTime;}
@@ -35,15 +35,19 @@ public:
 
 	//슬롯 이벤트 활성을 위한 조건.. 
 	//아마 게임이 좀 커지?면 매개 변수에 객체 함수로 바꿀 수도
-	void SetConditionValue(int32 mana, float coolTime)
+	void SetConditionToUseSlot(FSkillData* skillData)
 	{
-		SetReduceMana(mana);
-		SetMaxCoolTime(coolTime);
+		_skillData = skillData;
+
+		if (skillData != nullptr)
+			SetMaxCoolTime(skillData->_coolTime);
 	}
 
 	bool CanUseSkillEvent(int32 condition);
 
 	void StartSkillEvent();
+
+	int32 GetSKillId( ){ return (_skillData) ? _skillData->_skillId : -1; }
 
 
 
@@ -65,10 +69,8 @@ private:
 	float _maxCoolTime = 1;
 	UPROPERTY(VisibleAnywhere, Category = "Condition")
 	bool _bCoolTimeFlag = false;
-	UPROPERTY(VisibleAnywhere, Category = "Condition")
-	float _reduceMana = 0.f;
 
-
+	FSkillData* _skillData;
 
 	//슬롯이 비었을 경우 보이게 될 텍스처
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

@@ -175,8 +175,9 @@ void AUNIT_Character::AttackEnemy()
 	FRotator destRot = UKismetMathLibrary::FindLookAtRotation(ownedPos, enemyPos);
 	SetActorRotation(destRot);
 
-	GetUnitAnim()->PlayAttackMontage();
-	GetUnitAnim()->JumpToSection(_attackIndex);
+	GetUnitAnim()->PlayMontageAnim();
+	FName name = GetUnitAnim()->GetAttackMontageName(_attackIndex);
+	GetUnitAnim()->JumpToSection(name);
 
 	int32 maxAttackNum = GetUnitAnim()->GetMaxAttackNum();
 
@@ -186,7 +187,6 @@ void AUNIT_Character::AttackEnemy()
 
 void AUNIT_Character::AttackCheck()
 {
-
 	if (CanAttack() == false)
 		return;
 
@@ -198,6 +198,82 @@ void AUNIT_Character::AttackCheck()
 	GetTargetEnemy().Get()->TakeDamage(dmg, dmgEvent, GetController(), this);
 
 }
+
+
+bool AUNIT_Character::CanAttack()
+{
+
+	if (GetTargetEnemy().IsValid() == false)
+		return false;
+
+	if (GetTargetEnemy().Get()->GetUnitStates() == EUnitStates::DEAD)
+		return false;
+
+	if (this->GetDistanceTo(GetTargetEnemy().Get()) > 300.f)
+		return false;
+
+	return true;
+
+}
+
+
+void AUNIT_Character::OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted)
+{
+	_bAttacking = false;
+
+	auto pc = Cast<AUNIT_PlayerCT>(GetController());
+
+	if(pc)
+		pc->SetSkillEnded();
+
+	_onAttackEnded.Broadcast();
+}
+
+float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	//
+	float dmg = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	//TODO : 능력치 합산 들어가야 함. 
+
+	_ACP_Stat->OnAttacked(DamageAmount);
+
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = this;
+
+	FVector spawnPos = GetActorLocation();
+	FRotator spawnRot = DamageCauser->GetActorRotation();
+
+	//Todo 데미지 띄우기
+	UE_LOG(LogTemp, Log, TEXT("Attack dmg : %f"), DamageAmount);
+
+	auto curSpawnDmgActor = Cast<AACT_DamgeText>(
+		GetWorld()->SpawnActor<AActor>(_ACT_DmgText, spawnPos, spawnRot, spawnParams));
+
+	curSpawnDmgActor->SetDamage(DamageAmount);
+	curSpawnDmgActor->SetMyOwner(this);
+	curSpawnDmgActor->UpdateDamage();
+
+	_PS_HitEff->Activate(true);
+
+	//hp바 표시
+	VisibleHpBar();
+
+	return DamageAmount;
+}
+
+
+void AUNIT_Character::UseActiveSKill(int32 skillId)
+{
+	
+	//FVector ownedPos = GetActorLocation();
+	GetUnitAnim()->PlayMontageAnim();
+	FName name = GetUnitAnim()->GetSkillMontageName(skillId);
+	GetUnitAnim()->JumpToSection(name);
+
+
+}
+
 
 void AUNIT_Character::SoundPlay(int32 index)
 {
@@ -211,62 +287,7 @@ void AUNIT_Character::SoundPlay(int32 index)
 }
 
 
-bool AUNIT_Character::CanAttack()
-{
-	
-	if (GetTargetEnemy().IsValid() == false)
-		return false;
 
-	if (GetTargetEnemy().Get()->GetUnitStates() == EUnitStates::DEAD)
-		return false;
-
-	if (this->GetDistanceTo(GetTargetEnemy().Get()) > 300.f)
-		return false;
-	
-	return true;
-
-}
-
-void AUNIT_Character::OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted)
-{
-	_bAttacking = false;
-	GetOnAttackEnded().Broadcast();
-}
-
-float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	//
-	float dmg =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	//TODO : 능력치 합산 들어가야 함. 
-
-
-
-	_ACP_Stat->OnAttacked(DamageAmount);
-
-	FActorSpawnParameters spawnParams;
-	spawnParams.Owner = this;
-
-	FVector spawnPos = GetActorLocation();
-	FRotator spawnRot = DamageCauser->GetActorRotation();
-
-	//Todo 데미지 띄우기
-	UE_LOG(LogTemp, Log , TEXT("Attack dmg : %f"), DamageAmount);
-
-	auto curSpawnDmgActor = Cast<AACT_DamgeText>(
-		GetWorld()->SpawnActor<AActor>(_ACT_DmgText, spawnPos, spawnRot, spawnParams));
-
-	curSpawnDmgActor->SetDamage(DamageAmount);
-	curSpawnDmgActor->SetMyOwner(this);
-	curSpawnDmgActor->UpdateDamage();
-
-	_PS_HitEff->Activate(true);
-	
-	//hp바 표시
-	VisibleHpBar();
-
-	return DamageAmount;
-}
 
 void AUNIT_Character::VisibleHpBar()
 {

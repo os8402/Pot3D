@@ -23,10 +23,11 @@ public:
 
 public:
 
-	void PlayAttackMontage();
-	void JumpToSection(int32 index);
+	void PlayMontageAnim();
+	void JumpToSection(FName name);
 	
 	FName GetAttackMontageName(int32 index);
+	FName GetSkillMontageName(int32 index);
 	int32 GetMaxAttackNum() {return _maxAttackNum;}
 
 	UFUNCTION()

@@ -174,6 +174,17 @@ enum class ESkillAttackTypes : uint8
 };
 
 UENUM(BlueprintType)
+enum class EPaladinSkillNames : uint8
+{
+	MELEE = 0 UMETA(DisplayName = "MELEE"),
+	MAGIC UMETA(DisplayName = "MAGIC"),
+	RECOVERY UMETA(DisplayName = "RECOVERY"),
+	BUFF UMETA(DisplayName = "BUFF"),
+	DEBUFF UMETA(DisplayName = "DEBUFF"),
+
+	END
+};
+UENUM(BlueprintType)
 enum class ESlotTypes : uint8
 {
 	NONE UMETA(DisplayName = "NONE"),

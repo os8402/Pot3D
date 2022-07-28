@@ -17,7 +17,9 @@ public:
 
 	virtual void NativePreConstruct() override;
 	void BindStat(class UACP_StatInfo* statComp);
+
 	void UpdateHp();
+	void UpdateMp();
 
 	void SetGaugeTooltipHovered();
 

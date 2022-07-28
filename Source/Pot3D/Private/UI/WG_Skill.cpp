@@ -76,6 +76,10 @@ void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> sk
 
 			skillList->SetSkillData(skillData , bAcquired);
 
+			//TEST CODE
+			skillList->AcquireSkill();
+			
+
 		}
 
 	}

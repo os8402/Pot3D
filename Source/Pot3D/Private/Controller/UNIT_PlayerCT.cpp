@@ -118,7 +118,6 @@ void AUNIT_PlayerCT::BeginPlay()
 
 		if (_ppv)
 		{
-
 			_MI_PostProcess.Add(_MI_Outlines[0]);
 
 			FPostProcessSettings& postProcessSettings = _ppv->Settings;
@@ -524,10 +523,27 @@ void AUNIT_PlayerCT::MainBarSlotEvent()
 		//아이디가 유효하지 않거나.. 스킬 습득한 정보가 없을 경우
 		if(skillId == -1 || skillComp->IsAcquiredSkill(skillId) == false)
 			return;
+		//플레이어가 현재 스킬을 사용 중인 경우
 
-		slot->StartSkillEvent();
-		_UP_owned->UseActiveSKill(skillId);
+		if(skillComp->IsUsingSkill())
+			return;
+
+		FName skillName = skillComp->GetSkillNameFromId(skillId);
 		
+		//아이디 등록
+		skillComp->SetUsingSKillId(skillId);
+		//슬롯에 전달
+		slot->StartSkillEvent();
+		//캐릭터에 전달 
+		_UP_owned->UseActiveSKill(skillName);
+		
+		//마나감소
+		int32 reduceMana = skillComp->GetAcquireSKill(skillId)->_reduceMana;
+		int32 newMp = curMp - reduceMana;
+		_UP_owned->GetStatComp()->SetMp(newMp);
+
+
+		//현재 상태들 초기화
 		InitializePlayerState();
 		_bUseSkill = true;
 

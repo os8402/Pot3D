@@ -106,7 +106,6 @@ void UACP_PlayerToCameraChecker::CheckFadeThisMesh()
 			auto fadeMesh = Cast<UACP_FadeThisMesh>
 				(hit.Actor->GetComponentByClass(UACP_FadeThisMesh::StaticClass()));
 
-
 			if (fadeMesh == nullptr)
 				continue;
 		

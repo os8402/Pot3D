@@ -22,14 +22,33 @@ protected:
 
 public:
 
-	void SetSkillData(EUnitJobs job);
+	virtual void SetSkillData(EUnitJobs job);
 	void SetAcquireSkill(int32 id , FSkillData* skillData);
 
+	virtual void UseActiveSkill(FName name);
+
+
 public:
+
+	void SetUsingSKillId(int32 id) {_usingSkillId = id;}
+	int32 GetUsingSKillId() {return _usingSkillId;}
+	
+	bool IsUsingSkill()
+	{
+		return (_usingSkillId != -1);
+	}
+
+	//나중에 스폰하면 키값을 커넥티드 아이디로 바꿔야함 
+	TArray<class AUNIT_Character*>   GetSkillTargetEnemy() {return _skillTargetEnemys;};
+
+
 	EUnitJobs GetUnitJobs() {return _unitJob;}
 	TMap<int32 , FSkillData*> GetActiveSkills() {return _activeSkills;}
 	TMap<int32 , FSkillData*> GetPassiveSkills() {return _passiveSkills;}
 	TMap<int32 , FSkillData*> GetAcquiredSkills() {return _acquiredSkills;}
+
+	FSkillData* GetAcquireSKill(int32 id) { return _acquiredSkills[id]; }
+
 
 	bool IsAcquiredSkill(int32 id) 
 	{
@@ -41,6 +60,24 @@ public:
 		
 		return true;
 	};
+
+	FName GetSkillNameFromId(int32 id)
+	{
+		return _acquiredSkills[id]->_skillName;
+	}
+
+protected:
+	
+	TArray<FName> _unitSkillNames;
+
+protected:
+
+	//
+	//Skill 
+	//1. 타겟이 여러 명일 수도 있음..
+	TArray<class AUNIT_Character*>  _skillTargetEnemys;
+
+	int32 _usingSkillId = -1;
 
 private:
 

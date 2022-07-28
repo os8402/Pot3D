@@ -25,6 +25,8 @@ public:
 	virtual void DeadUnit() override;
 	virtual void VisibleHpBar() override;
 
+	virtual void UseActiveSKill(FName skillName) override;
+
 private:
 	
 	UPROPERTY()
@@ -42,5 +44,9 @@ private:
 	class UWidgetComponent* _WG_HpBar;
 
 	FTimerHandle _hpBarTimer;
+
+	float x;
+	float y;
+	float z;
 
 };

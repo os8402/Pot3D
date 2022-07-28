@@ -58,11 +58,13 @@ void UWG_MainBar::BindStat(class UACP_StatInfo* statComp)
 {
 	_currentStatComp = statComp;
 	_currentStatComp->GetOnHpChanged().AddUObject(this, &UWG_MainBar::UpdateHp);
+	_currentStatComp->GetOnMpChanged().AddUObject(this, &UWG_MainBar::UpdateMp);
 
 	_WBP_Tooltip_Hp->SetStatComp(_currentStatComp.Get());
 	_WBP_Tooltip_Mp->SetStatComp(_currentStatComp.Get());
 
 	UpdateHp();
+	UpdateMp();
 }
 
 void UWG_MainBar::UpdateHp()
@@ -72,6 +74,14 @@ void UWG_MainBar::UpdateHp()
 		_GB_HpBar->UpdateGauge(_currentStatComp->GetHpRatio());
 	}
 
+}
+
+void UWG_MainBar::UpdateMp()
+{
+	if (_currentStatComp.IsValid())
+	{
+		_GB_MpBar->UpdateGauge(_currentStatComp->GetMpRatio());
+	}
 }
 
 void UWG_MainBar::RefreshSlot(int32 id)

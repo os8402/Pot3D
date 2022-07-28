@@ -20,7 +20,6 @@ void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bAcquired)
 	if(skillData != nullptr)
 		_skillData = skillData;
 
-
 	UTexture2D* newTexture = Cast<UTexture2D>(
 		StaticLoadObject(UTexture2D::StaticClass(), nullptr, *skillData->_iconPath.ToString()));
 
@@ -28,7 +27,7 @@ void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bAcquired)
 	_WBP_Skill_Slot->SetSlotLocked(!bAcquired);
 	_WBP_Skill_Slot->SetSkillData(skillData);
 
-	_TB_SkillName->SetText(skillData->_skillName);
+	_TB_SkillName->SetText(skillData->_skillNameUI);
 
 	_BD_Lock->SetRenderOpacity(1.f);
 

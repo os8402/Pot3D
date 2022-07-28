@@ -54,7 +54,7 @@ struct FSkillData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _skillLevel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText _skillName;
+	FName _skillName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _skillInfo;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -73,7 +73,8 @@ struct FSkillData : public FTableRowBase
 	int32 _requestLevel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _iconPath;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText _skillNameUI;
 };
 
 

@@ -17,16 +17,28 @@
 // Sets default values
 AACT_DropItem::AACT_DropItem()
 {
-	USceneComponent* defalutRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMP"));
+	/*CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(ACharacter::CapsuleComponentName);
+	CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
+	CapsuleComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 
-	RootComponent = defalutRoot;
+	CapsuleComponent->CanCharacterStepUpOn = ECB_No;
+	CapsuleComponent->SetShouldUpdatePhysicsVolume(true);
+	CapsuleComponent->SetCanEverAffectNavigation(false);
+	CapsuleComponent->bDynamicObstacle = true;
+	RootComponent = CapsuleComponent;*/
+
+	//USceneComponent* defalutRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMP"));
+
+
 
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
 
-	_BOX_Trigger->SetupAttachment(RootComponent);
+	//_BOX_Trigger->SetupAttachment(RootComponent);
+
+	RootComponent = _BOX_Trigger;
 
 	_MESH_Comp->SetupAttachment(_BOX_Trigger);
 

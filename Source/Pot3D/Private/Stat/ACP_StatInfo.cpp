@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Stat/ACP_StatInfo.h"
 #include "Item/OBJ_Item.h"
 #include <Kismet/GameplayStatics.h>

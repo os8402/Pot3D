@@ -32,15 +32,25 @@ public:
 
 public:
 
+	//1.플컨에서 공격명령
 	void AttackEnemy();
-	virtual void AttackCheck();
-	void SoundPlay(int32 index);
+	//2.애니 몽타주 
+	virtual void AttackAnimCheck();
+	//3.공격 가능한 지 [애니 몽타주 안에 들어있음] 
 	bool CanAttack();
+
+	virtual void SkillAnimCheck();
+
+	void SoundPlay(int32 index);
+
 
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted);
+	UFUNCTION()
+	void OnSkillMontageEnded(UAnimMontage* montage, bool bInteruppted);
 
-	void UseActiveSKill(int32 skillId);
+
+	virtual void UseActiveSKill(FName skillName);
 
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -83,7 +93,7 @@ public:
 	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 
 
-private:
+protected:
 
 	int32 _connectedId = 0;
 	UPROPERTY(EditAnywhere, Category = "ID")
@@ -98,7 +108,7 @@ protected:
 protected:
 
 	//ATTACK 
-
+	// 플컨에서 잡고 있는 타겟 [ 몬스터 ]
 	UPROPERTY(VisibleAnywhere)
 	TWeakObjectPtr<class AUNIT_Character> _targetEnemy;
 
@@ -123,7 +133,7 @@ protected:
 protected:
 
 // 스킬
-
+	
 	UPROPERTY(VisibleAnywhere, Category = "Skill")
 	class UACP_SKillInfo* _ACP_Skill;
 
@@ -136,10 +146,13 @@ protected:
 	class AACT_DamgeText* _currentDmgActor;
 
 
-private :
+protected:
 	//ENUM
 	UPROPERTY(VisibleAnywhere, Category="Pawn")
 	EUnitStates _UnitStates; 
+	//ENUM
+	UPROPERTY(EditAnywhere, Category = "Pawn")
+	EUnitJobs _unitJobs;
 
 private :
 
@@ -165,7 +178,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Audio")
 	class UAudioComponent* _Audio_Comp;
-
 
 
 

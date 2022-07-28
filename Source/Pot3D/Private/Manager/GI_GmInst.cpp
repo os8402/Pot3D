@@ -40,7 +40,7 @@ UGI_GmInst::UGI_GmInst()
 	if (EM.Succeeded())
 		_spawnMonster = EM.Class;
 
-	static ConstructorHelpers::FClassFinder<AUNIT_Player> EP(TEXT("Blueprint'/Game/BluePrints/Player/BP_UnitPlayer.BP_UnitPlayer_C'"));
+	static ConstructorHelpers::FClassFinder<AUNIT_Player> EP(TEXT("Blueprint'/Game/BluePrints/Player/BP_UnitPlayer_Paladin.BP_UnitPlayer_Paladin_C'"));
 	if (EP.Succeeded())
 		_spawnPlayer = EP.Class;
 }

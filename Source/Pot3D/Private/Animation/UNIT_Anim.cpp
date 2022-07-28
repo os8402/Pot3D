@@ -35,14 +35,19 @@ FName UUNIT_Anim::GetAttackMontageName(int32 index)
 	return FName(*FString::Printf(TEXT("Attack%d"), index));
 }
 
-FName UUNIT_Anim::GetSkillMontageName(int32 index)
+FName UUNIT_Anim::GetSkillMontageName(FName name)
 {
-	return FName(*FString::Printf(TEXT("Skill%d"), index));
+	return FName(*FString::Printf(TEXT("Skill_%s"), *name.ToString()));
 }
 
 void UUNIT_Anim::AnimNotify_AttackHit()
 {
 	_onAttackHit.Broadcast();
+}
+
+void UUNIT_Anim::AnimNotify_SkillHit()
+{
+	_onSKillHit.Broadcast();
 }
 
 void UUNIT_Anim::AnimNotify_SoundPlay()

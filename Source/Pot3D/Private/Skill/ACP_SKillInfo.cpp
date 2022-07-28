@@ -1,6 +1,8 @@
 #include "Skill/ACP_SKillInfo.h"
 #include <Kismet/GameplayStatics.h>
 
+#include "Creature/UNIT_Character.h"
+
 UACP_SKillInfo::UACP_SKillInfo()
 {
 
@@ -59,7 +61,10 @@ void UACP_SKillInfo::SetAcquireSkill(int32 id, FSkillData* skillData)
 	//µî·Ï 
 	_acquiredSkills.Add(id , skillData);
 
+}
 
-
+void UACP_SKillInfo::UseActiveSkill(FName name)
+{
+	
 }
 

@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -75,6 +73,8 @@ public:
 	int32 GetBonusResilience() {return _bonusRes; }
 
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
+	FOnMpChanged& GetOnMpChanged() { return _onMpChanged; }
+
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
 public:
@@ -138,7 +138,7 @@ private:
 
 
 	FOnHpChanged _onHpChanged;
-	FOnHpChanged _onMpChanged;
+	FOnMpChanged _onMpChanged;
 	FOnUnitDied _onUnitDied;
 
 };

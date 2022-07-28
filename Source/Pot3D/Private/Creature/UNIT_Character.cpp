@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Creature/UNIT_Character.h"
+﻿#include "Creature/UNIT_Character.h"
 #include "Animation/UNIT_Anim.h"
 
 #include "Stat/ACP_StatInfo.h"
@@ -10,6 +7,8 @@
 #include "UI/WG_HpBar.h"
 #include "UI/ACT_DamgeText.h"
 #include "Manager/GI_GmInst.h"
+
+#include "Controller/UNIT_PlayerCT.h"
 
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
@@ -26,6 +25,8 @@
 #include <Sound/SoundCue.h>
 
 
+
+
 // Sets default values
 AUNIT_Character::AUNIT_Character()
 {
@@ -34,6 +35,7 @@ AUNIT_Character::AUNIT_Character()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -45,8 +47,6 @@ AUNIT_Character::AUNIT_Character()
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
-	_ACP_Skill = CreateDefaultSubobject<UACP_SKillInfo>(TEXT("SKILL"));
-
 
 	static ConstructorHelpers::FClassFinder<AActor> DTC(TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
 
@@ -89,7 +89,6 @@ AUNIT_Character::AUNIT_Character()
 	_PS_HitEff->SetRelativeLocation(effPos);
 	_PS_HitEff->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 
-
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> HIT_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Primary/FX/P_Kwang_Primary_Impact.P_Kwang_Primary_Impact'"));
 
 	if (HIT_EFF.Succeeded())
@@ -98,6 +97,9 @@ AUNIT_Character::AUNIT_Character()
 		_PS_HitEff->bAutoActivate = false;
 
 	}
+
+
+
 }
 
 // Called when the game starts or when spawned
@@ -105,23 +107,25 @@ void AUNIT_Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 }
-
 
 void AUNIT_Character::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
 	_ACP_Stat->SetCharacterId(_chrId);
-	_ACP_Skill->SetSkillData(_ACP_Stat->GetJob());
+
+	if(_ACP_Skill)
+		_ACP_Skill->SetSkillData(_ACP_Stat->GetJob());
 
 	_unitAnim = Cast<UUNIT_Anim>(GetMesh()->GetAnimInstance());
 
 	if (_unitAnim)
 	{
 		_unitAnim->OnMontageEnded.AddDynamic(this, &AUNIT_Character::OnAttackMontageEnded);
-		_unitAnim->GetOnAttackHit().AddUObject(this, &AUNIT_Character::AttackCheck);
+		_unitAnim->OnMontageEnded.AddDynamic(this, &AUNIT_Character::OnSkillMontageEnded);
+		_unitAnim->GetOnAttackHit().AddUObject(this, &AUNIT_Character::AttackAnimCheck);
+		_unitAnim->GetOnSkillHit().AddUObject(this, &AUNIT_Character::SkillAnimCheck);
 		_ACP_Stat->GetOnUnitDied().AddUObject(_unitAnim, &UUNIT_Anim::SetDead);
 	}
 
@@ -185,7 +189,7 @@ void AUNIT_Character::AttackEnemy()
 
 }
 
-void AUNIT_Character::AttackCheck()
+void AUNIT_Character::AttackAnimCheck()
 {
 	if (CanAttack() == false)
 		return;
@@ -217,16 +221,67 @@ bool AUNIT_Character::CanAttack()
 }
 
 
+void AUNIT_Character::SkillAnimCheck()
+{
+
+	TArray<AUNIT_Character*> skillTargetEnemy = GetSkillComp()->GetSkillTargetEnemy();
+	int32 skillId = GetSkillComp()->GetUsingSKillId();
+	bool bAcquiredSkill = GetSkillComp()->IsAcquiredSkill(skillId);
+
+	if(skillTargetEnemy.Num() == 0 || bAcquiredSkill == false)
+		return;
+
+	FSkillData* skillData = GetSkillComp()->GetAcquireSKill(skillId);
+
+	if(skillData == nullptr)
+		return;
+
+	int32 value = skillData->_value;
+	ESkillAttackTypes skillAttackType = skillData->_skillAttackType;
+
+	for (const auto& target : skillTargetEnemy)
+	{
+		if (target == nullptr)
+			continue;
+		//공격
+		if (skillAttackType == ESkillAttackTypes::MELEE || skillAttackType == ESkillAttackTypes::MAGIC)
+		{
+			UACP_StatInfo* statComp = target->GetStatComp();
+			
+			int32 hp = statComp->GetHp();
+
+			if(hp <= 0)
+				continue;
+
+
+			FDamageEvent dmgEvent;
+			UGameplayStatics::ApplyDamage(target, value, GetController(), this, NULL);
+		}
+		
+	}
+
+}
+
+
+
 void AUNIT_Character::OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted)
 {
 	_bAttacking = false;
 
+	_onAttackEnded.Broadcast();
+}
+
+void AUNIT_Character::OnSkillMontageEnded(UAnimMontage* montage, bool bInteruppted)
+{
 	auto pc = Cast<AUNIT_PlayerCT>(GetController());
 
-	if(pc)
+	if (pc)
 		pc->SetSkillEnded();
 
-	_onAttackEnded.Broadcast();
+	// 현재 사용 중인 스킬 정보 삭제
+	GetSkillComp()->SetUsingSKillId(-1);
+	GetSkillComp()->GetSkillTargetEnemy().Empty();
+
 }
 
 float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -245,7 +300,7 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	FRotator spawnRot = DamageCauser->GetActorRotation();
 
 	//Todo 데미지 띄우기
-	UE_LOG(LogTemp, Log, TEXT("Attack dmg : %f"), DamageAmount);
+//	UE_LOG(LogTemp, Log, TEXT("Attack dmg : %f"), DamageAmount);
 
 	auto curSpawnDmgActor = Cast<AACT_DamgeText>(
 		GetWorld()->SpawnActor<AActor>(_ACT_DmgText, spawnPos, spawnRot, spawnParams));
@@ -263,12 +318,12 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 }
 
 
-void AUNIT_Character::UseActiveSKill(int32 skillId)
+void AUNIT_Character::UseActiveSKill(FName skillName)
 {
 	
 	//FVector ownedPos = GetActorLocation();
 	GetUnitAnim()->PlayMontageAnim();
-	FName name = GetUnitAnim()->GetSkillMontageName(skillId);
+	FName name = GetUnitAnim()->GetSkillMontageName(skillName);
 	GetUnitAnim()->JumpToSection(name);
 
 
@@ -298,12 +353,18 @@ void AUNIT_Character::VisibleHpBar()
 
 void AUNIT_Character::DeadUnit()
 {
+	UCapsuleComponent* capsuleComp = GetCapsuleComponent();
 
-	GetCapsuleComponent()->DestroyComponent(true);
+	if (capsuleComp != nullptr)
+	{
+		capsuleComp->DestroyComponent(true);
+	}
+	
 	GetMesh()->SetCollisionProfileName("IgnoreOnlyPawn");
 	SoundPlay((int)ECharacterSounds::DEAD);
 	
 	_PSPR_MinimapIcon->SetSprite(nullptr);
+
 }
 
 void AUNIT_Character::SetOutline(bool on)

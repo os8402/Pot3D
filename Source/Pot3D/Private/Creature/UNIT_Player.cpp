@@ -4,12 +4,15 @@
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
 #include "Controller/UNIT_PlayerCT.h"
+
 #include "Equipment/ACP_Weapon.h"
 #include "Item/ACT_DropItem.h"
 
 #include "Equipment/ACP_Weapon.h"
 #include "Equipment/ACP_Armor.h"
 
+#include "Skill/ACP_SKillInfo.h"
+#include "Fade/ACP_PlayerToCameraChecker.h"
 
 #include <Camera/CameraComponent.h>
 #include <GameFramework/SpringArmComponent.h>
@@ -21,6 +24,8 @@
 
 AUNIT_Player::AUNIT_Player()
 {
+
+	GetMesh()->SetCollisionProfileName(TEXT("Player"));
 
 	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
 
@@ -67,6 +72,9 @@ AUNIT_Player::AUNIT_Player()
 		}
 	}
 
+	_ACP_CameraChecker = CreateDefaultSubobject<UACP_PlayerToCameraChecker>(TEXT("CAMERA_CHECKER"));
+
+	
 }
 
 void AUNIT_Player::BeginPlay()
@@ -77,6 +85,7 @@ void AUNIT_Player::BeginPlay()
 
 	for (auto& item : _armorList)
 		item.Value->SetOwner(this);
+
 }
 
 void AUNIT_Player::Tick(float DeltaTime)
@@ -120,9 +129,9 @@ void AUNIT_Player::SearchActorInfo()
 	}
 }
 
-void AUNIT_Player::AttackCheck()
+void AUNIT_Player::AttackAnimCheck()
 {
-	Super::AttackCheck();
+	Super::AttackAnimCheck();
 
 	if (CanAttack() == false)
 		return;
@@ -132,6 +141,8 @@ void AUNIT_Player::AttackCheck()
 	if (pc)
 		pc->CameraShake(1.0f);
 }
+
+
 
 
 

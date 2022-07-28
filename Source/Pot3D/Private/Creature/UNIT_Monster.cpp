@@ -1,11 +1,11 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-#include "Creature/UNIT_Monster.h"
+﻿#include "Creature/UNIT_Monster.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/OBJ_Weapon_Item.h"
 #include "Item/OBJ_Armor_Item.h"
 #include "Item/OBJ_Consumable_Item.h"
 
+#include "Skill/ACP_SKillInfo.h"
 
 #include "Item/ACT_DropItem.h"
 #include "Manager/GI_GmInst.h"
@@ -35,6 +35,8 @@ AUNIT_Monster::AUNIT_Monster()
 		_WG_HpBar->SetDrawSize(_hpDrawSize);
 	}*/
 
+	GetMesh()->SetCollisionProfileName(TEXT("Monster"));
+
 
 	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Red);
 
@@ -45,6 +47,8 @@ AUNIT_Monster::AUNIT_Monster()
 
 	AIControllerClass = AUNIT_MonsterCT::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	_ACP_Skill = CreateDefaultSubobject<UACP_SKillInfo>(TEXT("SKILL"));
 
 }
 
@@ -78,9 +82,8 @@ void AUNIT_Monster::DeadUnit()
 	/*GetWorld()->GetTimerManager().ClearTimer(_hpBarTimer);
 	_WG_HpBar->SetVisibility(false);*/
 
-	AController* controller = GetController<AController>();
-
-	controller->Destroy();
+	AUNIT_MonsterCT* mc = Cast<AUNIT_MonsterCT>(GetController<AController>());
+	mc->Destroy();
 	
 	//아이템 드랍
 	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -103,8 +106,6 @@ void AUNIT_Monster::DeadUnit()
 
 			for (int32 i = 0; i < itemNum; i++)
 			{
-
-				//정규 분포 
 
 				int32 result = UtilsLib::NormalDistribution(0, 1);
 
@@ -240,5 +241,12 @@ void AUNIT_Monster::VisibleHpBar()
 	//	{
 	//		_WG_HpBar->SetVisibility(false);
 	//	}), 1.5f, false);
+}
+
+void AUNIT_Monster::UseActiveSKill(FName skillName)
+{
+	Super::UseActiveSKill(skillName);
+
+	_ACP_Skill->UseActiveSkill(skillName);
 }
 

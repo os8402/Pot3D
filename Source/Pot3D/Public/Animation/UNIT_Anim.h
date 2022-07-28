@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,11 +5,9 @@
 #include "Animation/AnimInstance.h"
 #include "UNIT_Anim.generated.h"
 
-/**
- * 
- */
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackHit)
+DECLARE_MULTICAST_DELEGATE(FOnSkillHit)
 UCLASS()
 class POT3D_API UUNIT_Anim : public UAnimInstance
 {
@@ -27,11 +24,13 @@ public:
 	void JumpToSection(FName name);
 	
 	FName GetAttackMontageName(int32 index);
-	FName GetSkillMontageName(int32 index);
+	FName GetSkillMontageName(FName name);
 	int32 GetMaxAttackNum() {return _maxAttackNum;}
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();
+	UFUNCTION()
+	void AnimNotify_SkillHit();
 	UFUNCTION()
 	void AnimNotify_SoundPlay();
 
@@ -39,6 +38,7 @@ public:
 public :
 
 	FOnAttackHit& GetOnAttackHit() { return _onAttackHit; }
+	FOnSkillHit& GetOnSkillHit() { return _onSKillHit; }
 	void SetDead() { StopAllMontages(.1f); _bDead = true; }
 
 
@@ -57,4 +57,5 @@ private :
 	UAnimMontage* _AM_attackMontage;
 
 	FOnAttackHit  _onAttackHit;
+	FOnSkillHit _onSKillHit;
 };

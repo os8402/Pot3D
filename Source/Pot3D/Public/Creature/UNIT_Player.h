@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UNIT_Character.h"
 #include "UNIT_Player.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class POT3D_API AUNIT_Player : public AUNIT_Character
 {
@@ -27,7 +23,7 @@ public:
 public:
 
 	void SearchActorInfo();
-	virtual void AttackCheck() override;
+	virtual void AttackAnimCheck() override;
 
 public:
 
@@ -62,4 +58,11 @@ private:
 	class UACP_Armor* _ACP_Boots;
 
 	TMap<int32, UACP_Armor*> _armorList;
+
+private:
+
+	UPROPERTY(VisibleAnyWhere, Category = "FadeMesh")
+	class UACP_PlayerToCameraChecker* _ACP_CameraChecker;
+
+
 };

@@ -45,13 +45,13 @@ void UWG_Skill::InitializeUI()
 	
 	TMap<int32, FSkillData*> activeSkills = skillInfo->GetActiveSkills();
 	TMap<int32, FSkillData*> passiveSkills = skillInfo->GetPassiveSkills();
-	SetSkillListData(sbActive, activeSkills);
-	SetSkillListData(sbPassive, passiveSkills);
+	SetSkillListData(sbActive, activeSkills , _activeSkillList);
+	SetSkillListData(sbPassive, passiveSkills , _passiveSkillList);
 
 }
 
 
-void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> skills)
+void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> skills , TArray<UWG_Skill_List*>& skillTypeList)
 {
 
 	UACP_SKillInfo* skillInfo = _currentOwner->GetSkillComp();
@@ -61,6 +61,7 @@ void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> sk
 	if (sbList && IsValid(_skillListClass))
 	{
 		sbList->ClearChildren();
+		skillTypeList.Empty();
 
 		for (const auto& skill : skills)
 		{
@@ -79,6 +80,7 @@ void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> sk
 			//TEST CODE
 			skillList->AcquireSkill();
 			
+			skillTypeList.Add(skillList);
 
 		}
 

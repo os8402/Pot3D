@@ -7,6 +7,7 @@
 
 class AUNIT_Player;
 class UWG_Skill_List;
+class UWG_IngameMain;
 
 
 UCLASS()
@@ -21,10 +22,10 @@ public:
 public:
 
 	void InitializeUI();
-	void SetSkillListData(class UScrollBox* sbList , TMap<int32, FSkillData*> skills);
+	void SetSkillListData(class UScrollBox* sbList , TMap<int32, FSkillData*> skills, TArray<UWG_Skill_List*>& skillTypeList);
 	void RefreshUI();
 
-	void AcquireSkill(int32 id, FSkillData* skillData);
+	void AcquireSkill(int32 id, FSkillData* skillData );
 
 	UFUNCTION()
 	void ConvertActiveSwitcher();
@@ -32,10 +33,20 @@ public:
 	void ConvertPassiveSwitcher();
 
 public:
+
+	void SetUIOwner(UWG_IngameMain* owner) { _UIOwner = owner; }
+
 	void SetCurrentOwner(AUNIT_Player* player) { _currentOwner = player; }
 	AUNIT_Player* GetCurrentOwner() { return _currentOwner.Get(); }
 
+	TArray<UWG_Skill_List*> GetActiveSkillList() { return _activeSkillList;}
+	TArray<UWG_Skill_List*> GetPassiveSkillList() { return _passiveSkillList;}
+
+
+
 private:
+
+	TWeakObjectPtr<UWG_IngameMain> _UIOwner;
 	
 	UPROPERTY()
 	TSubclassOf<UWG_Skill_List> _skillListClass;
@@ -50,4 +61,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Button* _BTN_Passive;
+
+	TArray<UWG_Skill_List*> _activeSkillList; 
+	TArray<UWG_Skill_List*> _passiveSkillList; 
 };

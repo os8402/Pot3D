@@ -15,37 +15,33 @@ void UACP_SKillInfo_Paladin::InitializeComponent()
 
 }
 
-
-
 void UACP_SKillInfo_Paladin::UseActiveSkill(FName name)
 {
+	Super::UseActiveSkill(name);
+
 	FString skillName = FString::Printf(TEXT("Skill_%s"), *name.ToString());
 
 	if (SKILL_GOT_MACE == skillName)
 		SKill_GotMace();
 	else if (SKILL_GOT_BLESS == skillName)
 		SKill_GotBless();
-	else if (SKILL_GOT_EARTH_CRUSH == skillName)
-		SKill_EarthCrush();
-	else if (SKILL_GOT_BONE_CRUSH == skillName)
-		SKill_BoneCrush();
+	else if (SKILL_EARTH_QUAKE == skillName)
+		SKill_EarthQuake();
+	else if (SKILL_RUSH == skillName)
+		SKill_Rush();
 	else
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Paladin Skill Not Found"));
 }
 
-//신의철퇴
-void UACP_SKillInfo_Paladin::SKill_GotMace()
+
+
+void UACP_SKillInfo_Paladin::RangeAttackSkill(int32 attackRange)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Got Mace"));
+	Super::RangeAttackSkill(attackRange);
 
 	AUNIT_Player* player = Cast<AUNIT_Player>(GetOwner());
 
-	FVector startPos = player->GetActorLocation();
-	FVector endPos = player->GetActorLocation();
-
-
-	//임시용 나중에 스킬 데이터에서 배껴서 해야함
-	float attackRange = 300.f;
+	FVector pos = player->GetActorLocation();
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypes;
 	TArray<AActor*> ignoreActors; // 무시할 액터들.
@@ -53,16 +49,13 @@ void UACP_SKillInfo_Paladin::SKill_GotMace()
 
 
 	objectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-
 	ignoreActors.Add(player);
 
-	//EDrawDebugTrace::Type debugTrace = _bdebugFade ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
-	EDrawDebugTrace::Type debugTrace = EDrawDebugTrace::ForDuration;
 
 	bool result = UKismetSystemLibrary::SphereOverlapActors
 	(
 		GetWorld(),
-		startPos,
+		pos,
 		attackRange,
 		objectTypes,
 		nullptr,
@@ -75,7 +68,6 @@ void UACP_SKillInfo_Paladin::SKill_GotMace()
 	{
 		for (const auto& actor : outActors)
 		{
-			
 			AUNIT_Character* character = Cast<AUNIT_Character>(actor);
 
 			if (character == nullptr)
@@ -85,23 +77,41 @@ void UACP_SKillInfo_Paladin::SKill_GotMace()
 				FString::Printf(TEXT("hit : %s"), *actor->GetName()));
 
 			_skillTargetEnemys.Add(character);
-		
+
 		}
 	}
+}	
+
+//신의철퇴
+void UACP_SKillInfo_Paladin::SKill_GotMace()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Got Mace"));
+
+	RangeAttackSkill(300.f);
 	
 }
 
 void UACP_SKillInfo_Paladin::SKill_GotBless()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Got Bless"));
+
+	AUNIT_Player* player = Cast<AUNIT_Player>(GetOwner());
+
+	_skillTargetEnemys.Add(player);
+
 }
 
-void UACP_SKillInfo_Paladin::SKill_EarthCrush()
+void UACP_SKillInfo_Paladin::SKill_EarthQuake()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Earth Crush"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : EarthQuake"));
+
+	RangeAttackSkill(500.f);
+
 }	
 
-void UACP_SKillInfo_Paladin::SKill_BoneCrush()
+void UACP_SKillInfo_Paladin::SKill_Rush()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Bone Crush"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill : Rush"));
+
 }
+

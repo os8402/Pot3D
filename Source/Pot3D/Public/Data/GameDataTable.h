@@ -62,11 +62,11 @@ struct FSkillData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ESkillTypes _skillType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ESkillAttackTypes _skillAttackType;
+	TArray<ESkillAttackTypes> _skillAttackTypes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _reduceMana;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 _value;
+	TArray<int32> _values;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _coolTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -75,6 +75,10 @@ struct FSkillData : public FTableRowBase
 	FName _iconPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText _skillNameUI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ERecoveryTypes> _recoveryTypes;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<EBuffTypes> _buffTypes;
 };
 
 

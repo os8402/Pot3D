@@ -24,6 +24,7 @@
 #include "UI/WG_Inventory.h"
 #include "UI/WG_MainBar.h"
 #include "UI/WG_Skill.h"
+#include "UI/WG_MainBar.h"
 #include "UI/WG_MainBar_Slot.h"
 
 #include "Item/OBJ_Item.h"
@@ -105,6 +106,9 @@ void AUNIT_PlayerCT::BeginPlay()
 		_ingameMainUI->GetSkillPanel()->SetCurrentOwner(_UP_owned);
 		_ingameMainUI->GetSkillPanel()->InitializeUI();
 
+		//TEST CODE: 
+		_ingameMainUI->GetMainBar()->TestPreSlot();
+
 	}
 
 	//TODO : Post process
@@ -184,7 +188,6 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 			ChaseToEnemy(DeltaTime);
 		else if (_bPicking)
 			PickUpItem(DeltaTime);
-
 
 	}
 

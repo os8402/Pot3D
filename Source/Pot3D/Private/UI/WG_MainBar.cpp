@@ -5,6 +5,11 @@
 #include "UI/WG_GlassBallBar.h"
 #include "UI/WG_Tooltip_Gauge.h"
 
+#include "UI/WG_IngameMain.h"
+#include "UI/WG_Skill.h"
+#include "UI/WG_Skill_List.h"
+#include "UI/WG_Skill_Slot.h"
+
 #include <Blueprint/WidgetTree.h>
 #include <Components/HorizontalBox.h>
 
@@ -33,6 +38,7 @@ void UWG_MainBar::NativePreConstruct()
 	//Mainbar Slot 생성
 	UHorizontalBox* hb_slotList = WidgetTree->FindWidget<UHorizontalBox>("_HB_SlotList");
 
+
 	if (hb_slotList && IsValid(_mainBarSlotClass))
 	{
 		hb_slotList->ClearChildren();
@@ -46,7 +52,6 @@ void UWG_MainBar::NativePreConstruct()
 			mainbarSlot->SetSlotNum(i + 1);
 			mainbarSlot->RefreshUI();
 			mainbarSlot->SetUIOwner(this);
-			
 			_mainBarSlots.Add(mainbarSlot);
 
 		}
@@ -87,4 +92,27 @@ void UWG_MainBar::UpdateMp()
 void UWG_MainBar::RefreshSlot(int32 id)
 {
 	
+}
+
+void UWG_MainBar::TestPreSlot()
+{
+	//TEST CODE
+	TArray<UWG_Skill_List*> activeSkillList = _UIOwner->GetSkillPanel()->GetActiveSkillList();
+
+
+	for (int i = 0; i < 4; i++)
+	{
+		UWG_Skill_Slot* skillSlot = activeSkillList[i]->GetSkillSlot();
+		FSkillData* skillData = skillSlot->GetSkillData();
+
+		_mainBarSlots[i]->SetSlotType(ESlotTypes::SKILL);
+		UTexture2D* newTexture = skillSlot->GetTextureIcon();
+		_mainBarSlots[i]->SetTextureIcon(newTexture);
+		_mainBarSlots[i]->SetConditionToUseSlot(skillData);
+
+	}
+
+	/// <summary>
+	/// 나중에 지워야 함 
+	/// </summary>
 }

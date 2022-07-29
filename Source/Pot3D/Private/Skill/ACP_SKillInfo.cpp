@@ -65,6 +65,14 @@ void UACP_SKillInfo::SetAcquireSkill(int32 id, FSkillData* skillData)
 
 void UACP_SKillInfo::UseActiveSkill(FName name)
 {
-	
+	_skillTargetEnemys.Empty();
 }
 
+void UACP_SKillInfo::RangeAttackSkill(int32 attackRange)
+{
+
+}
+AUNIT_Character* UACP_SKillInfo::GetNearDistanceTarget()
+{
+	return nullptr;
+}

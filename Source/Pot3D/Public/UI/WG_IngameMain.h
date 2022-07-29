@@ -16,6 +16,7 @@ class POT3D_API UWG_IngameMain : public UUserWidget
 
 public:
 
+	virtual void NativePreConstruct() override;
 	void BindStat(class UACP_StatInfo* statComp);
 	void BindCreatureInfo();
 
@@ -25,6 +26,7 @@ public:
 	void OpenSkill();
 
 public:
+
 	UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
 	UWG_Inventory* GetInventory() {return _WBP_Inventory;}
 	UWG_MainBar* GetMainBar() {return _WBP_MainBar;}

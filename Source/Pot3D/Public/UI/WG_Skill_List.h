@@ -8,6 +8,7 @@
 #include "WG_Skill_List.generated.h"
 
 class UWG_Skill;
+class UWG_Skill_Slot;
 
 UCLASS()
 class POT3D_API UWG_Skill_List : public UUserWidget
@@ -26,7 +27,7 @@ public:
 
 	void SetUIOwner(UWG_Skill* skill) {	if (skill) 	_UIOwner = skill; }
 	
-
+	UWG_Skill_Slot* GetSkillSlot() {return _WBP_Skill_Slot;}
 
 private:
 	
@@ -35,7 +36,7 @@ private:
 	FSkillData*_skillData; 
 
 	UPROPERTY(meta = (BindWidget))
-	class UWG_Skill_Slot* _WBP_Skill_Slot;
+	UWG_Skill_Slot* _WBP_Skill_Slot;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_SkillName;

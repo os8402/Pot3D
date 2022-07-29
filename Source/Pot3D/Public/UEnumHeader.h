@@ -172,6 +172,33 @@ enum class ESkillAttackTypes : uint8
 
 	END
 };
+UENUM(BlueprintType)
+enum class ERecoveryTypes : uint8
+{
+	NONE = 0 UMETA(DisplayName = "NONE"),
+	HP  UMETA(DisplayName = "HP"),
+	MP UMETA(DisplayName = "MP"),
+
+	END
+};
+UENUM(BlueprintType)
+enum class EBuffTypes : uint8
+{
+	NONE = 0 UMETA(DisplayName = "NONE"),
+	HP  UMETA(DisplayName = "HP"),
+	MP UMETA(DisplayName = "MP"),
+	RESILIENCE UMETA(DisplayName = "RESILIENCE"),
+
+	ATTACK_SPEED UMETA(DisplayName = "ATTACK_SPEED"),
+	MOVE_SPEED UMETA(DisplayName = "MOVE_SPEED"),
+	
+	STRENGH UMETA(DisplayName = "STRENGH"),
+	DEXTERITY UMETA(DisplayName = "DEXTERITY"),
+	INTELIGENCE UMETA(DisplayName = "INTELIGENCE"),
+	LUCK UMETA(DisplayName = "LUCK"),
+
+	END
+};
 
 UENUM(BlueprintType)
 enum class EPaladinSkillNames : uint8

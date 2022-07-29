@@ -223,41 +223,79 @@ bool AUNIT_Character::CanAttack()
 
 void AUNIT_Character::SkillAnimCheck()
 {
-
+	
 	TArray<AUNIT_Character*> skillTargetEnemy = GetSkillComp()->GetSkillTargetEnemy();
 	int32 skillId = GetSkillComp()->GetUsingSKillId();
 	bool bAcquiredSkill = GetSkillComp()->IsAcquiredSkill(skillId);
-
+	//스킬 사용 가능한 지 검사 
 	if(skillTargetEnemy.Num() == 0 || bAcquiredSkill == false)
 		return;
-
+	//스킬 데이터
 	FSkillData* skillData = GetSkillComp()->GetAcquireSKill(skillId);
 
 	if(skillData == nullptr)
 		return;
+	//근접 + 마법 , 근접 + 디버프 등 조합이 다양할 수 있음.
+	int32 skillTypeLen = skillData->_skillAttackTypes.Num();
 
-	int32 value = skillData->_value;
-	ESkillAttackTypes skillAttackType = skillData->_skillAttackType;
 
 	for (const auto& target : skillTargetEnemy)
 	{
 		if (target == nullptr)
 			continue;
-		//공격
-		if (skillAttackType == ESkillAttackTypes::MELEE || skillAttackType == ESkillAttackTypes::MAGIC)
-		{
-			UACP_StatInfo* statComp = target->GetStatComp();
+
+		UACP_StatInfo* statComp = target->GetStatComp();
+		int32 hp = statComp->GetHp();
+		int32 mp = statComp->GetMp();
 			
-			int32 hp = statComp->GetHp();
+		for (int32 i = 0; i < skillTypeLen; i++)
+		{
+			int32 value = skillData->_values[i];
+			ESkillAttackTypes skillAttackType = skillData->_skillAttackTypes[i];
 
-			if(hp <= 0)
-				continue;
+			//공격계열이나 
+			if (skillAttackType == ESkillAttackTypes::MELEE || skillAttackType == ESkillAttackTypes::MAGIC)
+			{
+				if (hp <= 0)
+					continue;
 
+				UGameplayStatics::ApplyDamage(target, value, GetController(), this, NULL);
+			}
+			//회복계열
+			else if (skillAttackType == ESkillAttackTypes::RECOVERY)
+			{
+				ERecoveryTypes recoveryType = skillData->_recoveryTypes[i];
+				int32 newValue = 0;
 
-			FDamageEvent dmgEvent;
-			UGameplayStatics::ApplyDamage(target, value, GetController(), this, NULL);
+				switch (recoveryType)
+				{
+				case ERecoveryTypes::HP:
+					newValue = hp + value;
+					statComp->SetHp(newValue);
+					break;
+				case ERecoveryTypes::MP:
+					newValue = mp + value;
+					statComp->SetMp(newValue);
+					break;
+
+				default:
+					break;
+				}
+			}
+			//버프
+			else if (skillAttackType == ESkillAttackTypes::BUFF)
+			{
+
+			}
+			//디버프
+			else if (skillAttackType == ESkillAttackTypes::DEBUFF)
+			{
+
+			}
+
 		}
-		
+
+	
 	}
 
 }
@@ -280,7 +318,6 @@ void AUNIT_Character::OnSkillMontageEnded(UAnimMontage* montage, bool bInteruppt
 
 	// 현재 사용 중인 스킬 정보 삭제
 	GetSkillComp()->SetUsingSKillId(-1);
-	GetSkillComp()->GetSkillTargetEnemy().Empty();
 
 }
 

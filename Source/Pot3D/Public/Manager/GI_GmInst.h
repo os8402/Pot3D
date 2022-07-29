@@ -98,8 +98,10 @@ public:
 
 private:
 	int32 _gold = 0;
+
 	TArray<FSkillData*> _skillDatas;
 
+	
 };
 
 template<typename T>

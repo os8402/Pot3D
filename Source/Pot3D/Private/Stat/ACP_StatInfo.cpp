@@ -71,6 +71,8 @@ void UACP_StatInfo::SetHp(int32 newHp)
 {
 	_hp = FMath::Max(0, newHp);
 
+	_hp = FMath::Min(_hp , _maxHp);
+
 	if (_hp <= 0)
 		_onUnitDied.Broadcast();
 
@@ -80,6 +82,8 @@ void UACP_StatInfo::SetHp(int32 newHp)
 void UACP_StatInfo::SetMp(int32 newMp)
 {
 	_mp = FMath::Max(0, newMp);
+
+	_mp = FMath::Min(_mp, _maxMp);
 
 	_onMpChanged.Broadcast();
 }

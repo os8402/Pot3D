@@ -15,18 +15,20 @@ public:
 
 	virtual void UseActiveSkill(FName name) override;
 
+	virtual void RangeAttackSkill(int32 attackRange) override;
+
 	void SKill_GotMace();
-	void SKill_BoneCrush();
+	void SKill_Rush();
 	void SKill_GotBless();
-	void SKill_EarthCrush();
+	void SKill_EarthQuake();
 
 
 public:
 
 	const FString SKILL_GOT_MACE = TEXT("Skill_GotMace");
 	const FString SKILL_GOT_BLESS = TEXT("Skill_GotBless");
-	const FString SKILL_GOT_EARTH_CRUSH = TEXT("Skill_EarthCrush");
-	const FString SKILL_GOT_BONE_CRUSH = TEXT("Skill_BoneCrush");
+	const FString SKILL_EARTH_QUAKE = TEXT("Skill_EarthQuake");
+	const FString SKILL_RUSH = TEXT("Skill_Rush");
 
 private:
 

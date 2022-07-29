@@ -6,6 +6,7 @@
 #include "Manager/GI_GmInst.h" 
 #include "ACP_SKillInfo.generated.h"
 
+class AUNIT_Character;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POT3D_API UACP_SKillInfo : public UActorComponent
@@ -26,6 +27,11 @@ public:
 	void SetAcquireSkill(int32 id , FSkillData* skillData);
 
 	virtual void UseActiveSkill(FName name);
+
+	//기본 범위형 스킬
+	virtual void RangeAttackSkill(int32 attackRange);
+	//가까운 타겟 서치
+	virtual AUNIT_Character* GetNearDistanceTarget();
 
 
 public:
@@ -74,10 +80,17 @@ protected:
 
 	//
 	//Skill 
-	//1. 타겟이 여러 명일 수도 있음..
-	TArray<class AUNIT_Character*>  _skillTargetEnemys;
-
+	// 
 	int32 _usingSkillId = -1;
+	TArray<AUNIT_Character*>  _skillTargetEnemys;
+
+	/*  버프는 중복해서 걸릴 수도 있기 때문에, 비트 플래그로 검사.. 
+		미정 미정 미정 미정 미정 미정 마력 체력       
+		 0	 0	  0	   0    0   0    0    0   
+
+		 ex) 체력 1, 마력 2  , 체력 + 마력 = 3
+	*/
+	int32 _buffFlag = 0;
 
 private:
 

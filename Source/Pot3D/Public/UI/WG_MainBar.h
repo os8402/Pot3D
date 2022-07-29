@@ -7,6 +7,7 @@
 #include "WG_MainBar.generated.h"
 
 class UWG_MainBar_Slot;
+class UWG_IngameMain;
 
 UCLASS()
 class POT3D_API UWG_MainBar : public UUserWidget
@@ -22,12 +23,17 @@ public:
 	void UpdateMp();
 
 	void SetGaugeTooltipHovered();
-
 	void RefreshSlot(int32 id);
 	
+	void SetUIOwner(UWG_IngameMain* owner) {_UIOwner = owner;}
+
 	UWG_MainBar_Slot* GetMainBarSlot(int32 id){ return _mainBarSlots[id]; }
 
+	void TestPreSlot();
+
 private:
+	
+	TWeakObjectPtr<UWG_IngameMain> _UIOwner;
 
 	UPROPERTY()
 	TSubclassOf<UWG_MainBar_Slot> _mainBarSlotClass;
@@ -49,3 +55,4 @@ private:
 
 
 };
+

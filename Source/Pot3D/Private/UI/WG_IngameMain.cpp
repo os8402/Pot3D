@@ -13,6 +13,14 @@
 
 #include <Components/ProgressBar.h>
 
+void UWG_IngameMain::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	_WBP_MainBar->SetUIOwner(this);
+	_WBP_Skill->SetUIOwner(this);
+}
+
 void UWG_IngameMain::BindCreatureInfo()
 {
 	_WBP_NamePlate_1->SetVisibility(ESlateVisibility::Hidden);

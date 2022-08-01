@@ -4,9 +4,12 @@
 #include "Components/ActorComponent.h"
 #include "Data/GameDataTable.h"
 #include "Manager/GI_GmInst.h" 
+#include "UtilsLib.h"
 #include "ACP_SKillInfo.generated.h"
 
 class AUNIT_Character;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POT3D_API UACP_SKillInfo : public UActorComponent
@@ -28,11 +31,16 @@ public:
 
 	virtual void UseActiveSkill(FName name);
 
+	//원형으로 타겟 서치
+	bool GetOverlapSphereUnit(FVector startPos , float radius , TArray<AActor*> ignoreActors , TArray<AActor*>& outActors);
+
 	//기본 범위형 스킬
 	virtual void RangeAttackSkill(int32 attackRange);
-	//가까운 타겟 서치
-	virtual AUNIT_Character* GetNearDistanceTarget();
 
+	void PlaySkillEffect(int32 id);
+
+	//가까운 타겟 서치
+	virtual AUNIT_Character* GetNearDistanceTarget(float radius);
 
 public:
 
@@ -45,7 +53,7 @@ public:
 	}
 
 	//나중에 스폰하면 키값을 커넥티드 아이디로 바꿔야함 
-	TArray<class AUNIT_Character*>   GetSkillTargetEnemy() {return _skillTargetEnemys;};
+	TArray<AUNIT_Character*>   GetSkillTargetEnemy() {return _skillTargetEnemys;};
 
 
 	EUnitJobs GetUnitJobs() {return _unitJob;}
@@ -56,6 +64,13 @@ public:
 	FSkillData* GetAcquireSKill(int32 id) { return _acquiredSkills[id]; }
 
 
+	//TMap<int32, class USoundWave*> GetSoundCharSoundList() {return _SOUND_CHAR_List;}
+	//TMap<int32, class USoundWave*> GetSoundVFXSoundList() {return _SOUND_VFX_List;}
+
+	class USoundWave* GetSoundCharSound(int32 id) {return (_SOUND_CHAR_List.Num() > 0) ? _SOUND_CHAR_List[id] : nullptr ; }
+	class USoundWave* GetSoundVFXSound(int32 id) {return (_SOUND_VFX_List.Num() > 0) ? _SOUND_VFX_List[id] : nullptr;}
+	class UFXSystemAsset* GetVFXEffect(int32 id) {return (_VFX_EffList.Num() > 0) ? _VFX_EffList[id] : nullptr;}
+	
 	bool IsAcquiredSkill(int32 id) 
 	{
 		if(_acquiredSkills.Num() == 0)
@@ -103,6 +118,20 @@ private:
 
 	//습득한 스킬들
 	TMap<int32, FSkillData*> _acquiredSkills;
+
+
+private:
+	//캐릭터 대사
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TMap<int32 , class USoundWave*> _SOUND_CHAR_List;
+
+	//스킬 효과음
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TMap<int32, class USoundWave*>  _SOUND_VFX_List;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "FX")
+	TMap<int32, UFXSystemAsset*> _VFX_EffList;
 
 
 };

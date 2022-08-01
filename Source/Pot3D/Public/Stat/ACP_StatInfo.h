@@ -72,6 +72,8 @@ public:
 	int32 GetBonusDefece() {return _bonusDef; }
 	int32 GetBonusResilience() {return _bonusRes; }
 
+	USoundWave* GetUnitSound(int32 id ) { return _unitSoundList[id]; }
+
 	FOnHpChanged& GetOnHpChanged() { return _onHpChanged; }
 	FOnMpChanged& GetOnMpChanged() { return _onMpChanged; }
 
@@ -84,7 +86,7 @@ public:
 
 
 private:
-
+	///////////////////////////////////////////////
 
 	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _chrId;
@@ -123,7 +125,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	int32 _luck;
 
-
+	///////////////////////////////////////////////
 	UPROPERTY()
 	TMap<int32, int32> _bonusStats;
 
@@ -135,6 +137,10 @@ private:
 	int32 _bonusDef;
 	UPROPERTY()
 	int32 _bonusRes;
+
+	///////////////////////////////////////////////
+
+	TArray<USoundWave*> _unitSoundList;
 
 
 	FOnHpChanged _onHpChanged;

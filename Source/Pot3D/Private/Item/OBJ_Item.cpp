@@ -32,6 +32,9 @@ bool UOBJ_Item::SetItemInfo(class UGI_GmInst* gmInst, int32 id, int32 count)
 			_statData = itemData->_statData;
 			_dropPosition = itemData->_dropPosition;
 			_scale = itemData->_scale;
+			
+			_vfxSoundWav = Cast<USoundWave>(
+				StaticLoadObject(USoundWave::StaticClass(), nullptr, *itemData->_soundPath.ToString()));
 
 			SetEquimentType();
 

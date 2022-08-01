@@ -16,8 +16,6 @@ class POT3D_API UOBJ_Item : public UObject
 
 public:
 
-
-
 	int32 GetItemId() {return _id;}
 	FText GetItemName() {return _name;}
 	FName GetMeshPath() {return _meshPath;}
@@ -30,7 +28,11 @@ public:
 	FVector GetDropPos(){return _dropPosition;}
 	float GetScale(){return _scale;}
 
+	USoundWave* GetVFXSound() {return _vfxSoundWav;}
+
 	TMap<int32, int32> GetBonusStats() {return _bonusStats;}
+
+
 
 	virtual void SetEquimentType();
 
@@ -76,11 +78,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FVector _dropPosition;
-	
+
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	float _scale;
 
+	UPROPERTY(VisibleAnywhere, Category = "Item")
+	USoundWave* _vfxSoundWav;
+
 	UPROPERTY()
 	TMap<int32, int32> _bonusStats;
+
+	
 	
 };

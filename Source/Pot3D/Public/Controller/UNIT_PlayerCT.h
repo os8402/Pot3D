@@ -49,7 +49,7 @@ public:
 	//아이템 줍기
 	void PickUpItem(float deltaTime);
 
-	void CameraShake(float time);
+	void CameraShake(ECameraShake cameraType, float time);
 	//타켓이 사라질 경우
 	void SetTargetEmpty();
 
@@ -136,9 +136,18 @@ private:
 	//픽업 이슈로 
 	int32 _pickupCnt = 0;
 
-
+	//CAMERA
+	//상황에 맞게 적절히 가져다 쓰면 됨
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TSubclassOf<class UMatineeCameraShake> _CS_NormalAttack;
+
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	TSubclassOf<class UMatineeCameraShake> _CS_StrongAttack;
+
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	TSubclassOf<class UMatineeCameraShake> _CS_EarthQuake;
+
+private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UWG_IngameMain> _ingameMainClass;

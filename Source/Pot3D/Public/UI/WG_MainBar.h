@@ -22,9 +22,10 @@ public:
 	void UpdateHp();
 	void UpdateMp();
 
-	void SetGaugeTooltipHovered();
-	void RefreshSlot(int32 id);
-	
+
+
+	void SetSlotTooltipHovered(UWG_MainBar_Slot* slot);
+
 	void SetUIOwner(UWG_IngameMain* owner) {_UIOwner = owner;}
 
 	UWG_MainBar_Slot* GetMainBarSlot(int32 id){ return _mainBarSlots[id]; }
@@ -49,6 +50,9 @@ private:
 	class UWG_Tooltip_Gauge* _WBP_Tooltip_Hp;
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Tooltip_Gauge* _WBP_Tooltip_Mp;
+	UPROPERTY(meta = (BindWidget))
+	class UWG_Tooltip_MainBar* _WBP_Tooltip_MainBar;
+
 
 
 	TArray<UWG_MainBar_Slot*> _mainBarSlots;

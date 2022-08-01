@@ -23,14 +23,10 @@ public:
 	virtual void RefreshUI() override;
 	void SetSlotLocked(bool bLocked) { _bLocked =bLocked;}
 
-	FSkillData* GetSkillData() {return _skillData;}
-	void SetSkillData(FSkillData* skillData) {_skillData = skillData;}
-
 private:
 
 
-	FSkillData* _skillData;
-	
+
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_SkillLv;
 

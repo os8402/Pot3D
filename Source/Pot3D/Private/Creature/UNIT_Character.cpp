@@ -48,6 +48,8 @@ AUNIT_Character::AUNIT_Character()
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
 
+	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
+
 	static ConstructorHelpers::FClassFinder<AActor> DTC(TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
 
 	if (DTC.Succeeded())
@@ -87,9 +89,9 @@ AUNIT_Character::AUNIT_Character()
 	_PS_HitEff->SetupAttachment(GetMesh());
 	FVector effPos = FVector(0.f, 0.f, 50.f);
 	_PS_HitEff->SetRelativeLocation(effPos);
-	_PS_HitEff->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	_PS_HitEff->SetRelativeScale3D(FVector(3.f, 3.f, 3.f));
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> HIT_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Primary/FX/P_Kwang_Primary_Impact.P_Kwang_Primary_Impact'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> HIT_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonGrux/FX/Particles/Abilities/Primary/FX/P_Grux_ApplyBleed.P_Grux_ApplyBleed'"));
 
 	if (HIT_EFF.Succeeded())
 	{
@@ -98,14 +100,24 @@ AUNIT_Character::AUNIT_Character()
 
 	}
 
-
-
 }
 
 // Called when the game starts or when spawned
 void AUNIT_Character::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+	TArray<UMaterialInterface*> mats = GetMesh()->GetMaterials();
+	int32 nums = GetMesh()->GetNumMaterials();
+
+	for (int32 i = 0; i < nums; i++)
+	{
+		UMaterialInterface* mat = GetMesh()->GetMaterial(i);
+		UMaterialInstanceDynamic* mid = UMaterialInstanceDynamic::Create(mat, this);
+		GetMesh()->SetMaterial(i, mid);
+		_MID_meshs.Add(mid);
+	}
 
 }
 
@@ -156,6 +168,7 @@ void AUNIT_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	TickRecovery(DeltaTime);
+	OnHitFlag(DeltaTime);
 
 }
 
@@ -235,7 +248,7 @@ void AUNIT_Character::SkillAnimCheck()
 
 	if(skillData == nullptr)
 		return;
-	//근접 + 마법 , 근접 + 디버프 등 조합이 다양할 수 있음.
+	//물리 + 마법 , 물리 + 디버프 등 조합이 다양할 수 있음.
 	int32 skillTypeLen = skillData->_skillAttackTypes.Num();
 
 
@@ -281,6 +294,10 @@ void AUNIT_Character::SkillAnimCheck()
 				default:
 					break;
 				}
+
+				AACT_DamgeText* dmgActor = UtilsLib::MakeSpawnActor<AACT_DamgeText>(GetWorld(), _ACT_DmgText, this);
+				dmgActor->UpdateDamage(value, ESpawnTextTypes::HEAL);
+
 			}
 			//버프
 			else if (skillAttackType == ESkillAttackTypes::BUFF)
@@ -326,60 +343,68 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	//
 	float dmg = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	//TODO : 능력치 합산 들어가야 함. 
-
 	_ACP_Stat->OnAttacked(DamageAmount);
-
-	FActorSpawnParameters spawnParams;
-	spawnParams.Owner = this;
-
-	FVector spawnPos = GetActorLocation();
-	FRotator spawnRot = DamageCauser->GetActorRotation();
-
-	//Todo 데미지 띄우기
-//	UE_LOG(LogTemp, Log, TEXT("Attack dmg : %f"), DamageAmount);
-
-	auto curSpawnDmgActor = Cast<AACT_DamgeText>(
-		GetWorld()->SpawnActor<AActor>(_ACT_DmgText, spawnPos, spawnRot, spawnParams));
-
-	curSpawnDmgActor->SetDamage(DamageAmount);
-	curSpawnDmgActor->SetMyOwner(this);
-	curSpawnDmgActor->UpdateDamage();
-
-	_PS_HitEff->Activate(true);
 
 	//hp바 표시
 	VisibleHpBar();
+
+	ESpawnTextTypes spawnType = (GetStatComp()->GetUnitTypes() == EUnitTypes::PLAYER)
+		? ESpawnTextTypes::DAMAGED_PLAYER
+		: ESpawnTextTypes::DAMAGED_MONSTER;
+
+	AACT_DamgeText* dmgActor = UtilsLib::MakeSpawnActor<AACT_DamgeText>(GetWorld(), _ACT_DmgText, this);
+	dmgActor->UpdateDamage(dmg, spawnType);
+
+
+
+	//Hit 이펙트
+	_hitFlagGauge = 0.f;
+	_bHitFlag = true;
+
+	_PS_HitEff->Activate(true);
 
 	return DamageAmount;
 }
 
 
+void AUNIT_Character::OnHitFlag(float DeltaTime)
+{
+	if (_bHitFlag)
+	{
+		_hitFlagGauge += DeltaTime * _hitSpeed;
+
+		if (_hitFlagGauge >= 1.f)
+		{
+			_bHitFlag = false; 
+			_hitFlagGauge = 0.f;
+		}
+
+		for (const auto& mid : _MID_meshs)
+		{
+			mid->SetScalarParameterValue(TEXT("Damage") , _hitFlagGauge);
+		}
+	}
+}
+
 void AUNIT_Character::UseActiveSKill(FName skillName)
 {
 	
-	//FVector ownedPos = GetActorLocation();
 	GetUnitAnim()->PlayMontageAnim();
 	FName name = GetUnitAnim()->GetSkillMontageName(skillName);
 	GetUnitAnim()->JumpToSection(name);
 
-
 }
 
 
-void AUNIT_Character::SoundPlay(int32 index)
-{
 
+void AUNIT_Character::SoundPlay(USoundWave* wav)
+{
 	if (_Audio_Comp)
 	{
-		_Audio_Comp->SetSound(_SOUND_CHAR_Lists[index]);
+		_Audio_Comp->SetSound(wav);
 		_Audio_Comp->Play(0.f);
 	}
-	
 }
-
-
-
 
 void AUNIT_Character::VisibleHpBar()
 {
@@ -398,7 +423,11 @@ void AUNIT_Character::DeadUnit()
 	}
 	
 	GetMesh()->SetCollisionProfileName("IgnoreOnlyPawn");
-	SoundPlay((int)ECharacterSounds::DEAD);
+
+	USoundWave* deadSoundWav = GetStatComp()->GetUnitSound((int32)ECharacterSounds::DEAD);
+
+	if(deadSoundWav)
+		SoundPlay(deadSoundWav);
 	
 	_PSPR_MinimapIcon->SetSprite(nullptr);
 

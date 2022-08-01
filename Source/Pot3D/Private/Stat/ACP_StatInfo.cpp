@@ -42,7 +42,6 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 	{
 		auto unitData = gmInst->GetTableData<FUnitData>(ETableDatas::UNIT, _chrId);
 
-
 		if (unitData)
 		{
 			_level = unitData->_statData._level;
@@ -62,9 +61,19 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 			_dexterity = unitData->_statData._dexterity;
 			_intelligence = unitData->_statData._intelligence;
 			_luck = unitData->_statData._luck;
+
+			for (const auto& soundPath : unitData->_unitSoundPathList)
+			{
+				USoundWave* soundWav = Cast<USoundWave>(
+					StaticLoadObject(USoundWave::StaticClass(), nullptr, *soundPath.ToString()));
+
+				if(soundWav)
+					_unitSoundList.Add(soundWav);
+			}
 		}
 
 	}
+
 }
 
 void UACP_StatInfo::SetHp(int32 newHp)

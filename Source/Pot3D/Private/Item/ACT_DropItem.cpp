@@ -14,29 +14,16 @@
 #include <Components/BoxComponent.h>
 #include <Sound/SoundCue.h>
 
+#include <Components/AudioComponent.h>
+
 // Sets default values
 AACT_DropItem::AACT_DropItem()
 {
-	/*CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(ACharacter::CapsuleComponentName);
-	CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
-	CapsuleComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-
-	CapsuleComponent->CanCharacterStepUpOn = ECB_No;
-	CapsuleComponent->SetShouldUpdatePhysicsVolume(true);
-	CapsuleComponent->SetCanEverAffectNavigation(false);
-	CapsuleComponent->bDynamicObstacle = true;
-	RootComponent = CapsuleComponent;*/
-
-	//USceneComponent* defalutRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMP"));
-
-
 
 	_BOX_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TRIGGER"));
 	_BOX_Trigger->SetCollisionProfileName(TEXT("DropItem"));
 	_MESH_Comp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 	_MESH_Comp->SetCollisionProfileName(TEXT("DropItem"));
-
-	//_BOX_Trigger->SetupAttachment(RootComponent);
 
 	RootComponent = _BOX_Trigger;
 
@@ -47,6 +34,8 @@ AACT_DropItem::AACT_DropItem()
 	_WC_Info->SetWidgetSpace(EWidgetSpace::Screen);
 	_WC_Info->SetWorldLocation(FVector(0, 0 , 100));
 
+	_Audio_Comp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO_COMP"));
+	_Audio_Comp->SetupAttachment(RootComponent);
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
 	if (UW.Succeeded())
@@ -111,6 +100,8 @@ void AACT_DropItem::PostInitializeComponents()
 
 	_timeDestroy = 0;
 
+
+
 }
 
 void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
@@ -137,7 +128,6 @@ void AACT_DropItem::CreateItem(UOBJ_Item* newItem)
 
 	_WC_Info->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 
-
 }
 
 
@@ -148,10 +138,6 @@ void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 
 	if(HitComponent == _BOX_Trigger)
 		return;
-
-	FString str = FString::Printf(TEXT("%s : Hit World Static -> %s") , *HitComponent->GetName(),  *OtherActor->GetName());
-
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
 	
 	_WC_Info->SetVisibility(true);
 
@@ -170,6 +156,17 @@ void AACT_DropItem::OnPlaneHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 	_MESH_Comp->SetSimulatePhysics(false);
 
 	_MESH_Comp->SetRelativeLocation(_BOX_Trigger->GetRelativeLocation());
+
+
+	int32 soundId = (_dropItem->GetItemId() == 10001) ? 0 : 1;
+
+	if (_Audio_Comp)
+	{
+		_Audio_Comp->SetSound(_dropItemSoundList[soundId]);
+		_Audio_Comp->Play(0.f);
+	}
+
+	_bEnabledOutline = true;
 
 
 }

@@ -24,12 +24,13 @@ public:
 
 	void SearchActorInfo();
 	virtual void AttackAnimCheck() override;
+	virtual void SkillAnimCheck() override;
 
 public:
 
 	void GetReward(int32 id);
 
-	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
+
 	TMap<int32, class UACP_Armor*>  GetArmorList() { return _armorList; }
 
 
@@ -45,9 +46,7 @@ protected:
 	float _targetArmLength = 800.f;
 
 private:
-	//EQUIPMENT 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	class UACP_Weapon* _ACP_Weapon;
+
 	UPROPERTY(VisibleAnywhere, Category = "Armor")
 	class UACP_Armor* _ACP_Armor;
 	UPROPERTY(VisibleAnywhere, Category = "Armor")

@@ -35,6 +35,9 @@ public:
 	void SetSlotType(ESlotTypes slotType) {_slotType = slotType;}
 	ESlotTypes GetSlotType() {return _slotType;}
 
+	void SetSkillData(FSkillData* skillData) { _skillData = skillData; }
+	FSkillData* GetSkillData() { return _skillData; }
+
 protected:
 
 	UPROPERTY(EditAnywhere , Category = "Slot" , meta = (AllowPrivateAccess = true))
@@ -47,6 +50,10 @@ protected:
 	UButton* _BTN_Slot;
 
 	int32 _slotNum;
+
+	//쓰고 있다면 가져옴
+	FSkillData* _skillData;
+
 
 private:
 	UTexture2D* _iconTexture;

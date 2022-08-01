@@ -52,6 +52,13 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	if (CS_NORMAL_ATK.Succeeded())
 		_CS_NormalAttack = CS_NORMAL_ATK.Class;
 
+	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> CS_STRONG_ATK(TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_StrongAttack.BP_CS_StrongAttack_C'"));
+	if (CS_STRONG_ATK.Succeeded())
+		_CS_StrongAttack = CS_STRONG_ATK.Class;
+
+	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> CS_EARTH_QUAKE(TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_EarthQuake.BP_CS_EarthQuake_C'"));
+	if (CS_EARTH_QUAKE.Succeeded())
+		_CS_EarthQuake = CS_EARTH_QUAKE.Class;
 	
 	static ConstructorHelpers::FClassFinder<UWG_IngameMain> WB_Ingame(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_InGameMain.WBP_InGameMain_C'"));
 	if (WB_Ingame.Succeeded())
@@ -454,9 +461,27 @@ void AUNIT_PlayerCT::PickUpItem(float deltaTime)
 }
 
 
-void AUNIT_PlayerCT::CameraShake(float time)
+void AUNIT_PlayerCT::CameraShake(ECameraShake cameraType,  float time)
 {
-	UCameraShakeBase* cam = PlayerCameraManager->StartCameraShake(_CS_NormalAttack, time);
+	UCameraShakeBase* cam = nullptr;
+
+	switch (cameraType)
+	{
+	case ECameraShake::NORMAL:
+		cam = PlayerCameraManager->StartCameraShake(_CS_NormalAttack, time);
+		break;
+	case ECameraShake::STRONG:
+		cam = PlayerCameraManager->StartCameraShake(_CS_StrongAttack, time);
+		break;
+	case ECameraShake::EARTH_QUAKE:
+		cam = PlayerCameraManager->StartCameraShake(_CS_EarthQuake, time);
+		break;
+
+	default:
+		break;
+	}
+
+
 }
 
 void AUNIT_PlayerCT::SetTargetEmpty()

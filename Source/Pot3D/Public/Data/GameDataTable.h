@@ -55,7 +55,7 @@ struct FSkillData : public FTableRowBase
 	int32 _skillLevel;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName _skillName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite , meta = (MultiLine = true))
 	FText _skillInfo;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EUnitJobs _job;
@@ -79,6 +79,12 @@ struct FSkillData : public FTableRowBase
 	TArray<ERecoveryTypes> _recoveryTypes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<EBuffTypes> _buffTypes;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _unitSoundPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _vfxSoundPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _vfxEffectPath;
 };
 
 
@@ -138,6 +144,8 @@ struct FItemData : public FTableRowBase
 	FVector _dropPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _scale;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _soundPath;
 };
 
 
@@ -154,6 +162,8 @@ struct FUnitData : public FTableRowBase
 	EUnitTypes _type;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStatData _statData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FName> _unitSoundPathList;
 
 };
 

@@ -23,6 +23,9 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual void RefreshUI() override;
+
+	void SetUISlotFromData(UWG_Slot* slot);
+
 	void SetUIOwner(UWG_MainBar* mainBar) { if (mainBar) 	_UIOwner = mainBar; }
 	
 	void TickSlotCoolTime(float InDeltaTime);
@@ -31,7 +34,6 @@ public:
 
 	float GetCoolTimeRatio() {return _coolTime/ _maxCoolTime;}
 	bool GetCoolTimeFlag() {return _bCoolTimeFlag;}
-
 
 	//슬롯 이벤트 활성을 위한 조건.. 
 	//아마 게임이 좀 커지?면 매개 변수에 객체 함수로 바꿀 수도
@@ -48,7 +50,6 @@ public:
 	void StartSkillEvent();
 
 	int32 GetSKillId( ){ return (_skillData) ? _skillData->_skillId : -1; }
-
 
 
 private:
@@ -69,8 +70,6 @@ private:
 	float _maxCoolTime = 1;
 	UPROPERTY(VisibleAnywhere, Category = "Condition")
 	bool _bCoolTimeFlag = false;
-
-	FSkillData* _skillData;
 
 	//슬롯이 비었을 경우 보이게 될 텍스처
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

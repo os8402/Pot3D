@@ -1,6 +1,6 @@
 #include "UI/WG_Tooltip_Gauge.h"
 #include "Stat/ACP_StatInfo.h"
-#include <COmponents/TextBlock.h>
+#include <Components/TextBlock.h>
 
 
 void UWG_Tooltip_Gauge::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

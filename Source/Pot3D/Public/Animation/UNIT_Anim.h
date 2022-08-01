@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "UEnumHeader.h"
 #include "UNIT_Anim.generated.h"
 
 
@@ -32,8 +33,11 @@ public:
 	UFUNCTION()
 	void AnimNotify_SkillHit();
 	UFUNCTION()
-	void AnimNotify_SoundPlay();
-
+	void AnimNotify_SoundPrimaryAttack();
+	UFUNCTION()
+	void AnimNotify_SoundSkillAttack();
+	UFUNCTION()
+	void AnimNotify_PlayEffect();
 
 public :
 

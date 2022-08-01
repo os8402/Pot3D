@@ -41,7 +41,7 @@ public:
 
 	virtual void SkillAnimCheck();
 
-	void SoundPlay(int32 index);
+	void SoundPlay(USoundWave* wav);
 
 
 	UFUNCTION()
@@ -54,6 +54,7 @@ public:
 
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	void OnHitFlag(float DeltaTime);
 
 	virtual void VisibleHpBar();
 	virtual void DeadUnit();
@@ -71,9 +72,7 @@ public:
 	int32 GetCharacterId() { return _chrId; }
 	void SetCreatureInfo();
 	
-
 	class UUNIT_Anim* GetUnitAnim() { return _unitAnim; }
-
 
 	TWeakObjectPtr<class AUNIT_Character>& GetTargetEnemy() { return _targetEnemy; }
 	void SetTargetEnemy(class AUNIT_Character* target) { _targetEnemy = target; }
@@ -82,6 +81,8 @@ public:
 	FOnAttackEnded& GetOnAttackEnded() { return _onAttackEnded; }
 	class UACP_StatInfo* GetStatComp() { return _ACP_Stat; }
 	class UACP_SKillInfo* GetSkillComp() { return _ACP_Skill; }
+
+	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
 
 
 public:
@@ -140,11 +141,15 @@ protected:
 protected:
 	
 	UPROPERTY(VisibleAnywhere , Category="UI")
-	TSubclassOf<class AActor> _ACT_DmgText;
+	TSubclassOf<AActor> _ACT_DmgText;
 
 	UPROPERTY(VisibleAnywhere, Category="UI")
 	class AACT_DamgeText* _currentDmgActor;
 
+protected:
+	//EQUIPMENT 
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	class UACP_Weapon* _ACP_Weapon;
 
 protected:
 	//ENUM
@@ -156,9 +161,16 @@ protected:
 
 private :
 
+	//HIT
 	UPROPERTY(VisibleAnywhere, Category="Effect")
 	class UParticleSystemComponent* _PS_HitEff;
 
+	UPROPERTY(VisibleAnywhere, Category="Effect")
+	TArray<UMaterialInstanceDynamic*> _MID_meshs;
+	
+	bool _bHitFlag = false;
+	float _hitFlagGauge = 0.f;
+	float _hitSpeed = 2.f;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -172,13 +184,7 @@ protected:
 
 private: 
 	
-
-	UPROPERTY(EditDefaultsOnly, Category="Audio")
-	TArray<class USoundCue*> _SOUND_CHAR_Lists;
-
 	UPROPERTY(VisibleAnywhere, Category = "Audio")
 	class UAudioComponent* _Audio_Comp;
-
-
 
 };

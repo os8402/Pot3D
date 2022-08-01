@@ -20,27 +20,19 @@ public:
 	// Sets default values for this component's properties
 	UACP_Weapon();
 
-
 public:
 
 	class UParticleSystemComponent* GetAttachEffComp() { return _PS_AttachEff; };
 
-	virtual void SoundPlay(int32 index) override;
+	virtual void SoundPlay(USoundWave* wav) override;
 
 private :
-
-	UPROPERTY(EditDefaultsOnly, Category = "Audio")
-	TArray<class USoundCue*> _SOUND_WEPAON_Lists;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	class UParticleSystemComponent* _PS_AttachEff;
 
-
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	class UParticleSystem* _temp_AttachEff;
-
-
-
 
 
 };

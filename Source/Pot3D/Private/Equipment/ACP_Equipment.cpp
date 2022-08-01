@@ -19,7 +19,8 @@ UACP_Equipment::UACP_Equipment()
 
 }
 
-void UACP_Equipment::SoundPlay(int32 index)
+
+void UACP_Equipment::SoundPlay(USoundWave* wav)
 {
 
 }

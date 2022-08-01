@@ -27,8 +27,7 @@ public:
 
 	void UnEquipItem();
 
-	virtual void SoundPlay(int32 index);
-
+	virtual void SoundPlay(USoundWave* wav);
 
 protected:
 	// Called when the game starts

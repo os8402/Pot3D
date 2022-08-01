@@ -4,6 +4,8 @@
 #include "Skill/ACP_SKillInfo.h"
 #include "ACP_SKillInfo_Paladin.generated.h"
 
+class AUNIT_Character;
+
 UCLASS()
 class POT3D_API UACP_SKillInfo_Paladin : public UACP_SKillInfo
 {
@@ -16,6 +18,7 @@ public:
 	virtual void UseActiveSkill(FName name) override;
 
 	virtual void RangeAttackSkill(int32 attackRange) override;
+	virtual AUNIT_Character* GetNearDistanceTarget(float radius) override;
 
 	void SKill_GotMace();
 	void SKill_Rush();

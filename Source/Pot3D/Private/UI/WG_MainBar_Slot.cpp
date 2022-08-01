@@ -1,22 +1,25 @@
 #include "UI/WG_MainBar_Slot.h"
 #include "UI/WG_Skill_Slot.h"
 #include "UI/WG_Drag.h"
-
+#include "UI/WG_MainBar.h"
+#include <Components/Button.h>
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UWG_MainBar_Slot::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	_TEX_EmptyIcon = Cast<UTexture2D>(
-		StaticLoadObject(UTexture2D::StaticClass(), nullptr,
-			TEXT("Texture2D'/Game/Resources/fantasy_gui_4/textures/icons/fg4_empty.fg4_empty'")));
-
+	UtilsLib::GetAssetDynamic(&_TEX_EmptyIcon, TEXT("Texture2D'/Game/Resources/fantasy_gui_4/textures/icons/fg4_empty.fg4_empty'"));
 
 	_MID_coolTime = _IMG_CoolTime->GetDynamicMaterial();
 
-	if(_MID_coolTime)
-		_MID_coolTime->SetScalarParameterValue(TEXT("Percent") , GetCoolTimeRatio());
+
+	if (_MID_coolTime)
+	{
+		_MID_coolTime->SetScalarParameterValue(TEXT("Percent"), GetCoolTimeRatio());
+	}
+		
+	_IMG_CoolTime->SetVisibility(ESlateVisibility::Hidden);
 	
 	
 }
@@ -31,7 +34,7 @@ void UWG_MainBar_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const F
 	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
 
 	dragDropOperation->DefaultDragVisual = this;
-	dragDropOperation->Pivot = EDragPivot::MouseDown;
+	dragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	dragDropOperation->SetSlot(this);
 
@@ -58,26 +61,25 @@ bool UWG_MainBar_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 
 		//스킬 창에서 가져온 경우
 		if (skillSlot)
-		{
-			//ESkillTypes skillType = skillSlot->
-			
-			SetSlotType(ESlotTypes::SKILL);
-			UTexture2D* newTexture = skillSlot->GetTextureIcon();
-			SetTextureIcon(newTexture);
-			
-			FSkillData* skillData = skillSlot->GetSkillData();
-			SetConditionToUseSlot(skillData);
-			
+		{	
+			//TODO : 같은 스킬이 등록되어 있는지 아이디 체크.
+
+
+
+			SetUISlotFromData(skillSlot);
+
 		}
 		//메인 바 슬롯끼리 이동하는 경우
 		else if (mainBarSlot)
 		{
-			SetSlotType(ESlotTypes::SKILL);
-			UTexture2D* newTexture = mainBarSlot->GetTextureIcon();
-			SetTextureIcon(newTexture);
-			
+			SetUISlotFromData(mainBarSlot);
+
+		
+			//썼던 슬롯은 정보 전부 제거
 			mainBarSlot->SetTextureIcon(_TEX_EmptyIcon);
 			mainBarSlot->SetSlotType(ESlotTypes::NONE);
+			mainBarSlot->SetConditionToUseSlot(nullptr);
+
 
 		}
 	
@@ -95,10 +97,14 @@ FReply UWG_MainBar_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeome
 
 	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 	{
-
+		// 스킬 발동
 	}
 	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
 	{
+
+		if(_slotType == ESlotTypes::NONE)
+			return reply.NativeReply;
+
 
 		reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
 
@@ -115,6 +121,10 @@ void UWG_MainBar_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	if (_bCoolTimeFlag)
 	{
 		TickSlotCoolTime(InDeltaTime);
+	}
+	if (_BTN_Slot->IsHovered() && _UIOwner.IsValid())
+	{
+		_UIOwner.Get()->SetSlotTooltipHovered(this);
 	}
 
 }
@@ -150,14 +160,30 @@ void UWG_MainBar_Slot::StartSkillEvent()
 
 	_bCoolTimeFlag = true;
 
+	if(_IMG_CoolTime->GetVisibility() == ESlateVisibility::Hidden)
+		_IMG_CoolTime->SetVisibility(ESlateVisibility::Visible);
+
 }
 
 void UWG_MainBar_Slot::RefreshUI()
 {
 	_TB_SlotIndex->SetText(UtilsLib::ConvertToFText(_slotNum));
 
+}
 
-	
 
+void UWG_MainBar_Slot::SetUISlotFromData(UWG_Slot* slot)
+{
+	UTexture2D* newTexture = slot->GetTextureIcon();
+	FSkillData* skillData = slot->GetSkillData();
+
+	ESkillTypes skillType = skillData->_skillType;
+
+	if(skillType == ESkillTypes::PASSIVE)
+		return;
+
+	SetSlotType(ESlotTypes::SKILL);
+	SetTextureIcon(newTexture);
+	SetConditionToUseSlot(skillData);
 }
 

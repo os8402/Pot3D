@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UtilsLib.h"
 #include "ACT_DamgeText.generated.h"
 
 UCLASS()
@@ -23,9 +24,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void UpdateDamage();
-	void SetDamage(int32 dmg) { _dmg = dmg; }
-	void SetMyOwner(class AUNIT_Character* owner) { _myOwner = owner; }
+	void UpdateDamage(int32 value , ESpawnTextTypes spawnType);
+
 
 private:
 
@@ -39,11 +39,8 @@ private:
 	float _curTime = 0.0f;
 	float _destroyTime = 1.f;
 
-	int32 _dmg = 0;
-
-	TArray<FLinearColor> _colorList = { FLinearColor::Red, FLinearColor::Yellow,  FLinearColor::Blue };
+	TArray<FLinearColor> _colorList = { FLinearColor::Red , FLinearColor::Yellow,  FLinearColor::Green };
 	
-	UPROPERTY(VisibleAnywhere)
-	class AUNIT_Character* _myOwner;
+
 
 };

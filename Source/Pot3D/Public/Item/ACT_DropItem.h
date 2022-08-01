@@ -31,6 +31,7 @@ public:
 
 	UOBJ_Item* GetDropItem() {return _dropItem;};
 
+	bool IsEnabledOutline() {return _bEnabledOutline;}
 
 protected:
 
@@ -80,12 +81,14 @@ private:
 	float _upforce = 20000.f;
 	float _rotforce = 100000.f;
 
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float _pitch = 90.f;
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float _yaw = 0.f;
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float _roll = 0.f;
+	bool _bEnabledOutline =false;
 
+
+private:
 	
+	UPROPERTY(EditAnywhere, Category = "Audio" , meta=(AllowPrivateAccess = true))
+	TArray<USoundWave*> _dropItemSoundList;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	class UAudioComponent* _Audio_Comp;
 };

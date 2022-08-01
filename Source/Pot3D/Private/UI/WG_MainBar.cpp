@@ -10,6 +10,8 @@
 #include "UI/WG_Skill_List.h"
 #include "UI/WG_Skill_Slot.h"
 
+#include "UI/WG_Tooltip_MainBar.h"
+
 #include <Blueprint/WidgetTree.h>
 #include <Components/HorizontalBox.h>
 
@@ -52,7 +54,12 @@ void UWG_MainBar::NativePreConstruct()
 			mainbarSlot->SetSlotNum(i + 1);
 			mainbarSlot->RefreshUI();
 			mainbarSlot->SetUIOwner(this);
+
+			mainbarSlot->SetToolTip(_WBP_Tooltip_MainBar);
+
 			_mainBarSlots.Add(mainbarSlot);
+
+
 
 		}
 
@@ -89,10 +96,24 @@ void UWG_MainBar::UpdateMp()
 	}
 }
 
-void UWG_MainBar::RefreshSlot(int32 id)
+
+void UWG_MainBar::SetSlotTooltipHovered(UWG_MainBar_Slot* slot)
 {
+	FSkillData* skillData = slot->GetSkillData();
+
+	if (skillData == nullptr)
+	{
+		_WBP_Tooltip_MainBar->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
 	
+	_WBP_Tooltip_MainBar->SetVisibility(ESlateVisibility::Visible);
+	_WBP_Tooltip_MainBar->SetTooltipFromData(skillData);
+	
+
 }
+
+
 
 void UWG_MainBar::TestPreSlot()
 {

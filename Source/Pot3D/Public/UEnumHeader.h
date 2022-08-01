@@ -26,6 +26,17 @@ enum class EUnitTypes : uint8
 	END
 };
 
+
+UENUM(BlueprintType)
+enum class ESpawnTextTypes : uint8
+{
+	DAMAGED_PLAYER UMETA(DisplayName = "DAMAGED_PLAYER"),
+	DAMAGED_MONSTER UMETA(DisplayName = "DAMAGED_MONSTER"),
+	HEAL UMETA(DisplayName = "HEAL"),
+
+	END
+};
+
 UENUM(BlueprintType)
 enum class EUnitJobs : uint8
 {
@@ -51,9 +62,8 @@ enum class ESoundTypes : uint8
 UENUM(BlueprintType)
 enum class ECharacterSounds : uint8
 {
-	NORMAL UMETA(DisplayName = "NORMAL"),
-	SKILL01 UMETA(DisplayName = "SKILL01"),
-	SKILL02 UMETA(DisplayName = "SKILL02"),
+	START UMETA(DisplayName = "START"),
+	ATTACK UMETA(DisplayName = "ATTACK"),
 	DEAD UMETA(DisplayName = "DEAD"),
 
 	END
@@ -62,9 +72,8 @@ enum class ECharacterSounds : uint8
 UENUM(BlueprintType)
 enum class EWeaponSounds : uint8
 {
-	NORMAL UMETA(DisplayName = "NORMAL"),
-	SKILL01 UMETA(DisplayName = "SKILL01"),
-	SKILL02 UMETA(DisplayName = "SKILL02"),
+	PRIMARY UMETA(DisplayName = "PRIMARY"),
+	SKILL UMETA(DisplayName = "SKILL"),
 
 	END
 };
@@ -243,6 +252,19 @@ enum class EOutline: uint8
 	END
 
 };
+
+UENUM(BlueprintType)
+enum class ECameraShake : uint8
+{
+	NORMAL = 0 UMETA(DisplayName = "NORMAL"),
+	STRONG UMETA(DisplayName = "STRONG"),
+	EARTH_QUAKE UMETA(DisplayName = "EARTH_QUAKE"),
+
+
+	END
+
+};
+
 
 class POT3D_API UEnumHeader
 {

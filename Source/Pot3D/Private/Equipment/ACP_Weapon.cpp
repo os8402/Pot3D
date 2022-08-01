@@ -20,12 +20,13 @@ UACP_Weapon::UACP_Weapon()
 }
 
 
-void UACP_Weapon::SoundPlay(int32 index)
+void UACP_Weapon::SoundPlay(USoundWave* wav)
 {
 	if (_Audio_Comp)
 	{
-		_Audio_Comp->SetSound(_SOUND_WEPAON_Lists[index]);
+		_Audio_Comp->SetSound(wav);
 		_Audio_Comp->Play(0.f);
 	}
+
 }
 

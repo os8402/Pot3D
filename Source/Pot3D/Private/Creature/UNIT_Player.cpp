@@ -27,8 +27,6 @@ AUNIT_Player::AUNIT_Player()
 
 	GetMesh()->SetCollisionProfileName(TEXT("Player"));
 
-	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
-
 	_ACP_Armor = CreateDefaultSubobject<UACP_Armor>(TEXT("ARMOR"));
 	_ACP_Helmet = CreateDefaultSubobject<UACP_Armor>(TEXT("HELMET"));
 	_ACP_Pants = CreateDefaultSubobject<UACP_Armor>(TEXT("PANTS"));
@@ -55,26 +53,24 @@ AUNIT_Player::AUNIT_Player()
 	_CAM_Cam->bUsePawnControlRotation = false;
 	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Green);
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM(TEXT("SkeletalMesh'/Game/Resources/Models/ParagonKwang/Characters/Heroes/Kwang/Meshes/Kwang_GDC.Kwang_GDC'"));
-	if (SM.Succeeded())
-		GetMesh()->SetSkeletalMesh(SM.Object);
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM(TEXT("SkeletalMesh'/Game/Resources/Models/ParagonKwang/Characters/Heroes/Kwang/Meshes/Kwang_GDC.Kwang_GDC'"));
+	//if (SM.Succeeded())
+	//	GetMesh()->SetSkeletalMesh(SM.Object);
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> ATTACH_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Sword/FX/P_Kwang_Sword_Attach.P_Kwang_Sword_Attach'"));
-	if (ATTACH_EFF.Succeeded())
-	{
-		FName FX_Electric(TEXT("FX_Electric"));
-		if (GetMesh()->DoesSocketExist(FX_Electric))
-		{
-
-			GetWeapon()->GetAttachEffComp()->SetTemplate(ATTACH_EFF.Object);
-			GetWeapon()->GetAttachEffComp()->SetupAttachment(GetMesh(), FX_Electric);
-
-		}
-	}
+	//static ConstructorHelpers::FObjectFinder<UParticleSystem> ATTACH_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Sword/FX/P_Kwang_Sword_Attach.P_Kwang_Sword_Attach'"));
+	//if (ATTACH_EFF.Succeeded())
+	//{
+	//	FName FX_Electric(TEXT("FX_Electric"));
+	//	if (GetMesh()->DoesSocketExist(FX_Electric))
+	//	{
+	//		GetWeapon()->GetAttachEffComp()->SetTemplate(ATTACH_EFF.Object);
+	//		GetWeapon()->GetAttachEffComp()->SetupAttachment(GetMesh(), FX_Electric);
+	//	}
+	//}
 
 	_ACP_CameraChecker = CreateDefaultSubobject<UACP_PlayerToCameraChecker>(TEXT("CAMERA_CHECKER"));
 
-	
+
 }
 
 void AUNIT_Player::BeginPlay()
@@ -85,6 +81,7 @@ void AUNIT_Player::BeginPlay()
 
 	for (auto& item : _armorList)
 		item.Value->SetOwner(this);
+
 
 }
 
@@ -123,6 +120,10 @@ void AUNIT_Player::SearchActorInfo()
 		{
 			//드랍 아이템 확인
 			auto dropItem = Cast<AACT_DropItem>(hitItem.Actor);
+			
+			if(dropItem == nullptr || dropItem->IsEnabledOutline() == false)
+				return;
+			
 			pc->LookDropItem(dropItem);
 		}
 
@@ -133,18 +134,28 @@ void AUNIT_Player::AttackAnimCheck()
 {
 	Super::AttackAnimCheck();
 
-	if (CanAttack() == false)
-		return;
-	
 	auto pc = Cast<AUNIT_PlayerCT>(GetController());
 	
 	if (pc)
-		pc->CameraShake(1.0f);
+	{
+		ECameraShake cameraType = ECameraShake::NORMAL;
+		pc->CameraShake(cameraType, .25f);
+	}
+		
 }
 
+void AUNIT_Player::SkillAnimCheck()
+{
+	Super::SkillAnimCheck();
 
+	auto pc = Cast<AUNIT_PlayerCT>(GetController());
 
-
+	if (pc)
+	{
+		ECameraShake cameraType = ECameraShake::EARTH_QUAKE;
+		pc->CameraShake(cameraType, 1.0f);
+	}
+}
 
 void AUNIT_Player::GetReward(int32 id)
 {

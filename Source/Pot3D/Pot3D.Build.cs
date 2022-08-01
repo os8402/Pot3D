@@ -8,7 +8,7 @@ public class Pot3D : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "NavigationSystem", "AIModule", "UMG", "Paper2D", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" , "NavigationSystem", "AIModule", "UMG", "Paper2D", "GameplayTasks", "Niagara" });
 
 		//PrivateDependencyModuleNames.AddRange(new string[] {  });
 

@@ -63,13 +63,10 @@ void AACT_DamgeText::Tick(float DeltaTime)
 
 }
 
-void AACT_DamgeText::UpdateDamage()
+void AACT_DamgeText::UpdateDamage(int32 value, ESpawnTextTypes spawnType)
 {
-
-
-	int32 colorIndex = (int32)_myOwner->GetStatComp()->GetUnitTypes();
-
 	auto dmgWidget = Cast<UWG_DamgeText>(_WG_DmgText->GetUserWidgetObject());
-	dmgWidget->UpdateText(_dmg, _colorList[colorIndex]);
+	
+	dmgWidget->UpdateText(value, _colorList[(int32)spawnType]);
 }
 

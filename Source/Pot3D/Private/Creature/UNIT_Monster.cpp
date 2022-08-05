@@ -6,6 +6,7 @@
 #include "Item/OBJ_Consumable_Item.h"
 
 #include "Skill/ACP_SKillInfo.h"
+#include "Minimap/ACP_MinimapPoint.h"
 
 #include "Item/ACT_DropItem.h"
 #include "Manager/GI_GmInst.h"
@@ -37,18 +38,18 @@ AUNIT_Monster::AUNIT_Monster()
 
 	GetMesh()->SetCollisionProfileName(TEXT("Monster"));
 
-
-	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Red);
-
-	static ConstructorHelpers::FClassFinder<AActor> DIT(TEXT("Blueprint'/Game/BluePrints/Item/BP_DropItemActor.BP_DropItemActor_C'"));
-
-	if (DIT.Succeeded())
-		_ACT_DropItem = DIT.Class;
+	UtilsLib::GetClass(&_dropItemClass , TEXT("Blueprint'/Game/BluePrints/Item/BP_DropItemActor.BP_DropItemActor_C'"));
 
 	AIControllerClass = AUNIT_MonsterCT::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	_ACP_Skill = CreateDefaultSubobject<UACP_SKillInfo>(TEXT("SKILL"));
+	_ACP_MinimapPoint = CreateDefaultSubobject<UACP_MinimapPoint>(TEXT("Minimap"));
+
+	UTexture2D* newTexture;
+	UtilsLib::GetAssetDynamic<UTexture2D>(&newTexture , TEXT("Texture2D'/Game/Resources/UI/Minimap/Minimmap_MonsterIcon.Minimmap_MonsterIcon'"));
+
+	_ACP_MinimapPoint->SetIconTexture(newTexture);
 
 }
 
@@ -70,10 +71,6 @@ void AUNIT_Monster::PostInitializeComponents()
 
 }
 
-void AUNIT_Monster::Tick(float DeltaTime)
-{
-
-}
 
 void AUNIT_Monster::DeadUnit()
 {
@@ -84,6 +81,8 @@ void AUNIT_Monster::DeadUnit()
 
 	AUNIT_MonsterCT* mc = Cast<AUNIT_MonsterCT>(GetController<AController>());
 	mc->Destroy();
+
+	_ACP_MinimapPoint->RemoveFromUI();
 	
 	//아이템 드랍
 	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -214,7 +213,7 @@ void AUNIT_Monster::DeadUnit()
 				FVector finalPos = spawnPos + dropPos;
 
 				auto dropItem = Cast<AACT_DropItem>(
-					gmInst->GetWorld()->SpawnActor<AActor>(_ACT_DropItem, finalPos, spawnRot, spawnParams));
+					gmInst->GetWorld()->SpawnActor<AActor>(_dropItemClass, finalPos, spawnRot, spawnParams));
 
 	
 				dropItem->CreateItem(item);
@@ -226,7 +225,14 @@ void AUNIT_Monster::DeadUnit()
 	}
 
 	//Destroy();
+	FTimerHandle timerHandle;
+	float waitTime = 2.f;
 
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([&]()
+	{
+			Destroy();
+
+	}), waitTime, false);
 	
 
 }

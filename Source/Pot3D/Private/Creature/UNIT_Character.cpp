@@ -24,13 +24,9 @@
 #include <Components/AudioComponent.h>
 #include <Sound/SoundCue.h>
 
-
-
-
 // Sets default values
 AUNIT_Character::AUNIT_Character()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
@@ -47,43 +43,9 @@ AUNIT_Character::AUNIT_Character()
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	_ACP_Stat = CreateDefaultSubobject<UACP_StatInfo>(TEXT("STAT"));
-
 	_ACP_Weapon = CreateDefaultSubobject<UACP_Weapon>(TEXT("WEAPON"));
 
-	static ConstructorHelpers::FClassFinder<AActor> DTC(TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
-
-	if (DTC.Succeeded())
-		_ACT_DmgText = DTC.Class;
-
-	_SPR_MinimapSpring = CreateDefaultSubobject<USpringArmComponent>(TEXT("MINIMAP_SPRING"));
-	_SPR_MinimapSpring->SetupAttachment(GetCapsuleComponent());
-	_SPR_MinimapSpring->SetUsingAbsoluteRotation(true);
-	_SPR_MinimapSpring->bInheritPitch = false;
-	_SPR_MinimapSpring->bInheritRoll = false;
-	_SPR_MinimapSpring->bInheritYaw = false;
-	_SPR_MinimapSpring->TargetArmLength = 800.f;
-	_SPR_MinimapSpring->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
-	_SPR_MinimapSpring->bDoCollisionTest = false;
-
-	_SC_MinimapCam = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("MINIMAP_CAM"));
-	_SC_MinimapCam->SetupAttachment(_SPR_MinimapSpring);
-
-	_PSPR_MinimapIcon = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("MINIMAP_ICON"));
-
-	static ConstructorHelpers::FObjectFinder<UPaperSprite> PSPR(TEXT("PaperSprite'/Game/Resources/UI/Minimap/Minimap_Icon_Sprite.Minimap_Icon_Sprite'"));
-
-	if (PSPR.Succeeded())
-		_PSPR_MinimapIcon->SetSprite(PSPR.Object);
-
-	_PSPR_MinimapIcon->SetupAttachment(GetCapsuleComponent());
-	_PSPR_MinimapIcon->SetRelativeRotation(FRotator(0.f, 0.f, 90.f));
-	_PSPR_MinimapIcon->SetRelativeLocation(FVector(0.f, 0.f, 750.f));
-	_PSPR_MinimapIcon->bOwnerNoSee = true;
-
-	_Audio_Comp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO_COMP"));
-	_Audio_Comp->SetupAttachment(RootComponent);
-	_Audio_Comp->bIsPaused = true;
-	_Audio_Comp->bIsPaused = false;
+	UtilsLib::GetClass<AActor>(&_ACT_DmgText, TEXT("Blueprint'/Game/BluePrints/Object/DamageTextActor/BP_DmgTextActor.BP_DmgTextActor_C'"));
 
 	_PS_HitEff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PARTICLE"));
 	_PS_HitEff->SetupAttachment(GetMesh());
@@ -92,7 +54,6 @@ AUNIT_Character::AUNIT_Character()
 	_PS_HitEff->SetRelativeScale3D(FVector(3.f, 3.f, 3.f));
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> HIT_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonGrux/FX/Particles/Abilities/Primary/FX/P_Grux_ApplyBleed.P_Grux_ApplyBleed'"));
-
 	if (HIT_EFF.Succeeded())
 	{
 		_PS_HitEff->SetTemplate(HIT_EFF.Object);
@@ -102,7 +63,6 @@ AUNIT_Character::AUNIT_Character()
 
 }
 
-// Called when the game starts or when spawned
 void AUNIT_Character::BeginPlay()
 {
 	Super::BeginPlay();
@@ -148,6 +108,9 @@ void AUNIT_Character::PostInitializeComponents()
 
 void AUNIT_Character::TickRecovery(float DeltaTime)
 {	
+	if(_UnitStates == EUnitStates::DEAD)
+		return;
+
 	_tickRecoveryTime += DeltaTime;
 
 	if (_tickRecoveryTime >= 1.f)
@@ -312,7 +275,6 @@ void AUNIT_Character::SkillAnimCheck()
 
 		}
 
-	
 	}
 
 }
@@ -322,7 +284,6 @@ void AUNIT_Character::SkillAnimCheck()
 void AUNIT_Character::OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted)
 {
 	_bAttacking = false;
-
 	_onAttackEnded.Broadcast();
 }
 
@@ -369,11 +330,14 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 void AUNIT_Character::OnHitFlag(float DeltaTime)
 {
+	if(_UnitStates == EUnitStates::DEAD)
+		return;
+
 	if (_bHitFlag)
 	{
 		_hitFlagGauge += DeltaTime * _hitSpeed;
 
-		if (_hitFlagGauge >= 1.f)
+		if (_hitFlagGauge >= .9f)
 		{
 			_bHitFlag = false; 
 			_hitFlagGauge = 0.f;
@@ -393,17 +357,6 @@ void AUNIT_Character::UseActiveSKill(FName skillName)
 	FName name = GetUnitAnim()->GetSkillMontageName(skillName);
 	GetUnitAnim()->JumpToSection(name);
 
-}
-
-
-
-void AUNIT_Character::SoundPlay(USoundWave* wav)
-{
-	if (_Audio_Comp)
-	{
-		_Audio_Comp->SetSound(wav);
-		_Audio_Comp->Play(0.f);
-	}
 }
 
 void AUNIT_Character::VisibleHpBar()
@@ -427,30 +380,20 @@ void AUNIT_Character::DeadUnit()
 	USoundWave* deadSoundWav = GetStatComp()->GetUnitSound((int32)ECharacterSounds::DEAD);
 
 	if(deadSoundWav)
-		SoundPlay(deadSoundWav);
-	
-	_PSPR_MinimapIcon->SetSprite(nullptr);
+		UtilsLib::SoundPlay(GetWorld(), deadSoundWav , GetActorLocation());
+
+	for (const auto& mid : _MID_meshs)
+		mid->SetScalarParameterValue(TEXT("Damage"), 0);
 
 }
 
 void AUNIT_Character::SetOutline(bool on)
 {
 	GetMesh()->SetRenderCustomDepth(on);
+	int32 id = (on) ? 2 : 0;
 
-	if(on)
-		GetMesh()->SetCustomDepthStencilValue(2);
-		
-	else
-		GetMesh()->SetCustomDepthStencilValue(0);
-}
+	GetMesh()->SetCustomDepthStencilValue(id);
 
-void AUNIT_Character::SetDebugText()
-{
-
-}
-
-void AUNIT_Character::SetCreatureInfo()
-{
 
 }
 

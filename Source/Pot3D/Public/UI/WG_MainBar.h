@@ -30,6 +30,8 @@ public:
 
 	UWG_MainBar_Slot* GetMainBarSlot(int32 id){ return _mainBarSlots[id]; }
 
+	UWG_MainBar_Slot* CheckExistSlot(int32 skillId);
+
 	void TestPreSlot();
 
 private:

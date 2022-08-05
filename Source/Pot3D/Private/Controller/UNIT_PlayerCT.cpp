@@ -36,45 +36,40 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	DefaultMouseCursor = EMouseCursor::Default;
 
 	_WC_CursorNormal = CreateDefaultSubobject<UWidgetComponent>(TEXT("CURSOR_NORMAL"));
-	static ConstructorHelpers::FClassFinder<UUserWidget> CB(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_CursorNormal.WBP_CursorNormal_C'"));
-
-	if (CB.Succeeded())
-		_WC_CursorNormal->SetWidgetClass(CB.Class);
-
 	_WC_CursorAttack = CreateDefaultSubobject<UWidgetComponent>(TEXT("CURSOR_ATTACK"));
-	static ConstructorHelpers::FClassFinder<UUserWidget> CA(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_CursorAttack.WBP_CursorAttack_C'"));
-
-	if (CA.Succeeded())
-		_WC_CursorAttack->SetWidgetClass(CA.Class);
 
 
-	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> CS_NORMAL_ATK(TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_NormalAttack.BP_CS_NormalAttack_C'"));
-	if (CS_NORMAL_ATK.Succeeded())
-		_CS_NormalAttack = CS_NORMAL_ATK.Class;
+	TSubclassOf<UUserWidget> CursorNormal; 
+	UtilsLib::GetClass<UUserWidget>(&CursorNormal, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_CursorNormal.WBP_CursorNormal_C'"));
+	_WC_CursorNormal->SetWidgetClass(CursorNormal);
 
-	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> CS_STRONG_ATK(TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_StrongAttack.BP_CS_StrongAttack_C'"));
-	if (CS_STRONG_ATK.Succeeded())
-		_CS_StrongAttack = CS_STRONG_ATK.Class;
 
-	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> CS_EARTH_QUAKE(TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_EarthQuake.BP_CS_EarthQuake_C'"));
-	if (CS_EARTH_QUAKE.Succeeded())
-		_CS_EarthQuake = CS_EARTH_QUAKE.Class;
-	
-	static ConstructorHelpers::FClassFinder<UWG_IngameMain> WB_Ingame(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_InGameMain.WBP_InGameMain_C'"));
-	if (WB_Ingame.Succeeded())
-		_ingameMainClass = WB_Ingame.Class;
-	
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_MONSTER(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Monster.MI_InteractiveOutline_Monster'"));
-	if(MID_MONSTER.Succeeded())
-		_MI_Outlines.Add(MID_MONSTER.Object);
+	TSubclassOf<UUserWidget> CursorAttack;
+	UtilsLib::GetClass<UUserWidget>(&CursorAttack, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_CursorAttack.WBP_CursorAttack_C'"));
+	_WC_CursorAttack->SetWidgetClass(CursorAttack);
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_ITEM(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
-	if (MID_ITEM.Succeeded())
-		_MI_Outlines.Add(MID_ITEM.Object);
+	UtilsLib::GetClass(&_CS_NormalAttack , TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_NormalAttack.BP_CS_NormalAttack_C'"));
+	UtilsLib::GetClass(&_CS_StrongAttack, TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_StrongAttack.BP_CS_StrongAttack_C'"));
+	UtilsLib::GetClass(&_CS_EarthQuake, TEXT("Blueprint'/Game/BluePrints/Camera/BP_CS_EarthQuake.BP_CS_EarthQuake_C'"));
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MID_NPC(TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
-	if (MID_NPC.Succeeded())
-		_MI_Outlines.Add(MID_NPC.Object);
+
+	UtilsLib::GetClass(&_ingameMainClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_InGameMain.WBP_InGameMain_C'"));
+
+
+	UMaterialInterface* MI_Monster;
+	UtilsLib::GetAsset(&MI_Monster , TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Monster.MI_InteractiveOutline_Monster'"));
+
+	UMaterialInterface* MI_Item;
+	UtilsLib::GetAsset(&MI_Item, TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
+
+	UMaterialInterface* MI_Npc;
+	UtilsLib::GetAsset(&MI_Npc, TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
+
+	_MI_Outlines.Add(MI_Monster);
+	_MI_Outlines.Add(MI_Item);
+	_MI_Outlines.Add(MI_Npc);
+
+
 
 }
 
@@ -349,11 +344,15 @@ void AUNIT_PlayerCT::LookActorOther(class AUNIT_Character* other)
 			_currentLookTarget.Reset();
 		}
 
-		SetPostProcessOutline(EOutline::MONSTER);
 		_currentLookTarget = other;
-		_currentLookTarget->SetOutline(true);
 
-		//TODO : 아웃라인 활성화 
+
+		//아이템을 보고 있는 것이기 때문에, 아웃라인은 실행 안 함
+		if (_currentLookItem.IsValid())
+			return;
+
+		SetPostProcessOutline(EOutline::MONSTER);
+		_currentLookTarget->SetOutline(true);
 
 	}
 	else
@@ -393,8 +392,16 @@ void AUNIT_PlayerCT::LookDropItem(class AACT_DropItem* item)
 
 	if (item)
 	{	
-		SetPostProcessOutline(EOutline::ITEM);
+		if(item->IsEnabledOutline() == false)
+			return;
+	
 		_currentLookItem = item;
+
+		//몬스터를 보고 있는 것이기 때문에, 아웃라인은 실행 안 함
+		if (_currentLookTarget.IsValid())
+			return;
+
+		SetPostProcessOutline(EOutline::ITEM);
 		_currentLookItem->SetOutline(true);
 	}
 	else
@@ -524,6 +531,10 @@ void AUNIT_PlayerCT::MainBarSlotEvent()
 	else if(IsInputKeyDown(EKeys::Six)) slotIndex = 5;
 	else if(IsInputKeyDown(EKeys::Seven)) slotIndex = 6;
 	else return;
+
+
+	if(_UP_owned->IsAttacking())
+		return;
 
 	//TODO : 슬롯 정보 불러옴 - > 캐릭터 스킬 연동
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::FromInt(slotIndex + 1));

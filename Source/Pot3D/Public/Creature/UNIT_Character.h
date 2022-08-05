@@ -41,8 +41,6 @@ public:
 
 	virtual void SkillAnimCheck();
 
-	void SoundPlay(USoundWave* wav);
-
 
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* montage, bool bInteruppted);
@@ -61,7 +59,6 @@ public:
 
 	void SetOutline(bool on = true);
 
-	void SetDebugText();
 
 
 public:
@@ -70,7 +67,6 @@ public:
 	int32 GetConnectedId() { return _connectedId; }
 
 	int32 GetCharacterId() { return _chrId; }
-	void SetCreatureInfo();
 	
 	class UUNIT_Anim* GetUnitAnim() { return _unitAnim; }
 
@@ -85,13 +81,12 @@ public:
 	class UACP_Weapon* GetWeapon() { return _ACP_Weapon; }
 
 
+
 public:
 
 	//확장여지잇음 
 	void SetUnitStates(EUnitStates state);
 	EUnitStates GetUnitStates() { return _UnitStates; }
-
-	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
 
 
 protected:
@@ -172,19 +167,6 @@ private :
 	float _hitFlagGauge = 0.f;
 	float _hitSpeed = 2.f;
 
-protected:
-	UPROPERTY(VisibleAnywhere)
-	class USpringArmComponent* _SPR_MinimapSpring;
 
-	UPROPERTY(VisibleAnywhere)
-	class USceneCaptureComponent2D* _SC_MinimapCam;
-
-	UPROPERTY(VisibleAnywhere)
-	class UPaperSpriteComponent* _PSPR_MinimapIcon;
-
-private: 
-	
-	UPROPERTY(VisibleAnywhere, Category = "Audio")
-	class UAudioComponent* _Audio_Comp;
 
 };

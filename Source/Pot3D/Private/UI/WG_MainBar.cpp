@@ -115,13 +115,34 @@ void UWG_MainBar::SetSlotTooltipHovered(UWG_MainBar_Slot* slot)
 
 
 
+UWG_MainBar_Slot* UWG_MainBar::CheckExistSlot(int32 skillId)
+{
+	for (const auto& slot : _mainBarSlots)
+	{
+		ESlotTypes slotType = slot->GetSlotType();
+		FSkillData* skillData = slot->GetSkillData();
+
+		if(slotType == ESlotTypes::NONE || skillData == nullptr)
+			continue;
+		
+		int32 checkSKillId = skillData->_skillId;
+
+		if (checkSKillId == skillId)
+		{
+			return slot;
+		}
+	}
+
+	return nullptr;
+}
+
 void UWG_MainBar::TestPreSlot()
 {
 	//TEST CODE
 	TArray<UWG_Skill_List*> activeSkillList = _UIOwner->GetSkillPanel()->GetActiveSkillList();
 
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		UWG_Skill_Slot* skillSlot = activeSkillList[i]->GetSkillSlot();
 		FSkillData* skillData = skillSlot->GetSkillData();

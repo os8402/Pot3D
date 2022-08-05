@@ -37,8 +37,6 @@ AUNIT_Player::AUNIT_Player()
 	_armorList.Add((int32)EItemArmorTypes::PANTS, _ACP_Pants);
 	_armorList.Add((int32)EItemArmorTypes::BOOTS, _ACP_Boots);
 
-
-
 	_SPC_Arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPC_ARM"));
 	_SPC_Arm->SetupAttachment(GetCapsuleComponent());
 	_SPC_Arm->SetUsingAbsoluteRotation(true);
@@ -51,22 +49,6 @@ AUNIT_Player::AUNIT_Player()
 	_CAM_Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("CAM"));
 	_CAM_Cam->SetupAttachment(_SPC_Arm);
 	_CAM_Cam->bUsePawnControlRotation = false;
-	_PSPR_MinimapIcon->SetSpriteColor(FLinearColor::Green);
-
-	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM(TEXT("SkeletalMesh'/Game/Resources/Models/ParagonKwang/Characters/Heroes/Kwang/Meshes/Kwang_GDC.Kwang_GDC'"));
-	//if (SM.Succeeded())
-	//	GetMesh()->SetSkeletalMesh(SM.Object);
-
-	//static ConstructorHelpers::FObjectFinder<UParticleSystem> ATTACH_EFF(TEXT("ParticleSystem'/Game/Resources/Models/ParagonKwang/FX/Particles/Abilities/Sword/FX/P_Kwang_Sword_Attach.P_Kwang_Sword_Attach'"));
-	//if (ATTACH_EFF.Succeeded())
-	//{
-	//	FName FX_Electric(TEXT("FX_Electric"));
-	//	if (GetMesh()->DoesSocketExist(FX_Electric))
-	//	{
-	//		GetWeapon()->GetAttachEffComp()->SetTemplate(ATTACH_EFF.Object);
-	//		GetWeapon()->GetAttachEffComp()->SetupAttachment(GetMesh(), FX_Electric);
-	//	}
-	//}
 
 	_ACP_CameraChecker = CreateDefaultSubobject<UACP_PlayerToCameraChecker>(TEXT("CAMERA_CHECKER"));
 
@@ -120,10 +102,7 @@ void AUNIT_Player::SearchActorInfo()
 		{
 			//드랍 아이템 확인
 			auto dropItem = Cast<AACT_DropItem>(hitItem.Actor);
-			
-			if(dropItem == nullptr || dropItem->IsEnabledOutline() == false)
-				return;
-			
+
 			pc->LookDropItem(dropItem);
 		}
 
@@ -139,7 +118,7 @@ void AUNIT_Player::AttackAnimCheck()
 	if (pc)
 	{
 		ECameraShake cameraType = ECameraShake::NORMAL;
-		pc->CameraShake(cameraType, .25f);
+		pc->CameraShake(cameraType, .5f);
 	}
 		
 }

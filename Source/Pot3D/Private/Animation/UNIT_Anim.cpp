@@ -7,7 +7,7 @@
 #include "Equipment/ACP_Weapon.h"
 #include "Skill/ACP_SKillInfo.h"
 #include "Stat/ACP_StatInfo.h"
-
+#include "Item/OBJ_Item.h"
 
 void UUNIT_Anim::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -46,9 +46,14 @@ void UUNIT_Anim::AnimNotify_AttackHit()
 {
 	_onAttackHit.Broadcast();
 
+	auto owner = Cast<AUNIT_Character>(TryGetPawnOwner());
+
 	//무기에다가 싸운드 추가하고 넣어야함..
-//UACP_Weapon* weapon = owner->GetWeapon();
-//USoundWave* weaponSound = 
+	UACP_Weapon* weapon = owner->GetWeapon();
+	UOBJ_Item* item = weapon->GetItem();
+	USoundWave* weaponSound = (item) ? item->GetVFXSound() : weapon->GetDefaultSound();
+
+	UtilsLib::SoundPlay(GetWorld(), weaponSound , owner->GetActorLocation());
 
 }
 
@@ -67,7 +72,7 @@ void UUNIT_Anim::AnimNotify_SoundPrimaryAttack()
 		UACP_StatInfo* statComp = owner->GetStatComp();
 		USoundWave* primaryAtkSound = statComp->GetUnitSound((int32)ECharacterSounds::ATTACK);
 
-		owner->SoundPlay(primaryAtkSound);
+		UtilsLib::SoundPlay(GetWorld(), primaryAtkSound, owner->GetActorLocation());
 
 	}
 }
@@ -88,8 +93,7 @@ void UUNIT_Anim::AnimNotify_SoundSkillAttack()
 
 	USoundWave* unitSound = skillComp->GetSoundCharSound(usingSKill);
 
-	if(unitSound)
-		owner->SoundPlay(unitSound);
+	UtilsLib::SoundPlay(GetWorld(), unitSound, owner->GetActorLocation());
 
 
 
@@ -111,8 +115,7 @@ void UUNIT_Anim::AnimNotify_PlayEffect()
 	USoundWave* vfxSound = skillComp->GetSoundVFXSound(usingSKill);
 
 	if (vfxSound)
-		owner->GetWeapon()->SoundPlay(vfxSound);
-
+		UtilsLib::SoundPlay(GetWorld(), vfxSound, owner->GetActorLocation());
 
 	skillComp->PlaySkillEffect(usingSKill);
 }

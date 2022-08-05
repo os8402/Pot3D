@@ -8,6 +8,8 @@ class UWG_Inventory;
 class UWG_NamePlate;
 class UWG_MainBar;
 class UWG_Skill;
+class UWG_Minimap;
+
 
 UCLASS()
 class POT3D_API UWG_IngameMain : public UUserWidget
@@ -31,6 +33,8 @@ public:
 	UWG_Inventory* GetInventory() {return _WBP_Inventory;}
 	UWG_MainBar* GetMainBar() {return _WBP_MainBar;}
 	UWG_Skill* GetSkillPanel() {return _WBP_Skill;}
+	UWG_Minimap* GetMinimap() { return _WBP_Minimap; }
+
 
 private :
 	
@@ -46,6 +50,11 @@ private :
 	UWG_Inventory* _WBP_Inventory;
 
 	UPROPERTY(meta = (BindWidget))
-	UWG_Skill* _WBP_Skill;
+	UWG_Skill* _WBP_Skill;	
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_Minimap* _WBP_Minimap;
+
+
 
 };

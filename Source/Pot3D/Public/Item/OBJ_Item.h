@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "UEnumHeader.h"
+#include "UtilsLib.h"
 #include "Data/GameDataTable.h"
 #include "OBJ_Item.generated.h"
 
@@ -29,10 +30,7 @@ public:
 	float GetScale(){return _scale;}
 
 	USoundWave* GetVFXSound() {return _vfxSoundWav;}
-
 	TMap<int32, int32> GetBonusStats() {return _bonusStats;}
-
-
 
 	virtual void SetEquimentType();
 

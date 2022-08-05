@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include <Components/AudioComponent.h>
+
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
@@ -27,7 +29,7 @@ public:
 	{
 		ConstructorHelpers::FObjectFinder<T> asset(*path);
 		
-		if (asset)
+		if (asset.Succeeded())
 			*outObject =  asset.Object;
 		
 	}
@@ -43,6 +45,14 @@ public:
 	{
 		ConstructorHelpers::FClassFinder<T> asset(*path);
 		*outClass = asset.Class;
+
+	}
+
+	template<typename T>
+	static void GetTSubClass(TSubclassOf<T>* outClass, FString path)
+	{
+		UClass* loadClass = StaticLoadClass(T::StaticClass(), nullptr, *path);
+		*outClass = loadClass;
 
 	}
 
@@ -97,7 +107,7 @@ public:
 
 
 	template<typename T>
-	static T* FindResoruces(const FName& name)
+	static T* FindAsset(const FName& name)
 	{
 
 		T* resource = Cast<T>(StaticLoadObject(T::StaticClass(), NULL, *name.ToString()));
@@ -269,4 +279,17 @@ public:
 	}
 
 
+	static void SoundPlay(UWorld* world , USoundWave* wav , FVector pos)
+	{
+		if(world  == nullptr || wav == nullptr)
+			return;
+
+		UGameplayStatics::PlaySoundAtLocation(world, wav, pos);
+	}
+	
+
+	static void SoundPlay2D(UWorld* world, USoundWave* wav)
+	{
+		UGameplayStatics::PlaySound2D(world, wav);
+	}
 };

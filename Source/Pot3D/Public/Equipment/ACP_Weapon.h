@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Equipment/ACP_Equipment.h"
+#include "UtilsLib.h"
 #include "ACP_Weapon.generated.h"
 
 
@@ -24,7 +25,7 @@ public:
 
 	class UParticleSystemComponent* GetAttachEffComp() { return _PS_AttachEff; };
 
-	virtual void SoundPlay(USoundWave* wav) override;
+	USoundWave* GetDefaultSound() {return _defaultWav;}
 
 private :
 
@@ -34,5 +35,9 @@ private :
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	class UParticleSystem* _temp_AttachEff;
 
+
+	// 무기 장착 안 했을 경우 기본적으로 입힐 소리
+	UPROPERTY(VisibleAnywhere, Category = "Sound")
+	class USoundWave* _defaultWav;
 
 };

@@ -3,6 +3,7 @@
 #include "UI/WG_Drag.h"
 #include "UI/WG_MainBar.h"
 #include <Components/Button.h>
+
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UWG_MainBar_Slot::NativePreConstruct()
@@ -30,11 +31,12 @@ void UWG_MainBar_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const F
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
-	dragDropOperation->_widgetRef = this;
-	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	//dragDropOperation->Offset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+
 
 	dragDropOperation->DefaultDragVisual = this;
-	dragDropOperation->Pivot = EDragPivot::CenterCenter;
+	
+	dragDropOperation->Pivot = EDragPivot::MouseDown;
 
 	dragDropOperation->SetSlot(this);
 
@@ -48,7 +50,12 @@ bool UWG_MainBar_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Main Slot Drop"));
+	this->SetVisibility(ESlateVisibility::Visible);
+
+	FString str = FString::Printf(TEXT("Main Slot Drop : %d") , GetSlotNum());
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
+
 
 	UWG_Drag* dragDropOperation = Cast<UWG_Drag>(InOperation);
 
@@ -63,24 +70,31 @@ bool UWG_MainBar_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 		if (skillSlot)
 		{	
 			//TODO : 같은 스킬이 등록되어 있는지 아이디 체크.
+			FSkillData* skillData = skillSlot->GetSkillData();
 
+			UWG_MainBar_Slot* existSlot = _UIOwner->CheckExistSlot(skillData->_skillId);
 
+			//이미 등록된 스킬 존재
+			if (existSlot != nullptr)
+			{
+				RemoveSlotData(existSlot);
+			}
 
-			SetUISlotFromData(skillSlot);
+			MoveSlotData(skillSlot);
 
 		}
 		//메인 바 슬롯끼리 이동하는 경우
 		else if (mainBarSlot)
 		{
-			SetUISlotFromData(mainBarSlot);
+			//슬롯 번호 같으면 리턴
+			if(mainBarSlot->GetSlotNum() == GetSlotNum())
+				return true;
 
 		
-			//썼던 슬롯은 정보 전부 제거
-			mainBarSlot->SetTextureIcon(_TEX_EmptyIcon);
-			mainBarSlot->SetSlotType(ESlotTypes::NONE);
-			mainBarSlot->SetConditionToUseSlot(nullptr);
+			MoveSlotData(mainBarSlot);
+			RemoveSlotData(mainBarSlot);
 
-
+			
 		}
 	
 		return true;
@@ -92,6 +106,8 @@ bool UWG_MainBar_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 FReply UWG_MainBar_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	FEventReply reply;
+
+
 
 	reply.NativeReply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
@@ -128,6 +144,21 @@ void UWG_MainBar_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	}
 
 }
+
+
+void UWG_MainBar_Slot::RemoveSlotData(UWG_MainBar_Slot* slot)
+{
+	if (slot)
+	{
+		//썼던 슬롯은 정보 전부 제거
+		slot->SetTextureIcon(_TEX_EmptyIcon);
+		slot->SetSlotType(ESlotTypes::NONE);
+		slot->SetConditionToUseSlot(nullptr);
+
+	}
+
+}
+
 
 
 void UWG_MainBar_Slot::TickSlotCoolTime(float InDeltaTime)
@@ -172,7 +203,7 @@ void UWG_MainBar_Slot::RefreshUI()
 }
 
 
-void UWG_MainBar_Slot::SetUISlotFromData(UWG_Slot* slot)
+void UWG_MainBar_Slot::MoveSlotData(UWG_Slot* slot)
 {
 	UTexture2D* newTexture = slot->GetTextureIcon();
 	FSkillData* skillData = slot->GetSkillData();
@@ -185,5 +216,22 @@ void UWG_MainBar_Slot::SetUISlotFromData(UWG_Slot* slot)
 	SetSlotType(ESlotTypes::SKILL);
 	SetTextureIcon(newTexture);
 	SetConditionToUseSlot(skillData);
+	
+	UWG_MainBar_Slot* mainbarSlot = Cast<UWG_MainBar_Slot>(slot);
+
+	if (mainbarSlot)
+	{
+		//스킬 사용 중이었는지
+		bool flag = mainbarSlot->GetCoolTimeFlag();
+		if (flag)
+		{
+			StartSkillEvent();
+			//원래 슬롯에서 쿨타임 가져옴
+			_coolTime = mainbarSlot->GetCoolTime();
+			mainbarSlot->SetCoolTimeReset();
+		
+
+		}
+	}
 }
 

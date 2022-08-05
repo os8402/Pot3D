@@ -1,14 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "UtilsLib.h"
 #include "GMB_GameMode.generated.h"
 
-/**
- * 
- */
+class UWG_PublicHud;
+
 UCLASS()
 class POT3D_API AGMB_GameMode : public AGameModeBase
 {
@@ -16,5 +14,18 @@ class POT3D_API AGMB_GameMode : public AGameModeBase
 
 public:
 	AGMB_GameMode();
+
+	virtual void BeginPlay() override;
+
+public:
+
+	
+
+private:
+
+	UPROPERTY()
+	TSubclassOf<UWG_PublicHud> _hudClass;
+
+	UWG_PublicHud* _hud;
 	
 };

@@ -1,6 +1,5 @@
 #include "Equipment/ACP_Equipment.h"
 
-#include <Components/AudioComponent.h>
 #include <Sound/SoundCue.h>
 
 #include "Item/OBJ_Item.h"
@@ -11,19 +10,9 @@ UACP_Equipment::UACP_Equipment()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-
-	_Audio_Comp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO_COMP"));
-	_Audio_Comp->bIsPaused = true;
-	_Audio_Comp->bIsPaused = false;
-
-
 }
 
 
-void UACP_Equipment::SoundPlay(USoundWave* wav)
-{
-
-}
 
 void UACP_Equipment::BeginPlay()
 {
@@ -33,11 +22,13 @@ void UACP_Equipment::BeginPlay()
 
 void UACP_Equipment::EquipItem(UOBJ_Item* item)
 {
+	if(item)
+		return;
+
 	_currentItem = item;
-	
 	_currentOwner->GetStatComp()->RefreshStat(item->GetStatData() , item->GetBonusStats());
 	
-
+	
 	
 }
 

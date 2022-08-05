@@ -33,9 +33,7 @@ bool UOBJ_Item::SetItemInfo(class UGI_GmInst* gmInst, int32 id, int32 count)
 			_dropPosition = itemData->_dropPosition;
 			_scale = itemData->_scale;
 			
-			_vfxSoundWav = Cast<USoundWave>(
-				StaticLoadObject(USoundWave::StaticClass(), nullptr, *itemData->_soundPath.ToString()));
-
+			UtilsLib::GetAssetDynamic<USoundWave>(&_vfxSoundWav , *itemData->_soundPath.ToString());
 			SetEquimentType();
 
 			//보너스 스탯 초기화

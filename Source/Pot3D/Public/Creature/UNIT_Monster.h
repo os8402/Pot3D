@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,9 +5,6 @@
 #include "UtilsLib.h"
 #include "UNIT_Monster.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class POT3D_API AUNIT_Monster : public AUNIT_Character
 {
@@ -21,7 +16,7 @@ public:
 
 public:
 
-	virtual void Tick(float DeltaTime) override;
+
 	virtual void DeadUnit() override;
 	virtual void VisibleHpBar() override;
 
@@ -30,7 +25,7 @@ public:
 private:
 	
 	UPROPERTY()
-	TSubclassOf<class AActor> _ACT_DropItem;
+	TSubclassOf<class AActor> _dropItemClass;
 
 private:
 
@@ -48,5 +43,8 @@ private:
 	float x;
 	float y;
 	float z;
+
+	UPROPERTY(VisibleAnywhere, Category = "UI")
+	class UACP_MinimapPoint* _ACP_MinimapPoint;
 
 };

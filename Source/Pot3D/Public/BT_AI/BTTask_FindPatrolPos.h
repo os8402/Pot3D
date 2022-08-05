@@ -19,6 +19,10 @@ public:
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
+	UPROPERTY()
+	class UBehaviorTree* _BT_MonsterAITree;
 
+	UPROPERTY()
+	class UBlackboardData* _BB_MonsterAIData;
 
 };

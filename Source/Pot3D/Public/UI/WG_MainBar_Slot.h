@@ -3,11 +3,13 @@
 #include "CoreMinimal.h"
 #include "UI/WG_Slot.h"
 #include "UtilsLib.h"
+#include <Components/Image.h>
 #include "Data/GameDataTable.h"
 #include "WG_MainBar_Slot.generated.h"
 
 
 class UWG_MainBar;
+class UImage;
 
 UCLASS()
 class POT3D_API UWG_MainBar_Slot : public UWG_Slot
@@ -24,13 +26,26 @@ public:
 
 	virtual void RefreshUI() override;
 
-	void SetUISlotFromData(UWG_Slot* slot);
+	void MoveSlotData(UWG_Slot* slot);
 
-	void SetUIOwner(UWG_MainBar* mainBar) { if (mainBar) 	_UIOwner = mainBar; }
+	void SetUIOwner(UWG_MainBar* mainBar) { if (mainBar) _UIOwner = mainBar; }
 	
+	void RemoveSlotData(UWG_MainBar_Slot* slot);
+
+
 	void TickSlotCoolTime(float InDeltaTime);
 
+
 	void SetMaxCoolTime(float maxCoolTime) {_maxCoolTime = maxCoolTime;}
+
+	float GetCoolTime() { return _coolTime;}
+	void SetCoolTimeReset() {
+
+		_coolTime = 0.f; 
+		_MID_coolTime->SetScalarParameterValue(TEXT("Percent"), GetCoolTimeRatio()); 
+		_IMG_CoolTime->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 
 	float GetCoolTimeRatio() {return _coolTime/ _maxCoolTime;}
 	bool GetCoolTimeFlag() {return _bCoolTimeFlag;}

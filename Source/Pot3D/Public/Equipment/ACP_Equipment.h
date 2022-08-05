@@ -19,24 +19,17 @@ public:
 	// Sets default values for this component's properties
 	UACP_Equipment();
 
-	class UAudioComponent* GetAudioComp() { return _Audio_Comp; }
-
 	void SetOwner(AUNIT_Player* owner) { _currentOwner = owner; }
-
 	void EquipItem(UOBJ_Item* item);
-
 	void UnEquipItem();
 
-	virtual void SoundPlay(USoundWave* wav);
+	UOBJ_Item* GetItem() {return _currentItem;}
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, Category = "Audio")
-	class UAudioComponent* _Audio_Comp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Owner")
 	AUNIT_Player* _currentOwner;

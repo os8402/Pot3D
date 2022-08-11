@@ -83,7 +83,11 @@ public:
 	
 	void RefreshStat(const FStatData statData , const TMap<int32, int32> bonusStats);
 
+	//최종 데미지 포폴이니 대충 계산했음.. 
+	int32 CalcDamage();
+	int32 CalcDefence();
 
+	void CalcDefen2(){};
 
 private:
 	///////////////////////////////////////////////

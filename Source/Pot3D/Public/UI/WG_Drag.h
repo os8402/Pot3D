@@ -20,14 +20,6 @@ public:
 	UWG_Slot* GetSlot(){ return _slot;}
 	void SetSlot(UWG_Slot* slot) {_slot = slot;}
 
-public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UUserWidget* _widgetRef;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D _dragOffset;
-
 private:
 
 	UPROPERTY()

@@ -8,6 +8,13 @@
 #include "NiagaraSystem.h"
 
 #include "Creature/UNIT_Character.h"
+#include "Stat/ACP_StatInfo.h"
+
+#include "UI/WG_Buff.h"
+#include "UI/WG_IngameMain.h"
+#include "UI/WG_MainBar.h"
+
+#include "Controller/UNIT_PlayerCT.h"
 
 
 UACP_SKillInfo::UACP_SKillInfo()
@@ -67,7 +74,7 @@ void UACP_SKillInfo::SetSkillData(EUnitJobs job)
 		FName vfxEffPath = skill.Value->_vfxEffectPath;
 
 	
-		USoundWave* unitSoundWav = Cast<USoundWave>(
+		USoundWave* unitSoundWav =  Cast<USoundWave>(
 			StaticLoadObject(USoundWave::StaticClass(), nullptr, *unitSoundPath.ToString()));
 
 		if(unitSoundWav)
@@ -109,7 +116,76 @@ void UACP_SKillInfo::SetAcquireSkill(int32 id, FSkillData* skillData)
 	//등록 
 	_acquiredSkills.Add(id , skillData);
 
+	ESkillTypes skillType = skillData->_skillType;
+
+	//패시브일 경우 리프레시 스탯
+	if (skillType == ESkillTypes::PASSIVE)
+	{
+		RegisterPassiveSkill(id, skillData);
+
+	}
+
 }
+
+void UACP_SKillInfo::RegisterPassiveSkill(int32 id, FSkillData* skillData)
+{
+	int32 len = skillData->_values.Num();
+	
+	FStatData statData;
+	TMap<int32, int32> bonusStats;
+
+	AUNIT_Character* owner = Cast<AUNIT_Character>(GetOwner());
+
+	AUNIT_PlayerCT* pc = Cast<AUNIT_PlayerCT>(owner->GetController());
+
+	for (int32 i = 0; i < len; i++)
+	{
+		int32 value = skillData->_values[i];
+		EBuffTypes buffType = skillData->_buffTypes[i];
+
+		switch (buffType)
+		{
+
+		case EBuffTypes::HP:
+			statData._maxHp += value;
+			break;
+		case EBuffTypes::MP:
+			statData._maxMp += value;
+			break;
+		case EBuffTypes::RESILIENCE:
+			statData._resilience += value;
+			break;
+		case EBuffTypes::ATTACK_SPEED:
+			break;
+		case EBuffTypes::MOVE_SPEED:
+			break;
+		case EBuffTypes::STRENGH:
+			statData._strength += value;
+			break;
+		case EBuffTypes::DEXTERITY:
+			statData._dexterity += value;
+			break;
+		case EBuffTypes::INTELIGENCE:
+			statData._intelligence += value;
+			break;
+		case EBuffTypes::LUCK:
+			statData._luck += value;
+			break;
+		default:
+			break;
+		}
+
+		//TODO : 버프리스트에 등록
+		if (pc)
+			pc->GetMainUI()->GetMainBar()->AddBuffList(value , buffType);
+
+	}
+
+
+	 owner->GetStatComp()->RefreshStat(statData , bonusStats);
+
+}
+
 
 void UACP_SKillInfo::UseActiveSkill(FName name)
 {
@@ -174,3 +250,4 @@ AUNIT_Character* UACP_SKillInfo::GetNearDistanceTarget(float radius)
 {
 	return nullptr;
 }
+

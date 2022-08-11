@@ -4,21 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WG_PublicHud.generated.h"
+#include "WG_Select.generated.h"
 
-
-class UWG_Minimap;
+class UWG_Button;
 
 UCLASS()
-class POT3D_API UWG_PublicHud : public UUserWidget
+class POT3D_API UWG_Select : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	UWG_Minimap* GetMinimap() { return _WBP_Minimap; }
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void StartGame();
+	
 private:
 
 	UPROPERTY(meta = (BindWidget))
-	UWG_Minimap* _WBP_Minimap;
+	UWG_Button* _BTN_GameStart;
 	
 };

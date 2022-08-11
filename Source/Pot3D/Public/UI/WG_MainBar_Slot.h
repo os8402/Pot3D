@@ -66,10 +66,13 @@ public:
 
 	int32 GetSKillId( ){ return (_skillData) ? _skillData->_skillId : -1; }
 
+	void SetTBSlotIndex(UTextBlock* tb) { _TB_SlotIndex = tb; }
 
 private:
 
 	TWeakObjectPtr<UWG_MainBar> _UIOwner;
+	UPROPERTY(meta = (BindWidget))
+	class UBorder* _BD_Border;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* _IMG_CoolTime;
@@ -90,6 +93,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UTexture2D* _TEX_EmptyIcon;
 
+	UPROPERTY()
+	TSubclassOf<UWG_MainBar_Slot> mainSlotClass;
 
-
+	
 };

@@ -16,6 +16,11 @@
 #include <COmponents/Button.h>
 
 
+void UWG_Inventory_ItemSlot::NativePreConstruct()
+{
+	UtilsLib::GetTSubClass(&_invenItemSlotClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Item/WBP_Inventory_ItemSlot.WBP_Inventory_ItemSlot_C'"));
+}
+
 void UWG_Inventory_ItemSlot::RefreshUI()
 {
 
@@ -35,11 +40,23 @@ void UWG_Inventory_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
-	dragDropOperation->_widgetRef = this;
-	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	UWG_Inventory_ItemSlot* visualSlot = CreateWidget<UWG_Inventory_ItemSlot>(this, _invenItemSlotClass);
 
-	dragDropOperation->DefaultDragVisual = this;
-	dragDropOperation->Pivot = EDragPivot::MouseDown;
+	if (visualSlot)
+	{
+
+		visualSlot->SetSlotType(GetSlotType());
+		visualSlot->SetSlotNum(GetSlotNum());
+		visualSlot->SetTextureIcon(GetTextureIcon());
+		visualSlot->SetItem(GetItem());
+
+		visualSlot->RefreshUI();
+
+		dragDropOperation->DefaultDragVisual = visualSlot;
+
+	}
+
+	dragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	dragDropOperation->SetSlot(this);
 
@@ -53,7 +70,7 @@ bool UWG_Inventory_ItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDr
 	Super::NativeOnDrop(InGeometry, InDragDropEvent , InOperation);
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Item Drop"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Item SLot Change"));
 
 	UWG_Drag* dragDropOperation = Cast<UWG_Drag>(InOperation);
 

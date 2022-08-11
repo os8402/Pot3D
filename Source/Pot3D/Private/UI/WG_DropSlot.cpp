@@ -5,6 +5,7 @@
 #include "UI/WG_Drag.h"
 #include "Creature/UNIT_Player.h"
 #include "UI/WG_ItemSlot.h"
+#include "UI/WG_MainBar_Slot.h"
 #include "Item/ACT_DropItem.h"
 #include "Controller/UNIT_PlayerCT.h"
 #include "UI/WG_IngameMain.h"
@@ -34,30 +35,42 @@ bool UWG_DropSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Item Drop"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("slot Drop"));
 
 	UWG_Drag* dragDropOperation = Cast<UWG_Drag>(InOperation);
 
 	if (dragDropOperation)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Spawn Item"));
+	
 		
-		UWG_ItemSlot* slot = Cast<UWG_ItemSlot>(dragDropOperation->GetSlot());
+		UWG_ItemSlot* itemSlot = Cast<UWG_ItemSlot>(dragDropOperation->GetSlot());
+		UWG_MainBar_Slot* mainBarSlot = Cast<UWG_MainBar_Slot>(dragDropOperation->GetSlot());
 
-		if(slot == nullptr)
+		if(itemSlot == nullptr && mainBarSlot == nullptr)
 			return false;
 
-		SpawnItem(slot);
+		if (itemSlot)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Spawn Item"));
+			SpawnItem(itemSlot);
+		}
+		
+		if (mainBarSlot)
+		{
+			mainBarSlot->RemoveSlotData(mainBarSlot);
+			
+		}
 
-		ESlotTypes slotType = slot->GetSlotType();
+
+		ESlotTypes slotType = dragDropOperation->GetSlot()->GetSlotType();
 
 		switch (slotType)
 		{
 		case ESlotTypes::ITEM:
-			_inventory->RemoveItem(slot->GetSlotNum());
+			_inventory->RemoveItem(itemSlot->GetSlotNum());
 			break;
 		case ESlotTypes::EQUIPMENT:
-			_inventory->UnEquipItem(slot->GetItem(), false);
+			_inventory->UnEquipItem(itemSlot->GetItem(), false);
 			break;
 		case ESlotTypes::SKILL:
 			break;

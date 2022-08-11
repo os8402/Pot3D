@@ -34,11 +34,8 @@ void UWG_Equipment_ItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, c
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
-	dragDropOperation->_widgetRef = this;
-	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
-
 	dragDropOperation->DefaultDragVisual = this;
-	dragDropOperation->Pivot = EDragPivot::MouseDown;
+	dragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	dragDropOperation->SetSlot(this);
 

@@ -12,6 +12,7 @@ class UOBJ_Item;
 class UTexture2D;
 class UButton;
 class UImage;
+struct FSkillData;
 
 UCLASS()
 class POT3D_API UWG_Slot : public UUserWidget
@@ -28,6 +29,9 @@ public:
 	UTexture2D* GetTextureIcon() {return _iconTexture;}
 
 	UButton* GetSlotBtn() { return _BTN_Slot; }
+
+	void SetImage(UImage* img) {_IMG_Icon = img;}
+	UImage* GetImage() {return _IMG_Icon;}
 
 	void SetSlotNum(int32 num) { _slotNum = num; }
 	int32 GetSlotNum() { return _slotNum; }

@@ -1,12 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Creature/UNIT_Player.h"
 #include "Creature/UNIT_Monster.h"
 #include "Controller/UNIT_PlayerCT.h"
 
 #include "Equipment/ACP_Weapon.h"
 #include "Item/ACT_DropItem.h"
+#include "World/ACT_InteractableObj.h"
 
 #include "Equipment/ACP_Weapon.h"
 #include "Equipment/ACP_Armor.h"
@@ -90,12 +88,15 @@ void AUNIT_Player::SearchActorInfo()
 		FHitResult hitItem;
 		pc->GetHitResultUnderCursor(ECC_GameTraceChannel3, false, hitItem);
 
+		FHitResult hitInteractable;
+		pc->GetHitResultUnderCursor(ECC_GameTraceChannel6, false, hitInteractable);
+
 
 		if (hitOther.bBlockingHit)
 		{
 			//캐릭터 [ 몬스터, npc = 추후 멀티 추가되면 플레이어도 넣긴 할듯]
 			auto other = Cast<AUNIT_Character>(hitOther.Actor);
-			pc->LookActorOther(other);
+			pc->LookOther(other);
 		}
 
 		if (hitItem.bBlockingHit)
@@ -106,6 +107,13 @@ void AUNIT_Player::SearchActorInfo()
 			pc->LookDropItem(dropItem);
 		}
 
+		if (hitInteractable.bBlockingHit)
+		{
+			auto interactableObj = Cast<AACT_InteractableObj>(hitInteractable.Actor);
+
+			pc->LookInteractableObj(interactableObj);
+
+		}
 	}
 }
 

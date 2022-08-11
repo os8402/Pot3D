@@ -23,6 +23,8 @@ public:
 	virtual void RefreshUI() override;
 	void SetSlotLocked(bool bLocked) { _bLocked =bLocked;}
 
+	bool IsLocked() {return _bLocked;} 
+
 private:
 
 
@@ -34,5 +36,9 @@ private:
 	class UTexture2D* _TEX_lock;
 
 	bool _bLocked = false;
+
+
+	UPROPERTY()
+	TSubclassOf<UWG_Skill_Slot> _skillSlotClass;
 	
 };

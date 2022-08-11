@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "WG_Button.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class POT3D_API UWG_Button : public UUserWidget
 {
@@ -18,12 +15,13 @@ public:
 	virtual void NativePreConstruct() override;
 	
 public:
+
+
 	class UButton* GetSlotBtn() {return _BTN_Slot;}
 
-public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	FText _btnName; 
+
+
 
 private:
 	
@@ -40,4 +38,6 @@ private:
 	class UTexture2D* _texture;
 	UPROPERTY(EditAnywhere, Category = "Texture", meta = (AllowPrivateAccess = true))
 	FLinearColor _iconColor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	FText _btnName;
 };

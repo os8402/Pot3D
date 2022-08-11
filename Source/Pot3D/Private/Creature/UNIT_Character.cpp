@@ -171,9 +171,7 @@ void AUNIT_Character::AttackAnimCheck()
 		return;
 
 	FDamageEvent dmgEvent;
-	int32 minAtk = _ACP_Stat->GetMinAttack();
-	int32 maxAtk = _ACP_Stat->GetMaxAttack();
-	int32 dmg = FMath::RandRange(minAtk, maxAtk);
+	int32 dmg = _ACP_Stat->CalcDamage();
 
 	GetTargetEnemy().Get()->TakeDamage(dmg, dmgEvent, GetController(), this);
 
@@ -265,7 +263,7 @@ void AUNIT_Character::SkillAnimCheck()
 			//버프
 			else if (skillAttackType == ESkillAttackTypes::BUFF)
 			{
-
+				
 			}
 			//디버프
 			else if (skillAttackType == ESkillAttackTypes::DEBUFF)
@@ -301,10 +299,17 @@ void AUNIT_Character::OnSkillMontageEnded(UAnimMontage* montage, bool bInteruppt
 
 float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	//
+
 	float dmg = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	_ACP_Stat->OnAttacked(DamageAmount);
+	int32  defence = _ACP_Stat->CalcDefence();
+
+	dmg -= defence;
+
+
+	int32 calcDmg = FMath::Max(0, (int32)dmg);
+
+	_ACP_Stat->OnAttacked(calcDmg);
 
 	//hp바 표시
 	VisibleHpBar();
@@ -314,9 +319,9 @@ float AUNIT_Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		: ESpawnTextTypes::DAMAGED_MONSTER;
 
 	AACT_DamgeText* dmgActor = UtilsLib::MakeSpawnActor<AACT_DamgeText>(GetWorld(), _ACT_DmgText, this);
-	dmgActor->UpdateDamage(dmg, spawnType);
+	dmgActor->UpdateDamage(calcDmg, spawnType);
 
-
+	
 
 	//Hit 이펙트
 	_hitFlagGauge = 0.f;
@@ -385,10 +390,14 @@ void AUNIT_Character::DeadUnit()
 	for (const auto& mid : _MID_meshs)
 		mid->SetScalarParameterValue(TEXT("Damage"), 0);
 
+	SetOutline(false);
+
+
 }
 
 void AUNIT_Character::SetOutline(bool on)
 {
+
 	GetMesh()->SetRenderCustomDepth(on);
 	int32 id = (on) ? 2 : 0;
 

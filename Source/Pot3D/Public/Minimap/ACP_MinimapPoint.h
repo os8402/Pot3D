@@ -32,7 +32,8 @@ public:
 
 private:
 
-
+	UPROPERTY(EditAnywhere, Category = "Minimap", meta = (AllowPrivateAccess = true))
+	FVector2D _iconSize;
 	UPROPERTY(EditAnywhere, Category = "Minimap", meta = (AllowPrivateAccess = true))
 	UTexture2D* _iconTexure;
 	UPROPERTY(VisibleAnywhere, Category = "UI")

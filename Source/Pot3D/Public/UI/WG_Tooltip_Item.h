@@ -11,7 +11,7 @@
 class UOBJ_Item;
 
 UCLASS()
-class POT3D_API UWG_Tooltip_Item : public UWG_Tooltip
+class POT3D_API UWG_Tooltip_Item : public UUserWidget
 {
 	GENERATED_BODY()
 

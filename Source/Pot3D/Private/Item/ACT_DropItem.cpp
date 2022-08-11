@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Item/ACT_DropItem.h"
 #include "Item/OBJ_Item.h"
 #include "Controller/UNIT_PlayerCT.h"
@@ -16,7 +13,6 @@
 
 #include <Components/AudioComponent.h>
 
-// Sets default values
 AACT_DropItem::AACT_DropItem()
 {
 
@@ -32,17 +28,12 @@ AACT_DropItem::AACT_DropItem()
 	_WC_Info = CreateDefaultSubobject<UWidgetComponent>(TEXT("ITEM_INFO"));
 	_WC_Info->SetupAttachment(_BOX_Trigger);
 	_WC_Info->SetWidgetSpace(EWidgetSpace::Screen);
-	_WC_Info->SetWorldLocation(FVector(0, 0 , 100));
+	_WC_Info->SetWorldLocation(FVector(0, 0, 100));
+
+	UtilsLib::GetWidgetClass(_WC_Info, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"), FVector2D(150.f, 25.f));
 
 	_Audio_Comp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO_COMP"));
 	_Audio_Comp->SetupAttachment(RootComponent);
-
-	static ConstructorHelpers::FClassFinder<UUserWidget> UW(TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/WBP_DropItemInfo.WBP_DropItemInfo_C'"));
-	if (UW.Succeeded())
-	{
-		_WC_Info->SetWidgetClass(UW.Class);
-		_WC_Info->SetDrawSize(FVector2D(150.f, 25.f));
-	}
 
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -88,6 +79,7 @@ void AACT_DropItem::BeginPlay()
 void AACT_DropItem::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
 	_WC_Info->InitWidget();
 	_WC_Info->SetVisibility(false);
 
@@ -187,17 +179,11 @@ void AACT_DropItem::SetOutline(bool on)
 {
 
 	_MESH_Comp->SetRenderCustomDepth(on);
-	
 
-	if (on)
-	{
-		_MESH_Comp->SetCustomDepthStencilValue(2);
-		_WG_DropInfo->LookItem(FLinearColor(1, 1, 0, 0.4f));
-	}
+	int32 value = (on) ? 2 : 0;
+	FLinearColor color  = (on) ? FLinearColor(1,1,0, 0.4f) : FLinearColor(0, 0, 0, 0.4f);
 	
-	else
-	{
-		_MESH_Comp->SetCustomDepthStencilValue(0);
-		_WG_DropInfo->LookItem(FLinearColor(0,0,0, 0.4f));
-	}		
+	_MESH_Comp->SetCustomDepthStencilValue(value);
+	_WG_DropInfo->LookItem(color);
+
 }

@@ -27,6 +27,8 @@ public:
 	void OpenInventory();
 	void OpenSkill();
 
+	void SetMinimapData();
+
 public:
 
 	UWG_NamePlate* GetNamePlate() { return _WBP_NamePlate_1; }
@@ -55,6 +57,7 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	UWG_Minimap* _WBP_Minimap;
 
-
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* _TB_MapName;
 
 };

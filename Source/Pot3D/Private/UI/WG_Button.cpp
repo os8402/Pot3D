@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/WG_Button.h"
 
 #include "Components/TextBlock.h"
@@ -14,8 +11,12 @@ void UWG_Button::NativePreConstruct()
 	{	
 		_IMG_Icon->SetBrushFromTexture(_texture);
 		_IMG_Icon->SetColorAndOpacity(_iconColor);
+		_IMG_Icon->SetBrushSize(FVector2D(32,32));	
 	}
-
+	else
+	{
+		_IMG_Icon->SetBrushSize(FVector2D::ZeroVector);
+	}
 
 	_TB_Name->SetText(_btnName);
 }

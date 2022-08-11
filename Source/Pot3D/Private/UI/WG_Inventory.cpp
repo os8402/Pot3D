@@ -224,8 +224,10 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 		//TODO : UnEquipment Character
 		//_currentOwner->GetWeapon()->SetEquipItem(item);
 		//TODO : Equipment Slot
+
 		_WBP_Equipment_Weapon->SetItem(nullptr);
 		_currentOwner->GetWeapon()->UnEquipItem();
+	
 		//TODO : 인벤토리에 다시 등록
 	}
 
@@ -239,6 +241,7 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 		//TODO : Equipment Slot
 		_equipment_ArmorLists[(int32)armorType]->SetItem(nullptr);
 		_currentOwner->GetArmorList()[(int32)armorType]->UnEquipItem();
+	
 
 		//TODO : 인벤토리에 다시 등록
 

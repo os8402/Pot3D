@@ -85,6 +85,7 @@ enum class ETableDatas : uint8
 	MONSTER UMETA(DisplayName = "MONSTER"),
 	ITEM UMETA(DisplayName = "ITEM"),
 	SKILL UMETA(DisplayName = "SKILL"),
+	MAP UMETA(DisplayName = "MAP"),
 
 
 	END
@@ -246,7 +247,7 @@ enum class EOutline: uint8
 {
 	MONSTER = 0 UMETA(DisplayName = "MONSTER"),
 	ITEM UMETA(DisplayName = "ITEM"),
-	NPC UMETA(DisplayName = "NPC"),
+	INTERACTABLE UMETA(DisplayName = "INTERACTABLE"),
 
 
 	END
@@ -260,6 +261,16 @@ enum class ECameraShake : uint8
 	STRONG UMETA(DisplayName = "STRONG"),
 	EARTH_QUAKE UMETA(DisplayName = "EARTH_QUAKE"),
 
+
+	END
+
+};
+UENUM(BlueprintType)
+enum class EInteractable : uint8
+{
+	WARP = 0 UMETA(DisplayName = "WARP"),
+	UI UMETA(DisplayName = "UI"),
+	
 
 	END
 

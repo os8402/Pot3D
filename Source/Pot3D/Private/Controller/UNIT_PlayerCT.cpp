@@ -7,7 +7,7 @@
 #include <Camera/CameraShake.h>
 #include <Components/CanvasPanel.h>
 #include <Engine/PostProcessVolume.h>
-
+#include "Sound/SoundCue.h"
 
 #include "Creature/UNIT_Character.h"
 #include "Creature/UNIT_Player.h"
@@ -17,6 +17,7 @@
 #include "Skill/ACP_SkillInfo.h"
 
 #include "Item/ACT_DropItem.h"
+#include "World/ACT_InteractableObj.h"
 #include "Animation/UNIT_Anim.h"
 
 #include "UI/WG_IngameMain.h"
@@ -26,9 +27,12 @@
 #include "UI/WG_Skill.h"
 #include "UI/WG_MainBar.h"
 #include "UI/WG_MainBar_Slot.h"
+#include "UI/WG_Minimap.h"
 
 #include "Item/OBJ_Item.h"
 #include "Item/ACT_DropItem.h"
+
+#include "World/ACT_InteractableObj.h"
 
 AUNIT_PlayerCT::AUNIT_PlayerCT()
 {
@@ -62,14 +66,12 @@ AUNIT_PlayerCT::AUNIT_PlayerCT()
 	UMaterialInterface* MI_Item;
 	UtilsLib::GetAsset(&MI_Item, TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
 
-	UMaterialInterface* MI_Npc;
-	UtilsLib::GetAsset(&MI_Npc, TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Item.MI_InteractiveOutline_Item'"));
+	UMaterialInterface* MI_Interactable;
+	UtilsLib::GetAsset(&MI_Interactable, TEXT("MaterialInstanceConstant'/Game/Resources/Materials/InteractiveOutline/MI_InteractiveOutline_Interactable.MI_InteractiveOutline_Interactable'"));
 
 	_MI_Outlines.Add(MI_Monster);
 	_MI_Outlines.Add(MI_Item);
-	_MI_Outlines.Add(MI_Npc);
-
-
+	_MI_Outlines.Add(MI_Interactable);
 
 }
 
@@ -108,8 +110,10 @@ void AUNIT_PlayerCT::BeginPlay()
 		_ingameMainUI->GetSkillPanel()->SetCurrentOwner(_UP_owned);
 		_ingameMainUI->GetSkillPanel()->InitializeUI();
 
+		_ingameMainUI->SetMinimapData();
+
 		//TEST CODE: 
-		_ingameMainUI->GetMainBar()->TestPreSlot();
+		//_ingameMainUI->GetMainBar()->TestPreSlot();
 
 	}
 
@@ -186,10 +190,13 @@ void AUNIT_PlayerCT::PlayerTick(float DeltaTime)
 		if (_bMoving)
 			SetMoveDest(_destPos, DeltaTime);
 
+
 		if (_bAttacking)
 			ChaseToEnemy(DeltaTime);
 		else if (_bPicking)
 			PickUpItem(DeltaTime);
+		else if (_bInteractable)
+			ExecuteInteractableObj(DeltaTime);
 
 	}
 
@@ -227,7 +234,7 @@ void AUNIT_PlayerCT::ClickMouseCursor()
 	if (_UP_owned->IsAttacking())
 		return;
 
-	if (_bAttacking || _bPicking)
+	if (_bAttacking || _bPicking || _bInteractable)
 		return;
 		
 	
@@ -255,23 +262,27 @@ void AUNIT_PlayerCT::ClickMouseDown()
 		return;
 
 
-	_bClickMouseDown = _bMoving =  _bAttacking = _bPicking = false;
-
+	_bClickMouseDown = _bMoving = _bAttacking = _bPicking = _bInteractable = false;
 	_bMoving = true;
 
 
-	// 플레이어와 충돌이 일어나는 모든 오브젝트 
-	FHitResult objHit;
-	GetHitResultUnderCursor(ECC_GameTraceChannel5, false, objHit);
+	//캐릭터 메시 충돌 체크
+	FHitResult characterMeshHit;
+	GetHitResultUnderCursor(ECC_GameTraceChannel5, false, characterMeshHit);
 
 	//아이템 오브젝트
 	FHitResult itemHit;
 	GetHitResultUnderCursor(ECC_GameTraceChannel3, false, itemHit);
 
-	auto monster = Cast<AUNIT_Monster>(objHit.Actor);
-	auto dropItem = Cast<AACT_DropItem>(itemHit.Actor);
+	//아이템 오브젝트
+	FHitResult interactableHit;
+	GetHitResultUnderCursor(ECC_GameTraceChannel6, false, interactableHit);
 
-	if (monster == nullptr && dropItem == nullptr)
+	auto monster = Cast<AUNIT_Monster>(characterMeshHit.Actor);
+	auto dropItem = Cast<AACT_DropItem>(itemHit.Actor);
+	auto interactableObj = Cast<AACT_InteractableObj>(interactableHit.Actor);
+
+	if (monster == nullptr && dropItem == nullptr && interactableObj == nullptr)
 		return;
 
 	//애니메이션 취소
@@ -286,6 +297,11 @@ void AUNIT_PlayerCT::ClickMouseDown()
 	{
 		_bPicking = true;
 		_ACT_DropItem = dropItem;
+	}
+	else if (interactableObj)
+	{
+		_bInteractable = true;
+		_ACT_InteractableObj = interactableObj;
 	}
 
 }
@@ -319,7 +335,7 @@ void AUNIT_PlayerCT::SetMoveDest(const FVector destPos, float deltaTime)
 	}
 }
 
-void AUNIT_PlayerCT::LookActorOther(class AUNIT_Character* other)
+void AUNIT_PlayerCT::LookOther(class AUNIT_Character* other)
 {
 	if (_UP_owned == nullptr)
 		return;
@@ -411,6 +427,29 @@ void AUNIT_PlayerCT::LookDropItem(class AACT_DropItem* item)
 	
 }
 
+void AUNIT_PlayerCT::LookInteractableObj(class AACT_InteractableObj* obj)
+{
+	if (_currentLookInteractable.IsValid())
+	{
+		_currentLookInteractable->SetOutline(false);
+		_currentLookInteractable.Reset();
+	}
+
+	if (obj)
+	{
+	
+		_currentLookInteractable = obj;
+
+		SetPostProcessOutline(EOutline::INTERACTABLE);
+		_currentLookInteractable->SetOutline(true);
+	}
+	else
+	{
+		_currentLookInteractable.Reset();
+	}
+
+}
+
 void AUNIT_PlayerCT::ChaseToEnemy(float deltaTime)
 {
 	if (_UP_owned->GetTargetEnemy().IsValid() == false)
@@ -419,7 +458,7 @@ void AUNIT_PlayerCT::ChaseToEnemy(float deltaTime)
 	float const dist = FVector::Dist(_UP_owned->GetTargetEnemy().Get()->GetActorLocation(), _UP_owned->GetActorLocation());
 
 
-	if (dist >= 200.f)
+	if (dist >= 150.f)
 	{
 		_destPos = _UP_owned->GetTargetEnemy().Get()->GetActorLocation();
 	}
@@ -462,11 +501,32 @@ void AUNIT_PlayerCT::PickUpItem(float deltaTime)
 			_ACT_DropItem->Destroy();
 		}
 		_bPicking = false;
-		_pickupCnt = 1;
 
 	}
 }
 
+
+void AUNIT_PlayerCT::ExecuteInteractableObj(float deltaTime)
+{
+	float const dist = FVector::Dist(_ACT_InteractableObj->GetActorLocation(), _UP_owned->GetActorLocation());
+
+
+	if (dist >= 150.f)
+	{
+		_destPos = _ACT_InteractableObj->GetActorLocation();
+	}
+	else
+	{
+
+		_bMoving = false;
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Execute Interatable Object"));
+
+
+		_ACT_InteractableObj->ExecuteInteractableMethod();
+		_bInteractable = false;
+
+	}
+}
 
 void AUNIT_PlayerCT::CameraShake(ECameraShake cameraType,  float time)
 {
@@ -493,10 +553,12 @@ void AUNIT_PlayerCT::CameraShake(ECameraShake cameraType,  float time)
 
 void AUNIT_PlayerCT::SetTargetEmpty()
 {
+	if(_currentLookTarget.IsValid())
+		_currentLookTarget.Reset();
+
 	if (_UP_owned->GetTargetEnemy().IsValid())
 	{
 		_UP_owned->GetTargetEnemy().Reset();
-		_UP_owned->SetUnitStates(EUnitStates::IDLE);
 
 	}
 }
@@ -513,9 +575,17 @@ void AUNIT_PlayerCT::OnMoveReleased()
 	_bClickMouse = _bClickMouseDown = false;
 }
 
+USoundCue* AUNIT_PlayerCT::GetUIBtnSound()
+{
+	USoundCue* cue;
+	UtilsLib::GetAssetDynamic(&cue,  TEXT("SoundCue'/Game/Resources/fantasy_gui_4/sounds/btn_pressed_01_Cue.btn_pressed_01_Cue'"));
+
+	return cue;
+}
+
 void AUNIT_PlayerCT::OpenDeadPanel()
 {
-	
+
 }
 
 
@@ -594,10 +664,13 @@ void AUNIT_PlayerCT::MainBarSlotEvent()
 
 void AUNIT_PlayerCT::OpenInventory()
 {
+
+	UtilsLib::SoundPlay2D(GetWorld(), GetUIBtnSound());
 	_ingameMainUI->OpenInventory();
 }
 
 void AUNIT_PlayerCT::OpenSkillPanel()
 {
+	UtilsLib::SoundPlay2D(GetWorld(), GetUIBtnSound());
 	_ingameMainUI->OpenSkill();
 }

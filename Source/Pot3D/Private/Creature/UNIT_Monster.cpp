@@ -13,6 +13,7 @@
 #include "UI/WG_NamePlateSmall.h"
 
 #include "Controller/UNIT_MonsterCT.h"
+#include "Controller/UNIT_PlayerCT.h"
 
 #include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -81,6 +82,11 @@ void AUNIT_Monster::DeadUnit()
 
 	AUNIT_MonsterCT* mc = Cast<AUNIT_MonsterCT>(GetController<AController>());
 	mc->Destroy();
+
+	AUNIT_PlayerCT* pc =  Cast<AUNIT_PlayerCT>(UGameplayStatics::GetPlayerController(GetWorld() , 0));
+
+	pc->SetTargetEmpty();
+
 
 	_ACP_MinimapPoint->RemoveFromUI();
 	

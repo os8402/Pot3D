@@ -2,6 +2,7 @@
 #include "Item/OBJ_Item.h"
 #include "UI/WG_Inventory.h"
 #include <Components/Button.h>
+#include <components/Image.h>
 
 
 void UWG_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

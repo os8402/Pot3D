@@ -8,23 +8,12 @@
 
 UGI_GmInst::UGI_GmInst()
 {
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> DropItemData(TEXT("DataTable'/Game/Resources/Data/DropRewardDataTable.DropRewardDataTable'"));
-	if (DropItemData.Succeeded())
-		_dropRewardData = DropItemData.Object;
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> ItemData(TEXT("DataTable'/Game/Resources/Data/ItemDataTable.ItemDataTable'"));
-	if (ItemData.Succeeded())
-		_itemData = ItemData.Object;
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> UnitData(TEXT("DataTable'/Game/Resources/Data/UnitDataTable.UnitDataTable'"));
-	if (UnitData.Succeeded())
-		_unitData = UnitData.Object;
-
-
-	static ConstructorHelpers::FObjectFinder<UDataTable> SkillData(TEXT("DataTable'/Game/Resources/Data/SkillDataTable.SkillDataTable'"));
-	if (SkillData.Succeeded())
-		_skillData = SkillData.Object;
+	
+	UtilsLib::GetAsset(&_dropRewardData , TEXT("DataTable'/Game/Resources/Data/DropRewardDataTable.DropRewardDataTable'"));
+	UtilsLib::GetAsset(&_itemData, TEXT("DataTable'/Game/Resources/Data/ItemDataTable.ItemDataTable'"));
+	UtilsLib::GetAsset(&_unitData, TEXT("DataTable'/Game/Resources/Data/UnitDataTable.UnitDataTable'"));
+	UtilsLib::GetAsset(&_skillData, TEXT("DataTable'/Game/Resources/Data/SkillDataTable.SkillDataTable'"));
+	UtilsLib::GetAsset(&_mapData, TEXT("DataTable'/Game/Resources/Data/MapDataTable.MapDataTable'"));
 
 
 	//테이블에 넣는 서순주의 
@@ -32,25 +21,19 @@ UGI_GmInst::UGI_GmInst()
 	_tableLists.Add(_dropRewardData);
 	_tableLists.Add(_itemData);
 	_tableLists.Add(_skillData);
+	_tableLists.Add(_mapData);
 
 
+	UtilsLib::GetClass(&_spawnMonster , TEXT("Blueprint'/Game/BluePrints/Monster/001/BP_001_UnitMonster.BP_001_UnitMonster_C'"));
+	UtilsLib::GetClass(&_spawnPlayer, TEXT("Blueprint'/Game/BluePrints/Player/BP_UnitPlayer_Paladin.BP_UnitPlayer_Paladin_C'"));
 
-
-	static ConstructorHelpers::FClassFinder<AUNIT_Monster> EM(TEXT("Blueprint'/Game/BluePrints/Monster/001/BP_001_UnitMonster.BP_001_UnitMonster_C'"));
-	if (EM.Succeeded())
-		_spawnMonster = EM.Class;
-
-	static ConstructorHelpers::FClassFinder<AUNIT_Player> EP(TEXT("Blueprint'/Game/BluePrints/Player/BP_UnitPlayer_Paladin.BP_UnitPlayer_Paladin_C'"));
-	if (EP.Succeeded())
-		_spawnPlayer = EP.Class;
 }
-
 
 void UGI_GmInst::Init()
 {
 	Super::Init();
 
-	GetWorld()->GetTimerManager().SetTimer(_respawnTimer, this, &UGI_GmInst::RespawnMonster, 4.f, true);
+	//GetWorld()->GetTimerManager().SetTimer(_respawnTimer, this, &UGI_GmInst::RespawnMonster, 4.f, true);
 
 	//Skill 
 	_skillData->GetAllRows<FSkillData>(TEXT("") , _skillDatas);

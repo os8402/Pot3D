@@ -5,7 +5,6 @@
 #include "UtilsLib.h"
 #include "GMB_GameMode.generated.h"
 
-class UWG_PublicHud;
 
 UCLASS()
 class POT3D_API AGMB_GameMode : public AGameModeBase
@@ -17,15 +16,5 @@ public:
 
 	virtual void BeginPlay() override;
 
-public:
 
-	
-
-private:
-
-	UPROPERTY()
-	TSubclassOf<UWG_PublicHud> _hudClass;
-
-	UWG_PublicHud* _hud;
-	
 };

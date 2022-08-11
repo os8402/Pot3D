@@ -11,6 +11,9 @@ UACP_MinimapPoint::UACP_MinimapPoint()
 
 	PrimaryComponentTick.bCanEverTick = false;
 
+	//Default Size;
+	_iconSize = FVector2D(32,32);
+
 }
 
 
@@ -26,9 +29,13 @@ void UACP_MinimapPoint::BeginPlay()
 	{
 
 		AUNIT_PlayerCT* pc = Cast<AUNIT_PlayerCT>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-
 		_miniMapUI = pc->GetMainUI()->GetMinimap();
-		_miniMapUI->AddPointMinimap(this);
+
+		if (_miniMapUI)
+		{
+			_miniMapUI->AddPointMinimap(this, _iconSize);
+		}
+
 
 		
 	}) ,waitTime, false);

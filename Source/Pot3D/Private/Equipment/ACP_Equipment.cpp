@@ -22,7 +22,7 @@ void UACP_Equipment::BeginPlay()
 
 void UACP_Equipment::EquipItem(UOBJ_Item* item)
 {
-	if(item)
+	if(item == nullptr)
 		return;
 
 	_currentItem = item;

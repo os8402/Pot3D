@@ -24,6 +24,8 @@ public:
 
 	template<typename T>
 	T* GetTableData(ETableDatas type, int32 id);
+	template<typename T>
+	T* GetTableData(ETableDatas type, FString name);
 
 	void RespawnMonster();
 	void DestoryMonster(int32 id);
@@ -53,6 +55,8 @@ private:
 	class UDataTable* _unitData;
 	UPROPERTY()
 	class UDataTable* _skillData;
+	UPROPERTY()
+	class UDataTable* _mapData;
 	UPROPERTY()
 	TArray<UDataTable*> _tableLists;
 
@@ -110,4 +114,9 @@ T* UGI_GmInst::GetTableData(ETableDatas type, int32 id)
 	return _tableLists[(int8)type]->FindRow<T>(*FString::FromInt(id), TEXT(""));
 }
 
+template<typename T>
+T* UGI_GmInst::GetTableData(ETableDatas type, FString name)
+{
+	return _tableLists[(int8)type]->FindRow<T>(*name , TEXT(""));
+}
 

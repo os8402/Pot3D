@@ -63,6 +63,7 @@ public:
 
 	FSkillData* GetAcquireSKill(int32 id) { return _acquiredSkills[id]; }
 
+	void RegisterPassiveSkill(int32 id, FSkillData* skillData);
 
 	//TMap<int32, class USoundWave*> GetSoundCharSoundList() {return _SOUND_CHAR_List;}
 	//TMap<int32, class USoundWave*> GetSoundVFXSoundList() {return _SOUND_VFX_List;}

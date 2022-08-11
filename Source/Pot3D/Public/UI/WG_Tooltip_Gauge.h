@@ -27,7 +27,8 @@ public:
 
 private:
 
-	TWeakObjectPtr<UACP_StatInfo> _currentStatComp;
+	//TWeakObjectPtr<UACP_StatInfo> _currentStatComp;
+	class UACP_StatInfo* _currentStatComp;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_Name;

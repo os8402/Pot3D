@@ -7,11 +7,46 @@
 #include "UEnumHeader.h"
 #include "GameDataTable.generated.h"
 
+USTRUCT()
+struct FMapData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _mapName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText _mapNameUI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName _minimapTexturePath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _dimensions;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _zoom;
+
+};
+
 
 USTRUCT()
 struct FStatData : public FTableRowBase
 {
 	GENERATED_BODY()
+
+	FStatData()
+	{
+		_level = 0,
+		_job = EUnitJobs::NONE;
+		_minAtk = 0,
+		 _maxAtk = 0;
+		_defence = 0,
+		_resilience = 0;
+		_strength = 0;
+		_dexterity = 0;
+		_intelligence = 0;
+		_luck = 0;
+		_maxHp = 0;
+		_maxMp = 0;
+		_maxExp = 0;
+	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _level;

@@ -21,9 +21,15 @@ class POT3D_API UWG_Minimap : public UUserWidget
 public:
 	
 	void AddPlayerIcon();
-	void AddPointMinimap(class UACP_MinimapPoint* minimapPoint);
+	void AddPointMinimap(class UACP_MinimapPoint* minimapPoint , FVector2D size);
 
 	UMaterialParameterCollectionInstance* GetMaterialCollectionInstance(UWorld* world);
+
+	void SetDimensionsAndZoom(float dimensions, float zoom)
+	{
+		_dimensions = dimensions;
+		_zoom = zoom;
+	}
 
 	float GetDimensions() {return _dimensions;}
 	float GetZoom() {return _zoom;}
@@ -32,6 +38,8 @@ public:
 	void SetParentFromIcon(UWG_MinimapIcon* minimapIcon);
 
 	bool RemoveMinimapIcon(UACP_MinimapPoint* point);
+
+	void SetMinimapTexture(UTexture2D* newTexture);
 
 
 private:

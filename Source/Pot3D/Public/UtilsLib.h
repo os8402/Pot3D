@@ -9,7 +9,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Sound/SoundCue.h"
+
 #include <Components/AudioComponent.h>
+#include <Components/WidgetComponent.h>
 
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"
@@ -53,6 +56,15 @@ public:
 	{
 		UClass* loadClass = StaticLoadClass(T::StaticClass(), nullptr, *path);
 		*outClass = loadClass;
+
+	}
+
+	static void GetWidgetClass(UWidgetComponent* outObject, FString path , FVector2D size)
+	{
+		ConstructorHelpers::FClassFinder<UUserWidget> asset(*path);
+		outObject->SetWidgetClass(asset.Class);
+		outObject->SetDrawSize(size);
+
 
 	}
 
@@ -291,5 +303,9 @@ public:
 	static void SoundPlay2D(UWorld* world, USoundWave* wav)
 	{
 		UGameplayStatics::PlaySound2D(world, wav);
+	}
+	static void SoundPlay2D(UWorld* world, USoundCue* cue)
+	{
+		UGameplayStatics::PlaySound2D(world, cue);
 	}
 };

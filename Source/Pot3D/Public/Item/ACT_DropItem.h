@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "UEnumHeader.h"
+#include "UtilsLib.h"
 #include "ACT_DropItem.generated.h"
 
 class UOBJ_Item;

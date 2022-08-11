@@ -64,8 +64,8 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 
 			for (const auto& soundPath : unitData->_unitSoundPathList)
 			{
-				USoundWave* soundWav = Cast<USoundWave>(
-					StaticLoadObject(USoundWave::StaticClass(), nullptr, *soundPath.ToString()));
+				USoundWave* soundWav = nullptr;
+				UtilsLib::GetAssetDynamic(&soundWav, *soundPath.ToString());
 
 				if(soundWav)
 					_unitSoundList.Add(soundWav);
@@ -107,6 +107,7 @@ void UACP_StatInfo::RefreshStat(const FStatData statData, const TMap<int32, int3
 	
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, TEXT("Refresh Stat"));
 
+	//찐값
 	_maxHp += statData._maxHp;
 	_maxMp += statData._maxMp;
 	_minAtk += statData._minAtk;
@@ -123,10 +124,28 @@ void UACP_StatInfo::RefreshStat(const FStatData statData, const TMap<int32, int3
 		_bonusStats[stat.Key] += stat.Value;
 	}
 	
+	// 스탯창에 보여주기 위한 UI 세팅용 능력치
 	_bonusMinAtk += statData._minAtk;
 	_bonusMaxAtk += statData._maxAtk;
 	_bonusDef += statData._defence;
 	_bonusRes += statData._resilience;
 
+}
+
+int32 UACP_StatInfo::CalcDamage()
+{
+	int32 dmg = FMath::RandRange(_minAtk, _maxAtk);
+    dmg += (_strength / 10) + 1;
+
+	dmg = FMath::Max(0  , dmg);
+	
+	return dmg;
+}
+
+int32 UACP_StatInfo::CalcDefence()
+{
+	int32 defence =  _defence + (_luck / 10);
+
+	return defence;
 }
 

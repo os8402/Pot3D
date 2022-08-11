@@ -21,9 +21,6 @@ void UWG_Minimap::NativeConstruct()
 		_minimapCollection->SetScalarParameterValue(FName(TEXT("Dimensions")) , _dimensions);
 		_minimapCollection->SetScalarParameterValue(FName(TEXT("Zoom")) , _zoom);
 
-		UMaterialInstanceDynamic* mapInstance = _IMG_Map->GetDynamicMaterial();
-		if(mapInstance)
-			mapInstance->SetTextureParameterValue(FName(TEXT("MapImage")), _mapTexture);
 	
 		UtilsLib::GetTSubClass(&_playerIconClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Minimap/WBP_MinimapIcon_Player.WBP_MinimapIcon_Player_C'"));
 
@@ -35,6 +32,17 @@ void UWG_Minimap::NativeConstruct()
 
 
 }
+
+void UWG_Minimap::SetMinimapTexture(UTexture2D* newTexture)
+{
+	if(newTexture == nullptr)
+		newTexture = _mapTexture;
+
+	UMaterialInstanceDynamic* mapInstance = _IMG_Map->GetDynamicMaterial();
+	if (mapInstance)
+		mapInstance->SetTextureParameterValue(FName(TEXT("MapImage")), newTexture);
+}
+
 
 void UWG_Minimap::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -94,7 +102,7 @@ void UWG_Minimap::AddPlayerIcon()
 }
 
 
-void UWG_Minimap::AddPointMinimap(UACP_MinimapPoint* minimapPoint)
+void UWG_Minimap::AddPointMinimap(UACP_MinimapPoint* minimapPoint, FVector2D size)
 {
 
 	if (minimapPoint)
@@ -111,6 +119,7 @@ void UWG_Minimap::AddPointMinimap(UACP_MinimapPoint* minimapPoint)
 		otherIcon->SetOwnerUI(this);
 		otherIcon->SetOwnerActor(minimapPoint->GetOwner());
 		otherIcon->GetImage()->SetBrushFromTexture(iconTexture);
+		otherIcon->GetImage()->SetBrushSize(size);
 
 		_minimapIcons.Add(minimapPoint , otherIcon);
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::FromInt(_minimapIcons.Num()));
@@ -140,3 +149,4 @@ bool UWG_Minimap::RemoveMinimapIcon(UACP_MinimapPoint* point)
 
 	return false;
 }
+

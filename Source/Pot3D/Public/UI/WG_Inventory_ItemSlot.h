@@ -6,6 +6,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "UEnumHeader.h"
+#include "UtilsLib.h"
 #include "UI/WG_ItemSlot.h"
 #include "WG_Inventory_ItemSlot.generated.h"
 
@@ -22,7 +23,7 @@ class POT3D_API UWG_Inventory_ItemSlot : public UWG_ItemSlot
 
 public:
 
-
+	virtual void NativePreConstruct() override;
 	virtual void RefreshUI() override;
 
 
@@ -32,5 +33,9 @@ protected:
 	virtual bool NativeOnDrop( const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation ) override;
 	virtual FReply NativeOnPreviewMouseButtonDown( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent ) override;
 
+private:
+
+	UPROPERTY()
+	TSubclassOf<UWG_Inventory_ItemSlot> _invenItemSlotClass;
 
 };

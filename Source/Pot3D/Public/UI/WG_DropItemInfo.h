@@ -7,9 +7,7 @@
 #include "UEnumHeader.h"
 #include "WG_DropItemInfo.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class POT3D_API UWG_DropItemInfo : public UUserWidget
 {

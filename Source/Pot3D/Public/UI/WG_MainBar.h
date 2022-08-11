@@ -8,6 +8,7 @@
 
 class UWG_MainBar_Slot;
 class UWG_IngameMain;
+class UWG_Buff;
 
 UCLASS()
 class POT3D_API UWG_MainBar : public UUserWidget
@@ -17,12 +18,17 @@ class POT3D_API UWG_MainBar : public UUserWidget
 public:
 
 	virtual void NativePreConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 	void BindStat(class UACP_StatInfo* statComp);
 
 	void UpdateHp();
 	void UpdateMp();
 
 
+	void AddBuffList(int32 value , EBuffTypes buffType);
+
+	void ChangeTooltip(FText text);
 
 	void SetSlotTooltipHovered(UWG_MainBar_Slot* slot);
 
@@ -40,6 +46,8 @@ private:
 
 	UPROPERTY()
 	TSubclassOf<UWG_MainBar_Slot> _mainBarSlotClass;
+	UPROPERTY()
+	TSubclassOf<UWG_Buff> _buffClass;
 
 	TWeakObjectPtr<class UACP_StatInfo> _currentStatComp;
 
@@ -49,12 +57,23 @@ private:
 	class UWG_GlassBallBar* _GB_MpBar;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* _BTN_Inventory;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* _BTN_Skill;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* _BTN_Quest;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* _BTN_Menu;
+
+
+	UPROPERTY(meta = (BindWidget))
 	class UWG_Tooltip_Gauge* _WBP_Tooltip_Hp;
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Tooltip_Gauge* _WBP_Tooltip_Mp;
 	UPROPERTY(meta = (BindWidget))
 	class UWG_Tooltip_MainBar* _WBP_Tooltip_MainBar;
-
+	UPROPERTY(meta = (BindWidget))
+	class UWG_Tooltip* _WBP_Tooltip;
 
 
 	TArray<UWG_MainBar_Slot*> _mainBarSlots;

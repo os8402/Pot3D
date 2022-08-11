@@ -37,10 +37,12 @@ public:
 
 	void SetMoveDest(const FVector destPos, float deltaTime);
 
-	// npc + 몬스터 정보 확인
-	void LookActorOther(class AUNIT_Character* other);
+	//  몬스터 및 다른 플레이어 정보 확인
+	void LookOther(class AUNIT_Character* other);
 	// 드랍 아이템 확인
 	void LookDropItem(class AACT_DropItem* item);
+	// NPC + 상호작용 가능한 모든 오브젝트
+	void LookInteractableObj(class AACT_InteractableObj* obj);
 
 
 	//적 추적
@@ -48,6 +50,9 @@ public:
 
 	//아이템 줍기
 	void PickUpItem(float deltaTime);
+
+	//상호작용하기 
+	void ExecuteInteractableObj(float deltaTime);
 
 	void CameraShake(ECameraShake cameraType, float time);
 	//타켓이 사라질 경우
@@ -59,6 +64,8 @@ public:
 	void OnMovePressed();
 	void OnMoveReleased();
 
+	class USoundCue* GetUIBtnSound();
+
 	void OpenInventory();
 	void OpenSkillPanel();
 	void OpenDeadPanel();
@@ -68,7 +75,7 @@ public:
 
 	void InitializePlayerState()
 	{
-		_bClickMouse = _bMoving = _bAttacking = _bPicking = _bUseSkill = false;
+		_bClickMouse = _bMoving = _bAttacking = _bPicking = _bUseSkill = _bInteractable = false;
 	}
 
 	void SetSkillEnded() {_bUseSkill = false;} 
@@ -85,11 +92,13 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* _WC_CursorAttack;
 
-	//현재 마우스로 보는 몬스터 + npc 정보
+	//현재 마우스로 보는 몬스터
 	TWeakObjectPtr<class AUNIT_Character> _currentLookTarget;
 
 	//현재 마우스로 보는 드랍 아이템 정보
 	TWeakObjectPtr<class AACT_DropItem> _currentLookItem;
+	//현재 마우스로 보는 상호작용 오브젝트 정보
+	TWeakObjectPtr<class AACT_InteractableObj> _currentLookInteractable;
 
 
 	//플레이어 캐릭터
@@ -98,6 +107,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class AACT_DropItem* _ACT_DropItem;
+
+	UPROPERTY(VisibleAnywhere)
+	class AACT_InteractableObj* _ACT_InteractableObj;
 
 //POST PROCESS
 private:
@@ -127,14 +139,14 @@ private:
 	bool _bPicking = 0;
 	UPROPERTY(EditAnywhere, Category = "Pawn")
 	bool _bUseSkill = 0;
+	UPROPERTY(EditAnywhere, Category = "Pawn")
+	bool _bInteractable = 0;
 
 	FVector _destPos;
 	FRotator _smoothRot;
 	
 	float _destRimit;
 	
-	//픽업 이슈로 
-	int32 _pickupCnt = 0;
 
 	//CAMERA
 	//상황에 맞게 적절히 가져다 쓰면 됨

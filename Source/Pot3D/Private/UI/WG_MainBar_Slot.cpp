@@ -3,6 +3,7 @@
 #include "UI/WG_Drag.h"
 #include "UI/WG_MainBar.h"
 #include <Components/Button.h>
+#include <Components/Border.h>
 
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
@@ -14,6 +15,7 @@ void UWG_MainBar_Slot::NativePreConstruct()
 
 	_MID_coolTime = _IMG_CoolTime->GetDynamicMaterial();
 
+	 UtilsLib::GetTSubClass(&mainSlotClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Slot/WBP_MainBar_Slot.WBP_MainBar_Slot_C'"));
 
 	if (_MID_coolTime)
 	{
@@ -31,12 +33,24 @@ void UWG_MainBar_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const F
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
-	//dragDropOperation->Offset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	UWG_MainBar_Slot* visualSlot = CreateWidget<UWG_MainBar_Slot>(_UIOwner.Get() , mainSlotClass);
 
+	if (visualSlot)
+	{
 
-	dragDropOperation->DefaultDragVisual = this;
+		visualSlot->SetSlotType(GetSlotType());
+		visualSlot->SetSlotNum(GetSlotNum());
+		visualSlot->SetTextureIcon(GetTextureIcon());
+		visualSlot->SetSkillData(GetSkillData());
 	
-	dragDropOperation->Pivot = EDragPivot::MouseDown;
+		visualSlot->RefreshUI();
+
+		dragDropOperation->DefaultDragVisual = visualSlot;
+
+	}
+
+
+	dragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	dragDropOperation->SetSlot(this);
 
@@ -138,7 +152,7 @@ void UWG_MainBar_Slot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	{
 		TickSlotCoolTime(InDeltaTime);
 	}
-	if (_BTN_Slot->IsHovered() && _UIOwner.IsValid())
+	if (_BD_Border->IsHovered() && _UIOwner.IsValid())
 	{
 		_UIOwner.Get()->SetSlotTooltipHovered(this);
 	}
@@ -154,7 +168,7 @@ void UWG_MainBar_Slot::RemoveSlotData(UWG_MainBar_Slot* slot)
 		slot->SetTextureIcon(_TEX_EmptyIcon);
 		slot->SetSlotType(ESlotTypes::NONE);
 		slot->SetConditionToUseSlot(nullptr);
-
+		slot->SetCoolTimeReset();
 	}
 
 }
@@ -192,7 +206,7 @@ void UWG_MainBar_Slot::StartSkillEvent()
 	_bCoolTimeFlag = true;
 
 	if(_IMG_CoolTime->GetVisibility() == ESlateVisibility::Hidden)
-		_IMG_CoolTime->SetVisibility(ESlateVisibility::Visible);
+		_IMG_CoolTime->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 }
 
@@ -229,7 +243,7 @@ void UWG_MainBar_Slot::MoveSlotData(UWG_Slot* slot)
 			//¿ø·¡ ½½·Ô¿¡¼­ ÄðÅ¸ÀÓ °¡Á®¿È
 			_coolTime = mainbarSlot->GetCoolTime();
 			mainbarSlot->SetCoolTimeReset();
-		
+
 
 		}
 	}

@@ -7,7 +7,7 @@ void UWG_Tooltip_Gauge::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (_currentStatComp.IsValid())
+	if (_currentStatComp)
 	{
 		RefreshUI();
 	}
@@ -25,13 +25,17 @@ void UWG_Tooltip_Gauge::RefreshUI()
 
 	if (_statType == EStatTypes::HP)
 	{
-		value = _currentStatComp.Get()->GetHp();
-		maxValue = _currentStatComp.Get()->GetMaxHp();
+	//	value = _currentStatComp.Get()->GetHp();
+	//	maxValue = _currentStatComp.Get()->GetMaxHp();
+		 value = _currentStatComp->GetHp();
+		maxValue = _currentStatComp->GetMaxHp();
 	}
 	else if (_statType == EStatTypes::MP)
 	{
-		value = _currentStatComp.Get()->GetMp();
-		maxValue = _currentStatComp.Get()->GetMaxMp();
+	//	value = _currentStatComp.Get()->GetMp();	
+	//	maxValue = _currentStatComp.Get()->GetMaxMp();
+		value = _currentStatComp->GetMp();
+		maxValue = _currentStatComp->GetMaxMp();
 	}
 
 	FString str = FString::Printf(TEXT("%d/%d"), value , maxValue);

@@ -7,13 +7,11 @@
 
 void UWG_Skill_Slot::NativePreConstruct()
 {
-	_TEX_lock = Cast<UTexture2D>(
-		StaticLoadObject(UTexture2D::StaticClass(), nullptr, 
-		TEXT("Texture2D'/Game/Resources/fantasy_gui_4/textures/icons/brown/fg4_iconsBrown_lockClosed.fg4_iconsBrown_lockClosed'")));
-		
+	UtilsLib::GetAssetDynamic(&_TEX_lock , TEXT("Texture2D'/Game/Resources/fantasy_gui_4/textures/icons/brown/fg4_iconsBrown_lockClosed.fg4_iconsBrown_lockClosed'"));
+
 	_TB_SkillLv->SetText(FText::FromString(""));
 
-	SetTextureIcon(_TEX_lock);
+	UtilsLib::GetTSubClass(&_skillSlotClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Skill/WBP_Skill_Slot.WBP_Skill_Slot_C'"));
 
 }
 
@@ -24,12 +22,20 @@ void UWG_Skill_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPo
 
 	UWG_Drag* dragDropOperation = NewObject<UWG_Drag>();
 
+	UWG_Skill_Slot* visualSlot = CreateWidget<UWG_Skill_Slot>(this, _skillSlotClass);
 
-	dragDropOperation->_widgetRef = this;
-	dragDropOperation->_dragOffset = InGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	if (visualSlot)
+	{
 
-	dragDropOperation->DefaultDragVisual = this;
-	dragDropOperation->Pivot = EDragPivot::MouseDown;
+		visualSlot->SetSlotLocked(false);
+		visualSlot->SetSkillData(GetSkillData());
+		visualSlot->SetTextureIcon(GetTextureIcon());
+
+		dragDropOperation->DefaultDragVisual = visualSlot;
+
+	}
+
+	dragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	dragDropOperation->SetSlot(this);
 

@@ -32,7 +32,7 @@ void UACP_PlayerToCameraChecker::BeginPlay()
 
 	_player = Cast<APawn>(GetOwner());
 
-	auto pc = Cast<AUNIT_PlayerCT>(_player->GetController());
+	auto pc =  Cast<APlayerController>(_player->GetController());
 
 	if (pc)
 	{
@@ -68,6 +68,7 @@ void UACP_PlayerToCameraChecker::CheckFadeThisMesh()
 
 	FVector playerPos = _player->GetActorLocation();
 	FVector cameraPos = _camera->GetCameraLocation();
+
 
 	FVector calcPos = LocationPointBetweenAAndB(playerPos, cameraPos,
 		_traceDistanceFromPlayer, _fadeRadius);

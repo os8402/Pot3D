@@ -4,6 +4,7 @@
 #include "UI/WG_MainBar_Slot.h"
 #include "UI/WG_GlassBallBar.h"
 #include "UI/WG_Tooltip_Gauge.h"
+#include "UI/WG_Tooltip.h"
 
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_Skill.h"
@@ -11,6 +12,7 @@
 #include "UI/WG_Skill_Slot.h"
 
 #include "UI/WG_Tooltip_MainBar.h"
+#include "UI/WG_Buff.h"
 
 #include <Blueprint/WidgetTree.h>
 #include <Components/HorizontalBox.h>
@@ -21,10 +23,9 @@ void UWG_MainBar::NativePreConstruct()
 	Super::NativePreConstruct();
 
 	//TODO : 나중에 문서로.. 
-	UClass* mainbarSlotClass = StaticLoadClass(UWG_MainBar_Slot::StaticClass(), nullptr,
-		TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Slot/WBP_MainBar_Slot.WBP_MainBar_Slot_C'"));
 
-	_mainBarSlotClass = mainbarSlotClass;
+	UtilsLib::GetTSubClass(&_mainBarSlotClass , TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Slot/WBP_MainBar_Slot.WBP_MainBar_Slot_C'"));
+	UtilsLib::GetTSubClass(&_buffClass, TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Buff/WBP_Buff.WBP_Buff_C'"));
 
 	_GB_HpBar->SetToolTip(_WBP_Tooltip_Hp);
 	_WBP_Tooltip_Hp->SetUIName(FText::FromString(TEXT("생명력")));
@@ -64,6 +65,28 @@ void UWG_MainBar::NativePreConstruct()
 		}
 
 	}
+
+	_BTN_Inventory->SetToolTip(_WBP_Tooltip);
+	_BTN_Skill->SetToolTip(_WBP_Tooltip);
+	_BTN_Quest->SetToolTip(_WBP_Tooltip);
+	_BTN_Menu->SetToolTip(_WBP_Tooltip);
+}
+
+void UWG_MainBar::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if(_BTN_Inventory->IsHovered())
+		ChangeTooltip(FText::FromString(TEXT("인벤토리")));
+
+	if (_BTN_Skill->IsHovered())
+		ChangeTooltip(FText::FromString(TEXT("스킬")));
+
+	if (_BTN_Quest->IsHovered())
+		ChangeTooltip(FText::FromString(TEXT("퀘스트")));
+
+	if (_BTN_Menu->IsHovered())
+		ChangeTooltip(FText::FromString(TEXT("메뉴")));
 }
 
 void UWG_MainBar::BindStat(class UACP_StatInfo* statComp)
@@ -97,6 +120,27 @@ void UWG_MainBar::UpdateMp()
 }
 
 
+void UWG_MainBar::AddBuffList(int32 value , EBuffTypes buffType)
+{
+	//Mainbar Slot 생성
+	UHorizontalBox* hb_buffBox = WidgetTree->FindWidget<UHorizontalBox>("_HB_BuffBox");
+
+	UWG_Buff* buffSlot = CreateWidget<UWG_Buff>(this, _buffClass);
+	hb_buffBox->AddChild(buffSlot);
+
+
+	buffSlot->RefreshUI(value,  buffType);
+	buffSlot->SetUIOwner(this);
+
+	buffSlot->SetToolTip(_WBP_Tooltip);
+
+}
+
+void UWG_MainBar::ChangeTooltip(FText text)
+{
+	_WBP_Tooltip->SetNameText(text);
+}
+
 void UWG_MainBar::SetSlotTooltipHovered(UWG_MainBar_Slot* slot)
 {
 	FSkillData* skillData = slot->GetSkillData();
@@ -107,9 +151,9 @@ void UWG_MainBar::SetSlotTooltipHovered(UWG_MainBar_Slot* slot)
 		return;
 	}
 	
-	_WBP_Tooltip_MainBar->SetVisibility(ESlateVisibility::Visible);
+
 	_WBP_Tooltip_MainBar->SetTooltipFromData(skillData);
-	
+	_WBP_Tooltip_MainBar->SetVisibility(ESlateVisibility::Visible);
 
 }
 

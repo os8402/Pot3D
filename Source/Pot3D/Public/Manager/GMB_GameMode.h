@@ -14,7 +14,11 @@ class POT3D_API AGMB_GameMode : public AGameModeBase
 public:
 	AGMB_GameMode();
 
-	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+
+
 
 
 };

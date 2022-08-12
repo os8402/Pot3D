@@ -10,7 +10,7 @@
 #include "UI/WG_MainBar.h"
 #include "UI/WG_Skill.h"
 #include "UI/WG_Minimap.h"
-
+#include "UI/WG_MapStart.h"
 
 #include <Components/ProgressBar.h>
 #include <Components/TextBlock.h>
@@ -77,7 +77,11 @@ void UWG_IngameMain::SetMinimapData()
 
 			GetMinimap()->SetDimensionsAndZoom(dimensions , zoom);
 
-			_TB_MapName->SetText(mapData->_mapNameUI);
+			FText mapName = mapData->_mapNameUI;
+
+			_TB_MapName->SetText(mapName);
+
+			_WBP_MapStart->UpdateText(mapName);
 		
 		}
 

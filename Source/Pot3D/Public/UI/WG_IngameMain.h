@@ -9,6 +9,7 @@ class UWG_NamePlate;
 class UWG_MainBar;
 class UWG_Skill;
 class UWG_Minimap;
+class UWG_MapStart;
 
 
 UCLASS()
@@ -59,5 +60,8 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* _TB_MapName;
+
+	UPROPERTY(meta = (BindWidget))
+	UWG_MapStart* _WBP_MapStart;
 
 };

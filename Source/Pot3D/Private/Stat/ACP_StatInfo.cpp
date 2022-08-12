@@ -2,6 +2,10 @@
 #include "Item/OBJ_Item.h"
 #include <Kismet/GameplayStatics.h>
 
+#include "Creature/UNIT_Player.h"
+#include "Manager/PS_PlayerState.h"
+
+
 // Sets default values for this component's properties
 UACP_StatInfo::UACP_StatInfo()
 {
@@ -9,7 +13,7 @@ UACP_StatInfo::UACP_StatInfo()
 	PrimaryComponentTick.bCanEverTick = false;
 	bWantsInitializeComponent = true;
 
-	//TODO : DB에서 불러와야함
+
 }
 
 
@@ -23,18 +27,56 @@ void UACP_StatInfo::InitializeComponent()
 		_bonusStats.Add(i, 0);
 	}
 
+
+}
+
+void UACP_StatInfo::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//Load Save Data
+
+	APlayerController* pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (pc)
+		_playerState = Cast<APS_PlayerState>(pc->PlayerState);
+
+	auto owner = Cast<AUNIT_Player>(GetOwner());
+
+	if (owner)
+	{
+		int32 curHp = _playerState->GetCurrentHP();
+		int32 curMp = _playerState->GetCurrentMP();
+
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("curHP : %d"), curHp));
+
+		curHp = (curHp > 0) ? curHp : _maxHp;
+		curMp = (curMp > 0) ? curMp : _maxMp;
+
+		SetHp(curHp);
+		SetMp(curMp);
+
+	}
+	else
+	{
+		SetHp(_maxHp);
+		SetMp(_maxMp);
+	}
 }
 
 void UACP_StatInfo::OnAttacked(int32 dmg)
 {
 	int32 newHp = _hp - dmg;
 	SetHp(newHp);
+
+
 }
 
 
 void UACP_StatInfo::SetCharacterId(int32 id)
 {
 	_chrId = id;
+
 
 	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -49,10 +91,8 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 			_job = unitData->_statData._job;
 			_unitType = unitData->_type;
 			_maxHp = unitData->_statData._maxHp;
-			SetHp(unitData->_statData._maxHp);
-			_maxMp = unitData->_statData._maxMp;
-			SetMp(unitData->_statData._maxMp);
 
+			_maxMp = unitData->_statData._maxMp;
 			_minAtk = unitData->_statData._minAtk;
 			_maxAtk = unitData->_statData._maxAtk;
 			_defence = unitData->_statData._defence;
@@ -70,6 +110,7 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 				if(soundWav)
 					_unitSoundList.Add(soundWav);
 			}
+
 		}
 
 	}
@@ -82,10 +123,17 @@ void UACP_StatInfo::SetHp(int32 newHp)
 
 	_hp = FMath::Min(_hp , _maxHp);
 
+	auto owner = Cast<AUNIT_Player>(GetOwner());
+
+	if (owner)
+		_playerState->SetCurrentHp(_hp);
+
 	if (_hp <= 0)
 		_onUnitDied.Broadcast();
 
 	_onHpChanged.Broadcast();
+
+
 }
 
 void UACP_StatInfo::SetMp(int32 newMp)
@@ -94,13 +142,22 @@ void UACP_StatInfo::SetMp(int32 newMp)
 
 	_mp = FMath::Min(_mp, _maxMp);
 
+	auto owner = Cast<AUNIT_Player>(GetOwner());
+
+	if (owner)
+		_playerState->SetCurrentMp(_mp);
+
 	_onMpChanged.Broadcast();
+
+
+
 }
 
 void UACP_StatInfo::SetExp(int32 exp)
 {
 	
 }
+
 
 void UACP_StatInfo::RefreshStat(const FStatData statData, const TMap<int32, int32> bonusStats)
 {

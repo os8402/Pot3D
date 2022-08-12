@@ -19,6 +19,8 @@
 #include "PaperSprite.h"
 #include <Particles/ParticleSystemComponent.h>
 
+#include "Manager/PS_PlayerState.h"
+
 
 AUNIT_Player::AUNIT_Player()
 {
@@ -51,6 +53,7 @@ AUNIT_Player::AUNIT_Player()
 	_ACP_CameraChecker = CreateDefaultSubobject<UACP_PlayerToCameraChecker>(TEXT("CAMERA_CHECKER"));
 
 
+
 }
 
 void AUNIT_Player::BeginPlay()
@@ -61,7 +64,6 @@ void AUNIT_Player::BeginPlay()
 
 	for (auto& item : _armorList)
 		item.Value->SetOwner(this);
-
 
 }
 

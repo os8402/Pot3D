@@ -3,14 +3,29 @@
 
 #include "Manager/GMB_GameMode.h"
 #include <kismet/GameplayStatics.h>
+#include "Manager/PS_PlayerState.h"
+
 
 AGMB_GameMode::AGMB_GameMode()
 {
-	
+	PlayerStateClass = APS_PlayerState::StaticClass();	
 }
 
-void AGMB_GameMode::BeginPlay()
+
+void AGMB_GameMode::PostInitializeComponents()
 {
-	Super::BeginPlay();
+	Super::PostInitializeComponents();
+
+
+}
+
+void AGMB_GameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	APS_PlayerState* ps = Cast<APS_PlayerState>(NewPlayer->PlayerState);
+	ps->LoadDataFromPlayer();
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Load From Data"));
 
 }

@@ -24,7 +24,9 @@ public:
 
 protected:
 
+	
 	virtual void InitializeComponent() override;
+	virtual void BeginPlay() override;
 
 public:
 	void OnAttacked(int32 dmg);
@@ -79,6 +81,7 @@ public:
 
 	FOnUnitDied& GetOnUnitDied() { return _onUnitDied; }
 
+
 public:
 	
 	void RefreshStat(const FStatData statData , const TMap<int32, int32> bonusStats);
@@ -87,7 +90,9 @@ public:
 	int32 CalcDamage();
 	int32 CalcDefence();
 
-	void CalcDefen2(){};
+
+	
+
 
 private:
 	///////////////////////////////////////////////
@@ -150,5 +155,8 @@ private:
 	FOnHpChanged _onHpChanged;
 	FOnMpChanged _onMpChanged;
 	FOnUnitDied _onUnitDied;
+
+	UPROPERTY()
+	class APS_PlayerState* _playerState;
 
 };

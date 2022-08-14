@@ -14,6 +14,10 @@
 #include "UI/WG_Tooltip_MainBar.h"
 #include "UI/WG_Buff.h"
 
+#include "Manager/GI_GmInst.h"
+
+#include "Manager/PS_PlayerState.h"
+
 #include <Blueprint/WidgetTree.h>
 #include <Components/HorizontalBox.h>
 
@@ -41,6 +45,11 @@ void UWG_MainBar::NativePreConstruct()
 	//Mainbar Slot 생성
 	UHorizontalBox* hb_slotList = WidgetTree->FindWidget<UHorizontalBox>("_HB_SlotList");
 
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+	TMap<int32, int32> saveUsedSlots = ps->GetMainbarSlots();
+
 
 	if (hb_slotList && IsValid(_mainBarSlotClass))
 	{
@@ -57,11 +66,18 @@ void UWG_MainBar::NativePreConstruct()
 			mainbarSlot->SetUIOwner(this);
 
 			mainbarSlot->SetToolTip(_WBP_Tooltip_MainBar);
-
+			//TODO : Get Save Data
+			if (saveUsedSlots.Find(i + 1))
+			{
+				if (gmInst)
+				{
+					FSkillData* skillData = gmInst->GetTableData<FSkillData>(ETableDatas::SKILL, saveUsedSlots[i + 1]);
+					//복사함
+					mainbarSlot->CopySlotData(skillData);
+				}
+			}
+	
 			_mainBarSlots.Add(mainbarSlot);
-
-
-
 		}
 
 	}

@@ -276,6 +276,13 @@ enum class EInteractable : uint8
 
 };
 
+UENUM(BlueprintType)
+enum class ESaveType : uint8
+{
+	ADD UMETA(DisplayName = "ADD"),
+	REMOVE UMETA(DisplayName = "REMOVE")
+};
+
 
 class POT3D_API UEnumHeader
 {

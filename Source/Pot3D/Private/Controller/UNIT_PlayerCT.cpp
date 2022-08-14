@@ -108,7 +108,7 @@ void AUNIT_PlayerCT::BeginPlay()
 		_ingameMainUI->GetMainBar()->BindStat(_UP_owned->GetStatComp());
 		_ingameMainUI->GetInventory()->SetCurrentOwner(_UP_owned);
 		_ingameMainUI->GetSkillPanel()->SetCurrentOwner(_UP_owned);
-		_ingameMainUI->GetSkillPanel()->InitializeUI();
+		//_ingameMainUI->GetSkillPanel()->InitializeUI();
 
 		_ingameMainUI->SetMinimapData();
 

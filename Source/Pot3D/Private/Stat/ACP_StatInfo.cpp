@@ -120,7 +120,6 @@ void UACP_StatInfo::SetCharacterId(int32 id)
 void UACP_StatInfo::SetHp(int32 newHp)
 {
 	_hp = FMath::Max(0, newHp);
-
 	_hp = FMath::Min(_hp , _maxHp);
 
 	auto owner = Cast<AUNIT_Player>(GetOwner());

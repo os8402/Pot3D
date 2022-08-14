@@ -4,11 +4,15 @@
 
 APS_PlayerState::APS_PlayerState()
 {
-	_currentHp = 0;
-	_currentMp = 0;
-	_currentExp = 0;
-	_gold = 0;
 	_saveSlotName = TEXT("Player1");
+	_equipmentWeapon = -1;
+	_equipmentArmors.Init(-1, (int32)EItemArmorTypes::END);
+
+	for (int i = 0; i < 20; i++)
+	{
+		_inventorySlots.Add(i, -1);
+	}
+
 
 }
 
@@ -25,13 +29,24 @@ void APS_PlayerState::LoadDataFromPlayer()
 		int32 mp = saveGame->_currentMp;
 		int32 exp = saveGame->_currentExp;
 		int32 gold = saveGame->_gold;
+		TMap<int32, int32> acquireSkills = saveGame->_acquireSkills;
+		TMap<int32, int32> mainbarSlots = saveGame->_mainbarSlots;
+		TMap<int32, int32> inventorySlots = saveGame->_inventorySlots;
+		int32 weaponId = saveGame->_equipmentWeapon;
+		TArray<int32> armors = saveGame->_equipmentArmors;
 
 		SetCurrentHp(hp);
 		SetCurrentMp(mp);
 		SetCurrentExp(exp);
-		SetGold(gold);
+		SetGold(gold);	
+		SetAcquireSkills(acquireSkills);
+		SetMainbarSlots(mainbarSlots);
+		SetInventorySlots(inventorySlots);
+		SetEquipmentWeapon(weaponId);
+		SetEquipmentArmors(armors);
 
 		SavePlayerData();
+
 	}
 
 }
@@ -43,10 +58,17 @@ void APS_PlayerState::SavePlayerData()
 	newSaveData->_currentMp = GetCurrentMP();
 	newSaveData->_currentExp = GetCurrentExp();
 	newSaveData->_gold = GetGold();
+	newSaveData->_acquireSkills = GetAcquireSkills();
+	newSaveData->_mainbarSlots = GetMainbarSlots();
+	newSaveData->_inventorySlots = GetInventorySlots();
+	newSaveData->_equipmentWeapon = GetEquipmentWeapon();
+
+	newSaveData->_equipmentArmors = GetEquipmentArmors();
+
 
 	if (UGameplayStatics::SaveGameToSlot(newSaveData, _saveSlotName, 0))
 	{
-		UE_LOG(LogTemp , Log , TEXT("Save Error!!"));
+		UE_LOG(LogTemp , Log , TEXT("Save!"));
 	}
 
 }

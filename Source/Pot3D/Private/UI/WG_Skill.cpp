@@ -5,6 +5,8 @@
 #include "Skill/ACP_SKillInfo.h"
 #include "Creature/UNIT_Player.h"
 
+#include "Manager/PS_PlayerState.h"
+
 #include <Components/Button.h>
 #include <Components/WidgetSwitcher.h>
 #include <Components/TextBlock.h>
@@ -15,11 +17,7 @@ void UWG_Skill::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	UClass* skillList =  StaticLoadClass(UWG_Skill_List::StaticClass(), nullptr,
-		TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Skill/WBP_Skill_List.WBP_Skill_List_C'"));
-
-	_skillListClass = skillList;
-
+	UtilsLib::GetTSubClass(&_skillListClass , TEXT("WidgetBlueprint'/Game/BluePrints/UI/Widget/Template/Skill/WBP_Skill_List.WBP_Skill_List_C'"));
 
 	UButton* activeBtn = _BTN_Active->GetSlotBtn();
 	UButton* passiveBtn = _BTN_Passive->GetSlotBtn();
@@ -77,19 +75,17 @@ void UWG_Skill::SetSkillListData(UScrollBox* sbList, TMap<int32, FSkillData*> sk
 
 			skillList->SetSkillData(skillData , bAcquired);
 
-			//TEST CODE
-			skillList->AcquireSkill();
-			
 			skillTypeList.Add(skillList);
 
 		}
+
 
 	}
 }
 
 void UWG_Skill::RefreshUI()
 {
-
+	InitializeUI();
 }
 
 

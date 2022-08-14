@@ -26,6 +26,10 @@ void UACP_Equipment::EquipItem(UOBJ_Item* item)
 		return;
 
 	_currentItem = item;
+
+	if(_currentOwner == nullptr)
+		_currentOwner = Cast<AUNIT_Player>(GetOwner());
+
 	_currentOwner->GetStatComp()->RefreshStat(item->GetStatData() , item->GetBonusStats());
 	
 	

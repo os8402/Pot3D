@@ -89,20 +89,10 @@ private:
 
 
 public:
-	void SetGold(int32 gold)
-	{
-		//TODO : 그 외 보안 처리 다 들어가지만 포폴이라 안 함
-		_gold += gold;
-
-	}
-
-	int32 GetGold() { return _gold; }
 	TArray<FSkillData*> GetSkillDatas() {return _skillDatas;}
 
 
 private:
-	int32 _gold = 0;
-
 	TArray<FSkillData*> _skillDatas;
 
 	

@@ -23,6 +23,7 @@ public:
 protected:
 
 	virtual void InitializeComponent() override;
+	virtual void BeginPlay() override;
 
 public:
 

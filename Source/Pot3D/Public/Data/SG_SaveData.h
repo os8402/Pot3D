@@ -7,6 +7,7 @@
 #include "UtilsLib.h"
 #include "UEnumHeader.h"
 #include "GameDataTable.h"
+#include "UI/WG_Slot.h"
 #include "SG_SaveData.generated.h"
 
 
@@ -28,10 +29,20 @@ public:
 	int32 _currentExp;
 	UPROPERTY()
 	int32 _gold;
+
+	//내가 배운 스킬
 	UPROPERTY()
-	FStatData _statData;
+	TMap<int32, int32> _acquireSkills;
 
+	UPROPERTY()
+	TMap<int32, int32> _mainbarSlots;
 
+	UPROPERTY()
+	TMap<int32, int32> _inventorySlots;
 
+	UPROPERTY()
+	int32 _equipmentWeapon;
+	UPROPERTY()
+	TArray<int32> _equipmentArmors;
 
 };

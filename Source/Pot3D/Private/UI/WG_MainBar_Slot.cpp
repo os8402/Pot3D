@@ -5,6 +5,8 @@
 #include <Components/Button.h>
 #include <Components/Border.h>
 
+#include "Manager/PS_PlayerState.h"
+
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UWG_MainBar_Slot::NativePreConstruct()
@@ -169,6 +171,8 @@ void UWG_MainBar_Slot::RemoveSlotData(UWG_MainBar_Slot* slot)
 		slot->SetSlotType(ESlotTypes::NONE);
 		slot->SetConditionToUseSlot(nullptr);
 		slot->SetCoolTimeReset();
+		slot->SaveSlotData(ESaveType::REMOVE);
+
 	}
 
 }
@@ -210,6 +214,7 @@ void UWG_MainBar_Slot::StartSkillEvent()
 
 }
 
+
 void UWG_MainBar_Slot::RefreshUI()
 {
 	_TB_SlotIndex->SetText(UtilsLib::ConvertToFText(_slotNum));
@@ -219,6 +224,7 @@ void UWG_MainBar_Slot::RefreshUI()
 
 void UWG_MainBar_Slot::MoveSlotData(UWG_Slot* slot)
 {
+
 	UTexture2D* newTexture = slot->GetTextureIcon();
 	FSkillData* skillData = slot->GetSkillData();
 
@@ -227,9 +233,14 @@ void UWG_MainBar_Slot::MoveSlotData(UWG_Slot* slot)
 	if(skillType == ESkillTypes::PASSIVE)
 		return;
 
+	
 	SetSlotType(ESlotTypes::SKILL);
 	SetTextureIcon(newTexture);
 	SetConditionToUseSlot(skillData);
+
+	//TODO : Save
+	SaveSlotData(ESaveType::ADD);
+	
 	
 	UWG_MainBar_Slot* mainbarSlot = Cast<UWG_MainBar_Slot>(slot);
 
@@ -247,5 +258,45 @@ void UWG_MainBar_Slot::MoveSlotData(UWG_Slot* slot)
 
 		}
 	}
+}
+
+void UWG_MainBar_Slot::CopySlotData(FSkillData* skillData)
+{
+	UTexture2D* newTexture;
+	UtilsLib::GetAssetDynamic(&newTexture, *skillData->_iconPath.ToString());
+	ESkillTypes skillType = skillData->_skillType;
+
+	if (skillType == ESkillTypes::PASSIVE)
+		return;
+
+	SetSlotType(ESlotTypes::SKILL);
+	SetTextureIcon(newTexture);
+	SetConditionToUseSlot(skillData);
+
+}
+
+void UWG_MainBar_Slot::SaveSlotData(ESaveType type)
+{
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld() , 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+
+	if (ps)
+	{
+		int32 slotId = GetSlotNum();
+
+		switch (type)
+		{
+		case ESaveType::ADD:
+			ps->AddMainbarSlot(slotId, GetSkillData()->_skillId );
+			break;
+		case ESaveType::REMOVE:
+			ps->RemoveMainbarSlot(slotId);
+			break;
+		default:
+			break;
+		}
+	}
+
 }
 

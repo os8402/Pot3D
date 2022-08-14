@@ -5,6 +5,7 @@
 #include "UtilsLib.h"
 #include <Components/Image.h>
 #include "Data/GameDataTable.h"
+#include "UEnumHeader.h"
 #include "WG_MainBar_Slot.generated.h"
 
 
@@ -67,6 +68,10 @@ public:
 	int32 GetSKillId( ){ return (_skillData) ? _skillData->_skillId : -1; }
 
 	void SetTBSlotIndex(UTextBlock* tb) { _TB_SlotIndex = tb; }
+
+	void CopySlotData(FSkillData* skillData);
+	void SaveSlotData(ESaveType type);
+
 
 private:
 

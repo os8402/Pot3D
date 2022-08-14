@@ -84,6 +84,19 @@ struct FSkillData : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	FSkillData()
+	{
+		_skillId = 0,
+		_skillLevel = 0;
+
+		_job = EUnitJobs::NONE;
+		_skillType = ESkillTypes::ACTIVE;
+		_reduceMana = 0;
+		_coolTime = 0;
+		_requestLevel = 0;
+
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 _skillId;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

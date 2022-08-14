@@ -10,6 +10,10 @@
 #include "Creature/UNIT_Character.h"
 #include "Stat/ACP_StatInfo.h"
 
+#include "Manager/PS_PlayerState.h"
+#include "Controller/UNIT_PlayerCT.h"
+#include "UI/WG_Skill.h"
+
 #include "UI/WG_Buff.h"
 #include "UI/WG_IngameMain.h"
 #include "UI/WG_MainBar.h"
@@ -32,6 +36,57 @@ void UACP_SKillInfo::InitializeComponent()
 
 }
 
+void UACP_SKillInfo::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//TODO : 세이브 데이터에서 배운 스킬 있는지 확인 후 불러오기
+	auto pc = Cast<AUNIT_PlayerCT>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+	TMap<int32, int32> savedAcquireSkills;
+
+	if (ps)
+	{
+		savedAcquireSkills = ps->GetAcquireSkills();
+
+	}
+
+
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	//TODO : 미리 배워둔 스킬 불러오고 적용
+
+	if (gmInst)
+	{
+		for (const auto& acquireSkill : savedAcquireSkills)
+		{
+			int32 id = acquireSkill.Key;
+			FSkillData* skillData =  gmInst->GetTableData<FSkillData>(ETableDatas::SKILL, id);
+			SetAcquireSkill(id, skillData);
+
+		}
+
+		if (pc)
+		{
+			UWG_IngameMain* mainUI = pc->GetMainUI();
+			UWG_Skill* skillUI = nullptr;
+
+			if(mainUI)
+				skillUI = mainUI->GetSkillPanel();
+
+			if(skillUI)
+				skillUI->RefreshUI();
+			
+
+		}
+		
+
+
+	}
+
+}
+
 //일단 패시브.. 무조건 다 불러와야 하며.
 //클래스에 맞는 액티브 스킬도 다 가져와야 합니다.
 
@@ -43,6 +98,8 @@ void UACP_SKillInfo::SetSkillData(EUnitJobs job)
 
 	if (gmInst)
 	{
+
+
 		TArray<FSkillData*> skillDatas = gmInst->GetSkillDatas();
 
 		for (int32 i = 0; i < skillDatas.Num(); i++)
@@ -60,8 +117,10 @@ void UACP_SKillInfo::SetSkillData(EUnitJobs job)
 				_passiveSkills.Add(id, skillDatas[i]);
 			}
 
+
 		}
 
+	
 	}
 
 	//SOUND , VFX
@@ -100,6 +159,7 @@ void UACP_SKillInfo::SetSkillData(EUnitJobs job)
 			_VFX_EffList.Add(skill.Key, vfxNiagaraEff);
 
 	}
+
 
 	
 }

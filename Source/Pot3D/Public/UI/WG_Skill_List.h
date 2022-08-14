@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Data/GameDataTable.h"
+#include "UEnumHeader.h"
 #include "WG_Skill_List.generated.h"
 
 class UWG_Skill;
 class UWG_Skill_Slot;
+
 
 UCLASS()
 class POT3D_API UWG_Skill_List : public UUserWidget
@@ -26,6 +28,8 @@ public:
 	void RemoveSkill();
 
 	void SetUIOwner(UWG_Skill* skill) {	if (skill) 	_UIOwner = skill; }
+
+	void SaveSkillData(ESaveType type);
 	
 	UWG_Skill_Slot* GetSkillSlot() {return _WBP_Skill_Slot;}
 

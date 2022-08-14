@@ -5,7 +5,7 @@
 #include <Components/RichTextBlock.h>
 #include <Components/Button.h>
 #include <Components/Border.h>
-
+#include "Manager/PS_PlayerState.h"
 
 void UWG_Skill_List::NativePreConstruct()
 {
@@ -36,12 +36,17 @@ void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bAcquired)
 	{
 		_BD_Lock->SetRenderOpacity(0.f);
 
-		FString reduceStr = FString::Printf(TEXT("<White>소모 : 마나</> <Green>%d</>"), skillData->_reduceMana);
+		ESkillTypes skillType = skillData->_skillType;
+
+		FString reduceStr;
+		FString coolTimeStr;
+		FString coolTimevalueStr;
+
+		reduceStr = FString::Printf(TEXT("<White>소모 : 마나</> <Green>%d</>"), skillData->_reduceMana);
 		_RTB_ReduceMana->SetText(FText::FromString(reduceStr));
 
-		FString coolTimevalueStr = FString::SanitizeFloat(skillData->_coolTime);
-		FString coolTimeStr = FString::Printf(TEXT("<White>재사용 대기 시간 :</> <Green>%s</><White>초</>"), *coolTimevalueStr);
-
+		coolTimevalueStr = FString::SanitizeFloat(skillData->_coolTime);
+		coolTimeStr = FString::Printf(TEXT("<White>재사용 대기 시간 :</> <Green>%s</><White>초</>"), *coolTimevalueStr);
 
 		_RTB_CoolTime->SetText(FText::FromString(coolTimeStr));
 		_RTB_SkillInfo->SetText(skillData->_skillInfo);
@@ -64,6 +69,7 @@ void UWG_Skill_List::SetSkillData(FSkillData* skillData, bool bAcquired)
 void UWG_Skill_List::AcquireSkill()
 {
 
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill List Acquire Skill"));
 	_BTN_AddSkill->OnClicked.Clear();
 
 	_BTN_AddSkill->SetIsEnabled(false);
@@ -71,14 +77,47 @@ void UWG_Skill_List::AcquireSkill()
 
 	SetSkillData(_skillData, true);
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill List Acquire Skill"));
+
 
 	//TODO : 어떤 스킬을 배웠는지 UWG_SKill과 플레이어에 전달 
 	_UIOwner->AcquireSkill(_skillData->_skillId, _skillData);
+	//TODO : 세이브
+	
+	SaveSkillData(ESaveType::ADD);
+
+	
 }
 
 void UWG_Skill_List::RemoveSkill()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Skill List Remove Skill"));
 
+	SaveSkillData(ESaveType::REMOVE);
+}
+
+void UWG_Skill_List::SaveSkillData(ESaveType type)
+{
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+
+	if (ps)
+	{
+		int32 id = _skillData->_skillId;
+		int32 level = _skillData->_skillLevel;
+		
+		switch (type)
+		{
+		case ESaveType::ADD:
+			ps->AddAcquireSkill(id, level);
+			break;
+		case ESaveType::REMOVE:
+			ps->RemoveAcquireSkill(id);
+			break;
+		default:
+			break;
+		}
+
+	}
+		
 }

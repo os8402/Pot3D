@@ -8,6 +8,7 @@
 #include "UI/WG_Tooltip_Item.h"
 #include "UI/WG_Status.h"
 #include "Manager/GI_GmInst.h"
+#include "Manager/PS_PlayerState.h"
 
 #include "Creature/UNIT_Player.h"
 #include "Equipment/ACP_Weapon.h"
@@ -26,10 +27,16 @@ void UWG_Inventory::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 	UWrapBox* slotBox = WidgetTree->FindWidget<UWrapBox>("_WBOX_SlotBox");
 
 	if (slotBox && IsValid(_itemSlotClass))
 	{
+		TMap<int32 ,int32> savedInventorySlots = ps->GetInventorySlots();
+
 		for (int i = 0; i < _itemMaxSlotNum; i++)
 		{
 
@@ -40,11 +47,25 @@ void UWG_Inventory::NativePreConstruct()
 			itemSlot->SetSlotNum(i);
 
 			_inventoryData.Add(i, itemSlot);
+			// Get SAVE DATA
+
+			if (savedInventorySlots[i] != -1)
+			{
+				UOBJ_Item* copyItem = CreateCopyItem(savedInventorySlots[i]);
+				
+				itemSlot->SetItem(copyItem);
+			}
 
 			itemSlot->SetToolTip(_WBP_Tooltip_Item);
 
 		}
 	}
+
+	int32 savedWeaponId = ps->GetEquipmentWeapon();
+	UOBJ_Item* weaponItem = CreateCopyItem(savedWeaponId);
+
+	if(weaponItem)
+		EquipItem(weaponItem);
 
 	_WBP_Equipment_Weapon->SetToolTip(_WBP_Tooltip_Item);
 	_WBP_Equipment_Weapon->SetInventory(this);
@@ -54,14 +75,25 @@ void UWG_Inventory::NativePreConstruct()
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::PANTS, _WBP_Equipment_Pants);
 	_equipment_ArmorLists.Add((int32)EItemArmorTypes::BOOTS, _WBP_Equipment_Boots);
 
+	int32 cnt = 0;
+
 	for (auto& armor : _equipment_ArmorLists)
 	{
-	//	armor.Value->SetToolTip(_WBP_Tooltip);
+		armor.Value->SetToolTip(_WBP_Tooltip_Item);
 		armor.Value->SetInventory(this);
+
+		int32 savedArmorId = ps->GetEquipmentArmor(cnt++);
+
+		UOBJ_Item* armorItem = CreateCopyItem(savedArmorId);
+		if (armorItem)
+			EquipItem(armorItem);
 
 	}
 
 	_WBP_Tooltip_Item->SetVisibility(ESlateVisibility::Hidden);
+
+	RefreshInventory();
+
 }
 
 
@@ -85,6 +117,9 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 
 	}
 
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
 	EItemTypes itemtype = newItem->GetItemType();
 
 	if (itemtype == EItemTypes::GOLD || itemtype == EItemTypes::JEWEL)
@@ -92,11 +127,10 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 		// TODO : 재화 처리
 		if (itemtype == EItemTypes::GOLD)
 		{
-			auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-			if (gmInst)
+			if (ps)
 			{
-				gmInst->SetGold(newItem->GetCount());
+				ps->SetGold(newItem->GetCount());
 
 				FString goldStr = FString::Printf(TEXT("Add Gold :  %d"), newItem->GetCount());
 				GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, goldStr);
@@ -124,9 +158,18 @@ bool UWG_Inventory::AddItem(UOBJ_Item* newItem)
 			UOBJ_Consumable_Item* consumableItem = Cast<UOBJ_Consumable_Item>(newItem);
 			_inventoryData[emptySlot]->SetItem(consumableItem);
 		}
+
+		//TODO : Save
+
+		if (ps)
+		{
+			ps->SetInventorySlot(emptySlot , newItem->GetItemId());
+		}
 			
 		FString str = FString::Printf(TEXT("Get Item :  %s"), *newItem->GetItemName().ToString());
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, str);
+	
+	
 	}
 
 
@@ -141,6 +184,12 @@ void UWG_Inventory::RemoveItem(int32 slot)
 {
 	_inventoryData[slot]->SetItem(nullptr);
 
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+	if(ps)
+		ps->SetInventorySlot(slot, -1);
+
 	RefreshInventory();
 }
 
@@ -152,6 +201,10 @@ void UWG_Inventory::UseItem(int32 slot)
 
 void UWG_Inventory::EquipItem(int32 slot)
 {
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Equip Item"));
 
 	if (_currentOwner.IsValid())
@@ -176,6 +229,9 @@ void UWG_Inventory::EquipItem(int32 slot)
 			_currentOwner->GetWeapon()->EquipItem(item);
 			//TODO : Equipment Slot
 			_WBP_Equipment_Weapon->SetItem(item);
+
+			if(ps)
+				ps->SetEquipmentWeapon(item->GetItemId());
 		}
 
 		else
@@ -198,6 +254,9 @@ void UWG_Inventory::EquipItem(int32 slot)
 			//TODO : Equipment Slot
 			equipmentSlot->SetItem(item);
 
+			if(ps)
+				ps->SetEquipmentArmor((int32)armorType, item->GetItemId());
+
 		}
 
 		//슬롯 제거 작업
@@ -209,8 +268,55 @@ void UWG_Inventory::EquipItem(int32 slot)
 
 
 
+void UWG_Inventory::EquipItem(UOBJ_Item* item)
+{
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
+	auto player = Cast<AUNIT_Player>(pc->GetCharacter());
+
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Equip Item"));
+
+	if (player)
+	{
+
+		if (item == nullptr)
+			return;
+
+		EItemTypes itemType = item->GetItemType();
+
+		if (itemType == EItemTypes::WEAPON)
+		{
+			player->GetWeapon()->EquipItem(item);
+			//TODO : Equipment Slot
+			_WBP_Equipment_Weapon->SetItem(item);
+
+		}
+
+		else
+		{
+			UOBJ_Armor_Item* armorItem = Cast<UOBJ_Armor_Item>(item);
+
+			EItemArmorTypes armorType = armorItem->GetArmorType();
+
+			auto equipmentSlot = _equipment_ArmorLists[(int32)armorType];
+
+			player->GetArmorList()[(int32)armorType]->EquipItem(item);
+			//TODO : Equipment Slot
+			equipmentSlot->SetItem(item);
+
+		}
+
+		RefreshInventory();
+	}
+}
+
 void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 {
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Orange, TEXT("UnEquip Item"));
 
 	if(equippedItem == nullptr)
@@ -227,8 +333,10 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 
 		_WBP_Equipment_Weapon->SetItem(nullptr);
 		_currentOwner->GetWeapon()->UnEquipItem();
-	
-		//TODO : 인벤토리에 다시 등록
+
+		if(ps)
+			ps->SetEquipmentWeapon(-1);
+
 	}
 
 	else
@@ -242,8 +350,8 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 		_equipment_ArmorLists[(int32)armorType]->SetItem(nullptr);
 		_currentOwner->GetArmorList()[(int32)armorType]->UnEquipItem();
 	
-
-		//TODO : 인벤토리에 다시 등록
+		if (ps)
+			ps->SetEquipmentArmor((int32)armorType , -1);
 
 	}
 
@@ -256,11 +364,17 @@ void UWG_Inventory::UnEquipItem(UOBJ_Item* equippedItem, bool bAdd)
 
 void UWG_Inventory::ChangeItemSlot(int32 prev, int32 next)
 {
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+
 	UOBJ_Item* prevItem = _inventoryData[prev]->GetItem();
 	UOBJ_Item* nextItem = _inventoryData[next]->GetItem();
 
 	_inventoryData[next]->SetItem(prevItem);
 	_inventoryData[prev]->SetItem(nextItem);
+
+	if(ps)
+		ps->ChangeInventorySlot(prev , next);
 
 	RefreshInventory();
 }
@@ -268,11 +382,12 @@ void UWG_Inventory::ChangeItemSlot(int32 prev, int32 next)
 void UWG_Inventory::RefreshInventory()
 {
 	//Gold 
-	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
 
-	if (gmInst)
+	if (ps)
 	{
-		int32 gold = gmInst->GetGold();
+		int32 gold = ps->GetGold();
 		_TB_Gold->SetText(FText::FromString(FString::FromInt(gold)));
 
 	}
@@ -312,6 +427,48 @@ int32 UWG_Inventory::GetEmptySlot()
 
 	return emptySlot;
 }
+
+UOBJ_Item* UWG_Inventory::CreateCopyItem(int32 itemId)
+{
+	if(itemId == -1)
+		return nullptr;
+
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	auto ps = Cast<APS_PlayerState>(pc->PlayerState);
+	auto gmInst = Cast<UGI_GmInst>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	UOBJ_Item* newItem = NewObject<UOBJ_Item>(UOBJ_Item::StaticClass());
+	FItemData* itemData = gmInst->GetTableData<FItemData>(ETableDatas::ITEM, itemId);
+
+	if (itemData)
+	{
+		EItemTypes itemType = itemData->_itemType;
+		if (itemType == EItemTypes::WEAPON)
+		{
+			auto weaponItemClass = UOBJ_Weapon_Item::StaticClass();
+			auto weaponItem = NewObject<UOBJ_Weapon_Item>(weaponItemClass);
+			newItem = weaponItem;
+		}
+		else if (itemType == EItemTypes::ARMOR)
+		{
+			auto armorItemClass = UOBJ_Armor_Item::StaticClass();
+			auto armorItem = NewObject<UOBJ_Armor_Item>(armorItemClass);
+			newItem = armorItem;
+		}
+		else if (itemType == EItemTypes::CONSUMABLE)
+		{
+			auto consumableItemClass = UOBJ_Consumable_Item::StaticClass();
+			auto consumableItem = NewObject<UOBJ_Consumable_Item>(consumableItemClass);
+			newItem = consumableItem;
+		}
+
+	}
+
+	newItem->SetItemInfo(gmInst, itemId, 1);
+
+	return newItem;
+}
+
 
 void UWG_Inventory::SetItemTooltipHovered(UOBJ_Item* item)
 {
